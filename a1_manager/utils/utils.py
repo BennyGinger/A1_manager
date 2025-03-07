@@ -153,12 +153,6 @@ def draw_square_from_circle(point: tuple, radius: int, mask_size: tuple)-> tuple
     mask[rr,cc] = 1
     return bounding_box_nDim(mask)
 
-# def between(num,a,b):
-#     if a < num and num < b: 
-#         return True
-#     else: 
-#         return False
-    
 def get_centroid(image: np.ndarray) -> list:
     properties = regionprops(image)
     centroids = [prop.centroid for prop in properties]

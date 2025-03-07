@@ -7,10 +7,10 @@ import numpy as np
 from python_tsp.heuristics import solve_tsp_simulated_annealing
 from python_tsp.distances import euclidean_distance_matrix
 
-from dish_calibration.dish_calib import DishCalib
+from dish_manager.dish_calib import DishCalib
 from microscope_hardware.nikon import NikonTi2
 from microscope_software.aquisition import Aquisition
-from dish_calibration.dish_grid import WellGrid
+from dish_manager.dish_grid import WellGrid
 from utils.utils import load_file
 
 # TODO: Add the possibility to enter a manual dish calibration
