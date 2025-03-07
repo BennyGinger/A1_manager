@@ -1,4 +1,3 @@
-from __future__ import annotations
 from pathlib import Path
 from dataclasses import dataclass,field
 from os.path import join
@@ -13,6 +12,8 @@ from microscope_hardware.nikon import NikonTi2
 from microscope_software.aquisition import Aquisition
 from dish_calibration.dish_grid import WellGrid
 from utils.utils import load_file
+
+# TODO: Add the possibility to enter a manual dish calibration
 
 ##################################################################
 ############################ Main class ##########################
