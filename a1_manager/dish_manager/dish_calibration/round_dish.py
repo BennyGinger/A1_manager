@@ -1,8 +1,11 @@
 from dataclasses import dataclass, field
 from string import ascii_uppercase
 
+from dish_manager.dish_calibration.well_utils import WellCircle
+from dish_manager.dish_calibration.prompt_utils import prompt_for_edge_points, prompt_for_center
 from microscope_hardware.nikon import NikonTi2
-from dish_manager.dish_calib import DishCalib
+from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
+from dish_manager.dish_calibration.geometry_utils import find_circle
 
 
 SETTINGS_35MM = {'expected_radius': 10.5 * 1000} # in micron
@@ -15,7 +18,7 @@ SETTINGS_96WELL = {
     'width': 63.0 * 1000}  # in micron
 
 @dataclass
-class DishCalib_35mm(DishCalib):
+class Dish35mm(DishCalibManager):
     
     expected_radius: float = field(default_factory=float)
     expected_radius_upper: float = field(init=False)
@@ -29,23 +32,25 @@ class DishCalib_35mm(DishCalib):
         self.expected_radius_upper = self.expected_radius + (self.expected_radius * correction_percentage)
         self.expected_radius_lower = self.expected_radius - (self.expected_radius * correction_percentage)
     
-    def calibrate_dish(self, nikon: NikonTi2, list_points: list[tuple[float, float]] | None = None)-> dict:
+    def calibrate_dish(self, nikon: NikonTi2, list_points: list[tuple[float, float]] | None = None)-> dict[str, WellCircle]:
+        """Calibrates the 35mm dish by asking for three points along the edge of the circle.
+        Returns a dictionary mapping a well identifier (e.g., 'A1') to a WellCircle.
+        """
+        # TODO: Instead of failing the calibration, ask if the user wants to use the measured radius, if yes continue, if no, start again
         success_calibration = False    
-        while success_calibration==False:
+        while not success_calibration:
             # Define 3 points on the middle ring. The middle of the objective must be on the inner part of the ring
             point1, point2, point3 = self.get_edge_points(nikon, list_points)
             # Center of circle
-            center, measured_radius = self.findCircle(point1,point2,point3)
+            center, measured_radius = find_circle(point1,point2,point3)
 
             if not self.expected_radius_lower < measured_radius < self.expected_radius_upper:
                 print(f"\nCalibration failed, start again! Radius={measured_radius} vs expected radius={self.expected_radius}")
                 continue
             
-            dish_measurments = {'A1': {'radius': measured_radius, 'center': center, 'ZDrive': None, 'PFSOffset': None}}
-            
+            print(f"\nCalibration successful! Radius={measured_radius} vs expected radius={self.expected_radius}")
             success_calibration = True
-        print(f"\nCalibration successful! Radius={measured_radius} vs expected radius={self.expected_radius}")
-        return dish_measurments
+        return {'A1': WellCircle(center=center, radius=measured_radius)}
 
     def get_edge_points(self, nikon: NikonTi2, list_points: list[tuple[float, float]] | None = None) -> tuple[tuple[float, float], tuple[float, float], tuple[float, float]]:
         if list_points is not None:
@@ -54,18 +59,11 @@ class DishCalib_35mm(DishCalib):
             
             point1, point2, point3 = list_points
             return point1, point2, point3
-        
-        input("\nMove to the edge of the dish and press 'Enter'")
-        point1 = nikon.get_stage_position()['xy']
-        input("Move to another point of the edge of the dish and press 'Enter'")
-        point2 = nikon.get_stage_position()['xy']
-        input("Move to a final point of the edge of the dish and press 'Enter'")
-        point3 = nikon.get_stage_position()['xy']
-        return point1,point2,point3
+        # Prompt the user to move the stage to the edge of the dish
+        return prompt_for_edge_points(nikon)
 
-# 
 @dataclass
-class DishCalib_96well(DishCalib):
+class Dish96well(DishCalibManager):
     row_number: int = field(default_factory=int)
     col_number: int = field(default_factory=int)
     well_radius: float = field(default_factory=float)
@@ -75,29 +73,25 @@ class DishCalib_96well(DishCalib):
     def __post_init__(self) -> None:
         self.unpack_settings(SETTINGS_96WELL)
 
-    def calibrate_dish(self, nikon: NikonTi2, top_left_center: tuple[float,float] | None = None) -> dict:
-        """Calculate the dish measurment of a 96-well plate. If the center of the top left corner of the dish is not provided, the user will be prompted to move to the top left corner of the dish. Else, the top left corner of the dish should be provided as x,y coordinates. Returns a dictionary with the well name as key and the center of the well as value."""
-        
+    def calibrate_dish(self, nikon: NikonTi2, top_left_center: tuple[float,float] | None = None) -> dict[str, WellCircle]:
+        """Calibrates a 96-well plate by computing each well's center. If the top-left center is not provided, the user is prompted to move to the A1 well. Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle objects."""
         
         x_tl, y_tl = self.get_center_point(nikon, top_left_center)
 
         # Create wells
-        dish_measurments = {}
-        for i, letter in enumerate(list(ascii_uppercase)[: self.row_number]):
-            for j, numb in enumerate(range(1, self.col_number + 1)):
+        dish_measurements: dict[str, WellCircle] = {}
+        for i, letter in enumerate(ascii_uppercase[:self.row_number]):
+            for j in range(self.col_number):
+                well_number = j + 1
                 x_center = x_tl - (self.length / (self.col_number - 1)) * j
                 y_center = y_tl + (self.width / (self.row_number - 1)) * i
-                
-                dish_measurments[f"{letter}{numb}"] = {'radius':self.well_radius,'center':(x_center, y_center),'ZDrive':None,'PFSOffset':None}
+                dish_measurements[f"{letter}{well_number}"] = WellCircle(center=(x_center, y_center), radius=self.well_radius)
 
         print(f"Calibration successful!")
-        return dish_measurments
+        return dish_measurements
 
-    def get_center_point(self, nikon, top_left_center):
+    def get_center_point(self, nikon: NikonTi2, top_left_center: tuple[float,float] | None = None) -> tuple[float,float]:
         if top_left_center is None:
-            # Define top left corner of dish
-            input("Move to center of the A1 well of the dish and press 'Enter'")
-            x_tl, y_tl = nikon.get_stage_position()["xy"]
-        else:
-            x_tl, y_tl = top_left_center
-        return x_tl,y_tl
+            # Define the center of the dish
+            return prompt_for_center(nikon)
+        return top_left_center

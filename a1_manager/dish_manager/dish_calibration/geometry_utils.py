@@ -2,8 +2,7 @@ import math
 
 
 def find_circle(point1: tuple[float, float], point2: tuple[float, float], point3: tuple[float, float]) -> tuple[tuple[float, float], float]:
-    """
-    Compute the center and radius of a circle passing through three points.
+    """Compute the center and radius of a circle passing through three points.
     
     Args:
         point1: A tuple (x1, y1) representing the first point.
@@ -16,8 +15,8 @@ def find_circle(point1: tuple[float, float], point2: tuple[float, float], point3
             - radius: The circle's radius.
     
     Raises:
-        ValueError: If the three points are collinear.
-    """
+        ValueError: If the three points are collinear."""
+    
     (x1, y1), (x2, y2), (x3, y3) = point1, point2, point3
 
     # Calculate the denominator, which is 2 times the determinant of the matrix

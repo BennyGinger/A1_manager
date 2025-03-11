@@ -7,7 +7,7 @@ import numpy as np
 from python_tsp.heuristics import solve_tsp_simulated_annealing
 from python_tsp.distances import euclidean_distance_matrix
 
-from dish_manager.dish_calib import DishCalib
+from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
 from microscope_hardware.nikon import NikonTi2
 from microscope_software.aquisition import Aquisition
 from dish_manager.dish_grid import WellGrid
@@ -24,7 +24,7 @@ class Dish:
     run_dir: Path # Path to the run directory
     well_selection: list[str]
     calib_path: Path = field(init=False)
-    calib_obj: DishCalib = field(init=False)
+    calib_obj: DishCalibManager = field(init=False)
     grid_obj: WellGrid = field(init=False)
     dish_measurments: dict = field(init=False)
     
@@ -56,7 +56,7 @@ class Dish:
 
     def config_dish(self, fTurret: str | None)-> None:
         # Get the dish calibration and grid object, the instances will be created based on the dish name
-        self.calib_obj = DishCalib().get_dish_calib_instance(self.dish_name)
+        self.calib_obj = DishCalibManager().dish_calib_factory(self.dish_name)
         
         if fTurret is not None:
             # load the DMD profile and get the grid object
