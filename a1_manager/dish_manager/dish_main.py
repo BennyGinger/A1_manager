@@ -10,7 +10,7 @@ from python_tsp.distances import euclidean_distance_matrix
 from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
 from microscope_hardware.nikon import NikonTi2
 from microscope_software.aquisition import Aquisition
-from a1_manager.dish_manager.well_grid_manager import WellGrid
+from a1_manager.dish_manager.well_grid_manager import WellGridManager
 from utils.utils import load_file
 
 # TODO: Add the possibility to enter a manual dish calibration
@@ -25,7 +25,7 @@ class Dish:
     well_selection: list[str]
     calib_path: Path = field(init=False)
     calib_obj: DishCalibManager = field(init=False)
-    grid_obj: WellGrid = field(init=False)
+    grid_obj: WellGridManager = field(init=False)
     dish_measurments: dict = field(init=False)
     
     def __post_init__(self)-> None:
@@ -63,10 +63,10 @@ class Dish:
             dmd_profile = load_file('dmd_profile')
             if dmd_profile is None:
                 raise FileNotFoundError("No dmd_profile file found. Please calibrate the dmd first.")
-            self.grid_obj = WellGrid(dmd_profile[fTurret]['center_xy_corr_pix']).get_well_grid_instance(self.dish_name)
+            self.grid_obj = WellGridManager(dmd_profile[fTurret]['center_xy_corr_pix']).get_well_grid_instance(self.dish_name)
         else:
             # If no DMD attached then use the default center correction, i.e. [0,0]
-            self.grid_obj = WellGrid([0, 0]).get_well_grid_instance(self.dish_name)
+            self.grid_obj = WellGridManager([0, 0]).get_well_grid_instance(self.dish_name)
                  
     def save_dish_measurments(self)-> None:
         with open(join(self.calib_path), "w") as outfile:

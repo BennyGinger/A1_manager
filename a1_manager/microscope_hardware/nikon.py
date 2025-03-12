@@ -38,7 +38,6 @@ class NikonTi2:
             raise TypeError("Objective must be a string: 10x, 20x...")
         if objective not in Objectifdefault.keys():
             raise ValueError(f"{self.objective} is not yet calibrated. Please use 10x or 20x")
-        
         self.core.set_property('Nosepiece', 'State', Objectifdefault[self.objective])
          
     def set_light_path(self, light_path: int)-> None:

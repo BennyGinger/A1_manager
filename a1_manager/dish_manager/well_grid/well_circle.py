@@ -1,20 +1,24 @@
 from dataclasses import dataclass, field
-from typing import Any
 
 import numpy as np
 
-from dish_manager.well_grid_manager import WellGrid
+from dish_manager.well_grid_manager import WellGridManager
+from dish_manager.dish_utils.well_utils import WellCircle
 
 
 @dataclass
-class WellGrid_circle(WellGrid):
+class WellCircle(WellGridManager, dish_name=('35mm', '96well')):
     radius: float = field(init=False)
     center: tuple[float,float] = field(init=False)
+    well_width: float = field(init=False)
+    well_length: float = field(init=False)
     n_corners_in: int = field(init=False)
     
-    def unpack_well_properties(self, well_measurments: dict[str, dict[str, Any]], **kwargs)-> None:
+    def unpack_well_properties(self, well_measurments: WellCircle, **kwargs)-> None:
         self.radius = well_measurments['radius']
         self.center = well_measurments['center']
+        self.well_width = self.radius * 2
+        self.well_length = self.radius * 2
         if kwargs:
             for k, v in kwargs.items():
                 if k in ['n_corners_in']:
@@ -22,11 +26,11 @@ class WellGrid_circle(WellGrid):
         
     def get_coord_list_per_axis(self)-> tuple[list,list]:
         # Calculate the center position of the first and last rectangle
-        first_x = self.center[0] - self.radius + self.align_correction[0] + self.rect_size[0]/2
-        last_x = self.center[0] + self.radius - self.align_correction[0] - self.rect_size[0]/2
+        first_x = self.center[0] - self.radius + self.align_correction[0] + self.window_size[0]/2
+        last_x = self.center[0] + self.radius - self.align_correction[0] - self.window_size[0]/2
         
-        first_y = self.center[1] + self.radius - self.align_correction[1] - self.rect_size[1]/2
-        last_y = self.center[1] - self.radius + self.align_correction[1] + self.rect_size[1]/2
+        first_y = self.center[1] + self.radius - self.align_correction[1] - self.window_size[1]/2
+        last_y = self.center[1] - self.radius + self.align_correction[1] + self.window_size[1]/2
         
         # Get all coordinates between the start and stop position
         y_coord = np.linspace(first_y, last_y, int(self.numb_rectS[1]))
@@ -36,8 +40,8 @@ class WellGrid_circle(WellGrid):
     def update_well_grid(self, well_grid: dict, temp_point: dict, count: int, x: float, y: float) -> int:
         point = temp_point.copy()
         if self.is_rectangle_within_circle((x, y), self.n_corners_in):
-            x = x + self.center_adjust_um[0]
-            y = y - self.center_adjust_um[1]
+            x = x + self.window_center_offset_um[0]
+            y = y - self.window_center_offset_um[1]
             point['xy'] = (x,y)
             well_grid[count] = point
             count += 1
@@ -46,7 +50,7 @@ class WellGrid_circle(WellGrid):
     def is_rectangle_within_circle(self, rect_coord: tuple[float, float], n_corner_in: int) -> bool:
         """ Check if the rectangle is within the circle: Allowing only n_corner corner to be outside the circle """
         x_center, y_center = rect_coord
-        rect_width, rect_height = self.rect_size
+        rect_width, rect_height = self.window_size
         corner_in = 4
         
         # Get the 4 coords of the corners

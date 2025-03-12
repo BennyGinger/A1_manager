@@ -70,7 +70,7 @@ class CalibrateFTurret:
         window_size = self.fTurret_profile['window_size']
         window_start = (self.fTurret_profile['x_slice'][0], self.fTurret_profile['y_slice'][0])
         input_centroids = self.generate_random_points(window_size, window_start, numb_points)
-        self.dmd_points_list = [DMD_Point(point, idx, a1_manager.camera.image_size, self.img_savedir) 
+        self.dmd_points_list = [DMD_Point(point, idx, a1_manager.image_size, self.img_savedir) 
                                 for idx, point in enumerate(input_centroids)]
         
     def get_transformation_matrix(self, a1_manager: A1Manager)-> np.ndarray:
@@ -153,10 +153,10 @@ class CalibrateFTurret:
         Creates a full input mask by drawing squares (of random sizes)
         centered at each point from the list.
         """
-        mask = np.zeros(shape=a1_manager.camera.image_size, dtype=np.uint16)
+        mask = np.zeros(shape=a1_manager.image_size, dtype=np.uint16)
         for point in points_list:
             radius = np.random.randint(15, 38)
-            _,box_coord = draw_square_from_circle(point, radius, a1_manager.camera.image_size)
+            _,box_coord = draw_square_from_circle(point, radius, a1_manager.image_size)
             mask[box_coord] = 1
         return mask
     

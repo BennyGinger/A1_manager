@@ -1,21 +1,23 @@
-from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Any
+from abc import ABC, abstractmethod
 
 import numpy as np
 
-from a1_manager.main import A1Manager
+from dish_manager.dish_utils.geometry_utils import compute_optimal_overlap
+from main import A1Manager
 
 
-
-#################### Grid classes ####################
 @dataclass
-class WellGrid():
-    # Correction values to add to adjust the center position of dmd window to the full image size, in x and y axis respectively
-    center_correction_pixel: list[int]
-    center_adjust_um: tuple[float] = field(init=False)
-    # x and y axis respectively
-    rect_size: tuple[float] = field(init=False)
+class WellGridManager(ABC):
+    # Dictionary mapping dish names to their corresponding classes
+    _well_classes: dict[str, type['WellGridManager']] = {}
+    dmd_window_only: bool = field(init=False)
+    window_size: tuple[float, float] = field(init=False) # xy axis respectively
+    # Offsets values to add to adjust the center position of dmd window to the full image size, in x and y axis respectively
+    window_center_offset_um: tuple[float, float] = field(init=False)
+    
+    
+    
     # Overlap in x and y axis respectively
     overlaps: tuple[float,float] = field(init=False)
     # Maximum number of rectangles that can fit each axis, in x and y axis respectively
@@ -23,58 +25,71 @@ class WellGrid():
     # Correction values to add to align the body of rectangles on given axis, in x and y axis respectively
     align_correction: tuple[float,float] = field(init=False)
     
-    def get_well_grid_instance(self, dish_name: str)-> 'WellGrid':
-        # Dictionary mapping dish names to their corresponding classes
-        dish_classes: dict[str, WellGrid] = {
-            '35mm': WellGrid_circle,
-            '96well': WellGrid_circle,
-            'ibidi-8well': WellGrid_Ibidi}
+    def __init_subclass__(cls, dish_name: str = None, **kwargs) -> None:
+        """Automatically registers subclasses with a given dish_name. Meaning that the subclasses of WellGrid will automatically filled the _dish_classes dictionary. All the subclasses must have the dish_name attribute and are stored in the 'well_grid/' folder."""
         
+        super().__init_subclass__(**kwargs)
+        if dish_name:
+            if isinstance(dish_name, str):
+                dish_names = (dish_name,)
+            for name in dish_names:
+                WellGridManager._well_classes[name] = cls
+    
+    @classmethod
+    def get_well_grid_instance(cls, dish_name: str, center_correction_pixel: list[int], dmd_window_only: bool, a1_manager: A1Manager)-> 'WellGridManager':
+        """Factory method to obtain a well grid instance for a given dish.
+        
+        Args:
+            dish_name: Identifier of the dish (e.g., '35mm', '96well', 'ibidi-8well').
+            center_correction_pixel: Correction values to be used by the grid.
+        
+        Returns:
+            An instance of a WellGrid subclass corresponding to the dish."""
+            
         # Get the class based on dish_name
-        dish_class = dish_classes.get(dish_name)
-        if not dish_class:
+        well_class = cls._well_classes.get(dish_name)
+        if well_class is None:
             raise ValueError(f"Unknown dish name: {dish_name}")
         
         # Instantiate and return the appropriate subclass
-        return dish_class(self.center_correction_pixel)
+        well_grid = well_class(window_center_offset_pix=tuple(center_correction_pixel),
+                          dmd_window_only=dmd_window_only)
+        well_grid.configure(a1_manager)
+        return well_grid
         
-    def determine_rect_size(self, dmd_window_only: bool, a1_manager: A1Manager)-> None:
-        if dmd_window_only:
-            dmd_size = a1_manager.dmd.dmd_mask.dmd_size
-            self.rect_size = (a1_manager.size_pixel2micron(dmd_size[0]),a1_manager.size_pixel2micron(dmd_size[1]))
-        else:
-            image_size = a1_manager.camera.image_size
-            self.rect_size = (int(a1_manager.size_pixel2micron(image_size[0])),int(a1_manager.size_pixel2micron(image_size[1])))
+    def configure(self, a1_manager: A1Manager, window_center_offset_pix: tuple[int, int])-> None:
+        """Extract the size of the window and adjust the center offset."""
+        
+        self.window_size = a1_manager.window_size(self.dmd_window_only)
+        self._adjust_center_offset(a1_manager, window_center_offset_pix)
     
-    def get_center_adjustment(self, dmd_window_only: bool, a1_manager: A1Manager)-> None:
-        if self.center_correction_pixel == [0,0]:
-            self.center_adjust_um = (0,0)
+    @abstractmethod
+    def unpack_well_properties(self, well_measurements: dict, **kwargs) -> None:
+        """Subclasses must implement this method to unpack well-specific properties."""
+        pass
+    
+    def _adjust_center_offset(self, a1_manager: A1Manager, window_center_offset_pix: tuple[int, int])-> None:
+        if not self.dmd_window_only or window_center_offset_pix == (0,0):
+            self.window_center_offset_um = (0,0)
 
-        elif dmd_window_only:
-            # Adjust the correction values to the binning in use
-            center_correction_binned = tuple([int(corr//a1_manager.camera.binning) for corr in self.center_correction_pixel])
-            # Convert correction values to um
-            self.center_adjust_um = tuple([a1_manager.size_pixel2micron(corr) for corr in center_correction_binned])
         else:
-            # For full image size, no correction is needed
-            self.center_adjust_um = (0,0)
+            # Adjust the correction values to the binning in use
+            binned = tuple([int(corr//a1_manager.camera.binning) for corr in window_center_offset_pix])
+            # Convert correction values to um
+            self.window_center_offset_um = tuple([a1_manager.size_pixel2micron(corr) for corr in binned])
     
     def define_overlap(self, overlap: float | None)-> None:
-        """Returns the optimum overlap for the given rectangle size,
-        i.e. the overlap that will allow to fill a given axis with the maximum number of rectangles"""
+        """Sets the overlap between rectangles. If an overlap is provided, it is used; otherwise, computes an optimal value."""
+        
         if overlap is not None:
-            self.overlaps = (overlap,overlap)
-            return None
-        
-        # If overlap is None, then determine optimum overlap
-        rectS_in_y = (2*self.radius)/self.rect_size[1]
-        rectS_in_x = (2*self.radius)/self.rect_size[0]
-        
-        ceiled_rectS_in_y = np.ceil(rectS_in_y)
-        ceiled_rectS_in_x = np.ceil(rectS_in_x)
-        overlap_y = (ceiled_rectS_in_y - rectS_in_y) / ceiled_rectS_in_y
-        overlap_x = (ceiled_rectS_in_x - rectS_in_x) / ceiled_rectS_in_x
-        self.overlaps = (overlap_x, overlap_y)
+            self.overlaps = (overlap, overlap)
+        else:
+            self.overlaps = compute_optimal_overlap(self.window_size, self.well_width, self.well_length)
+    
+    
+    
+    
+    
     
     def define_numb_of_rect_in_yNx(self)-> None:
         """Determine the maximum number of rectangles that can fit each axis, i.e. create a rectangular grid. X and Y axis depend on the dish type."""
@@ -83,9 +98,9 @@ class WellGrid():
         x_axis, y_axis = self.axis_length
         
         # Calculate the maximum number of rectangles side that can fit
-        rectS_in_x = int(x_axis) // (self.rect_size[0] - self.rect_size[0] * self.overlaps[0])
+        rectS_in_x = int(x_axis) // (self.window_size[0] - self.window_size[0] * self.overlaps[0])
         
-        rectS_in_y = int(y_axis) // (self.rect_size[1] - self.rect_size[1] * self.overlaps[1])
+        rectS_in_y = int(y_axis) // (self.window_size[1] - self.window_size[1] * self.overlaps[1])
         
         self.numb_rectS = (rectS_in_x, rectS_in_y)
     
@@ -96,8 +111,8 @@ class WellGrid():
         x_axis, y_axis = self.axis_length
         
         # Get the correction factor to center all rectangles along the dish axis
-        corr_fact_y = (y_axis - (self.rect_size[1] - self.rect_size[1] * self.overlaps[1]) * self.numb_rectS[1]) / 2
-        corr_fact_x = (x_axis - (self.rect_size[0] - self.rect_size[0] * self.overlaps[0]) * self.numb_rectS[0]) / 2
+        corr_fact_y = (y_axis - (self.window_size[1] - self.window_size[1] * self.overlaps[1]) * self.numb_rectS[1]) / 2
+        corr_fact_x = (x_axis - (self.window_size[0] - self.window_size[0] * self.overlaps[0]) * self.numb_rectS[0]) / 2
         self.align_correction = (corr_fact_x, corr_fact_y)
     
     @staticmethod
@@ -123,8 +138,8 @@ class WellGrid():
         
         # Extract dish and imaging properties
         self.unpack_well_properties(well_measurments, **kwargs)
-        self.determine_rect_size(dmd_window_only, a1_manager)
-        self.get_center_adjustment(dmd_window_only, a1_manager)
+        self.window_size = a1_manager.window_size
+        self._adjust_center_offset(dmd_window_only, a1_manager)
         
         # If overlap is None, then determine optimum overlap
         self.define_overlap(overlap)

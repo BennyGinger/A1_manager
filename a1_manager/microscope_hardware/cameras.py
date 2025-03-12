@@ -21,9 +21,4 @@ class AndorCamera:
     def set_camera_exposure(self, exposure_ms: float)-> None:
         self.core.set_property('Andor sCMOS Camera', 'Exposure', exposure_ms)
         self.exposure_ms = exposure_ms
-        
-    @property
-    def image_size(self)-> tuple[int,int]:
-        """Calculate window size in pixel for the camera."""
-        return (2048//self.binning, 2048//self.binning)
     

@@ -1,5 +1,7 @@
 import math
 
+import numpy as np
+
 
 def find_circle(point1: tuple[float, float], point2: tuple[float, float], point3: tuple[float, float]) -> tuple[tuple[float, float], float]:
     """Compute the center and radius of a circle passing through three points.
@@ -37,3 +39,17 @@ def find_circle(point1: tuple[float, float], point2: tuple[float, float], point3
     radius = math.sqrt((center_x - x1)**2 + (center_y - y1)**2)
     
     return (center_x, center_y), radius
+
+def compute_optimal_overlap(window_size: tuple[float, float], well_width: float, well_length: float) -> tuple[float, float]:
+    """
+    Computes the optimal overlap based on the rectangle size and a given width and length of the dish.
+    """
+    # If overlap is None, then determine optimum overlap
+    rectS_in_y = (2 * well_width) / window_size[1]
+    rectS_in_x = (2 * well_length) / window_size[0]
+    
+    ceiled_rectS_in_y = np.ceil(rectS_in_y)
+    ceiled_rectS_in_x = np.ceil(rectS_in_x)
+    overlap_y = (ceiled_rectS_in_y - rectS_in_y) / ceiled_rectS_in_y
+    overlap_x = (ceiled_rectS_in_x - rectS_in_x) / ceiled_rectS_in_x
+    return (overlap_x, overlap_y)

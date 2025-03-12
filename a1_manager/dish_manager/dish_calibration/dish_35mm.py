@@ -1,10 +1,10 @@
 from dataclasses import dataclass, field
 
-from dish_manager.dish_calibration.well_utils import WellCircle
-from dish_manager.dish_calibration.prompt_utils import prompt_for_edge_points
+from dish_manager.dish_utils.well_utils import WellCircle
+from dish_manager.dish_utils.prompt_utils import prompt_for_edge_points
 from microscope_hardware.nikon import NikonTi2
-from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
-from dish_manager.dish_calibration.geometry_utils import find_circle
+from dish_manager.dish_calib_manager import DishCalibManager
+from dish_manager.dish_utils.geometry_utils import find_circle
 
 
 SETTINGS_35MM = {'expected_radius': 10.5 * 1000} # in micron

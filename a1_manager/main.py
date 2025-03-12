@@ -1,5 +1,6 @@
 from pathlib import Path
 from time import sleep
+from functools import cached_property
 
 import numpy as np
 from pycromanager import Core
@@ -91,6 +92,29 @@ class A1Manager:
         self.lamp.set_LED_shutter(1)
         sleep(duration_sec) # Time in seconds
         self.lamp.set_LED_shutter(0)
+    
+    def size_pixel2micron(self, size_in_pixel: int=None)-> float:
+        pixel_calibration = {'10x':0.6461,'20x':0.3258}
+        objective = self.nikon.objective
+        binning = self.camera.binning
+        pixel_in_um = pixel_calibration[objective]
+        if size_in_pixel:
+            return size_in_pixel*pixel_in_um*binning
+        image_size = (2048 // binning, 2048 // binning)
+        return image_size[0]*pixel_in_um*binning
+    
+    @property
+    def image_size(self)-> tuple[int,int]:
+        """Calculate window size in pixel for the camera."""
+        return (2048//self.camera.binning, 2048//self.camera.binning)
+    
+    def window_size(self, dmd_window_only: bool)-> tuple[int,int]:
+        """Calculate window size in micron for the camera."""
+        
+        if self.is_dmd_attached and dmd_window_only:
+            dmd_size = self.dmd.dmd_mask.dmd_size
+            return (self.size_pixel2micron(dmd_size[0]),self.size_pixel2micron(dmd_size[1]))
+        return (self.size_pixel2micron(self.image_size[0]),self.size_pixel2micron(self.image_size[1]))
     
     def _pfs_initialization(self)-> None:
         while True:  # Make sure that PFS is on, before snap
