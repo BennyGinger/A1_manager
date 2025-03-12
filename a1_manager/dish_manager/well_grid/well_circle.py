@@ -2,28 +2,24 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from dish_manager.dish_utils.geometry_utils import compute_optimal_overlap
 from dish_manager.well_grid_manager import WellGridManager
-from dish_manager.dish_utils.well_utils import WellCircle
+from dish_manager.dish_utils.well_utils import WellCircleCoord
 
 
 @dataclass
-class WellCircle(WellGridManager, dish_name=('35mm', '96well')):
+class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
     radius: float = field(init=False)
     center: tuple[float,float] = field(init=False)
     well_width: float = field(init=False)
     well_length: float = field(init=False)
     n_corners_in: int = field(init=False)
     
-    def unpack_well_properties(self, well_measurments: WellCircle, **kwargs)-> None:
+    def unpack_well_properties(self, well_measurments: WellCircleCoord, n_corners_in: int = None)-> None:
         self.radius = well_measurments['radius']
         self.center = well_measurments['center']
-        self.well_width = self.radius * 2
-        self.well_length = self.radius * 2
-        if kwargs:
-            for k, v in kwargs.items():
-                if k in ['n_corners_in']:
-                    setattr(self, k, v)
-        
+        self.n_corners_in = 4 if n_corners_in is None else n_corners_in
+    
     def get_coord_list_per_axis(self)-> tuple[list,list]:
         # Calculate the center position of the first and last rectangle
         first_x = self.center[0] - self.radius + self.align_correction[0] + self.window_size[0]/2

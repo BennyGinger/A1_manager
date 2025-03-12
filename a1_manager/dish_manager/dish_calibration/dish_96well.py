@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from string import ascii_uppercase
 
 from dish_manager.dish_utils.prompt_utils import prompt_for_center
-from dish_manager.dish_utils.well_utils import WellCircle
+from dish_manager.dish_utils.well_utils import WellCircleCoord
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
 
@@ -25,19 +25,19 @@ class Dish96well(DishCalibManager):
     def __post_init__(self) -> None:
         self.unpack_settings(SETTINGS_96WELL)
 
-    def calibrate_dish(self, nikon: NikonTi2, top_left_center: tuple[float,float] | None = None) -> dict[str, WellCircle]:
+    def calibrate_dish(self, nikon: NikonTi2, top_left_center: tuple[float,float] | None = None) -> dict[str, WellCircleCoord]:
         """Calibrates a 96-well plate by computing each well's center. If the top-left center is not provided, the user is prompted to move to the A1 well. Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle objects."""
         
         x_tl, y_tl = self.get_center_point(nikon, top_left_center)
 
         # Create wells
-        dish_measurements: dict[str, WellCircle] = {}
+        dish_measurements: dict[str, WellCircleCoord] = {}
         for i, letter in enumerate(ascii_uppercase[:self.row_number]):
             for j in range(self.col_number):
                 well_number = j + 1
                 x_center = x_tl - (self.length / (self.col_number - 1)) * j
                 y_center = y_tl + (self.width / (self.row_number - 1)) * i
-                dish_measurements[f"{letter}{well_number}"] = WellCircle(center=(x_center, y_center), radius=self.well_radius)
+                dish_measurements[f"{letter}{well_number}"] = WellCircleCoord(center=(x_center, y_center), radius=self.well_radius)
 
         print(f"Calibration successful!")
         return dish_measurements

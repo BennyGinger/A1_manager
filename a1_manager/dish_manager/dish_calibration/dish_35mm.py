@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from dish_manager.dish_utils.well_utils import WellCircle
+from dish_manager.dish_utils.well_utils import WellCircleCoord
 from dish_manager.dish_utils.prompt_utils import prompt_for_edge_points
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
@@ -24,7 +24,7 @@ class Dish35mm(DishCalibManager):
         self.expected_radius_upper = self.expected_radius + (self.expected_radius * correction_percentage)
         self.expected_radius_lower = self.expected_radius - (self.expected_radius * correction_percentage)
     
-    def calibrate_dish(self, nikon: NikonTi2, list_points: list[tuple[float, float]] | None = None)-> dict[str, WellCircle]:
+    def calibrate_dish(self, nikon: NikonTi2, list_points: list[tuple[float, float]] | None = None)-> dict[str, WellCircleCoord]:
         """Calibrates the 35mm dish by asking for three points along the edge of the circle.
         Returns a dictionary mapping a well identifier (e.g., 'A1') to a WellCircle.
         """
@@ -42,7 +42,7 @@ class Dish35mm(DishCalibManager):
             
             print(f"\nCalibration successful! Radius={measured_radius} vs expected radius={self.expected_radius}")
             success_calibration = True
-        return {'A1': WellCircle(center=center, radius=measured_radius)}
+        return {'A1': WellCircleCoord(center=center, radius=measured_radius)}
 
     def get_edge_points(self, nikon: NikonTi2, list_points: list[tuple[float, float]] | None = None) -> tuple[tuple[float, float], tuple[float, float], tuple[float, float]]:
         if list_points is not None:

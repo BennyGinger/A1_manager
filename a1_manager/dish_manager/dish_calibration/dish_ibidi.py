@@ -4,7 +4,7 @@ from string import ascii_uppercase
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
 from dish_manager.dish_utils.prompt_utils import prompt_for_center
-from dish_manager.dish_utils.well_utils import WellSquare
+from dish_manager.dish_utils.well_utils import WellSquareCoord
 
 
 SETTINGS_IBIDI = {'row_number': 2,
@@ -31,7 +31,7 @@ class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
     def __post_init__(self)-> None:
         self.unpack_settings(SETTINGS_IBIDI)
         
-    def calibrate_dish(self, nikon: 'NikonTi2')-> dict[str, 'WellSquare']:
+    def calibrate_dish(self, nikon: 'NikonTi2')-> dict[str, 'WellSquareCoord']:
         """Calibrates the Ibidi dish by computing the coordinates for each well.
         
         Prompts the user to move the objective to the center of well A1.
@@ -52,7 +52,7 @@ class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
         y_br = y_center + self.well_width / 2
         
         # Create wells
-        dish_measurements: dict[str, WellSquare] = {}
+        dish_measurements: dict[str, WellSquareCoord] = {}
         for i, letter in enumerate(ascii_uppercase[:self.row_number]):
             for j in range(self.col_number):
                 well_number = j + 1
@@ -64,6 +64,6 @@ class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
                 well_x_br = x_br - self.well_length * j - gap_sum
                 well_y_br = y_br + (self.well_width + self.well_gap_width) * i
                 # Save the well
-                dish_measurements[f"{letter}{well_number}"] = WellSquare(top_left=(well_x_tl, well_y_tl), 
+                dish_measurements[f"{letter}{well_number}"] = WellSquareCoord(top_left=(well_x_tl, well_y_tl), 
                                                                          bottom_right=(well_x_br, well_y_br))
         return dish_measurements
