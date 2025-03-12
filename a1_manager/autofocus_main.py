@@ -3,8 +3,9 @@ from pathlib import Path
 from matplotlib import pyplot as plt
 
 from main import A1Manager
-from autofocus.af_main import AutoFocus
+from a1_manager.autofocus.af_manager import AutoFocusManager
 from autofocus.af_utils import load_config_file, save_config_file
+from utils.class_utils import StageCoord
 
 
 LARGE_FOCUS_RANGE = {'ZDrive':{'searchRange':1000, 'step':100},
@@ -36,7 +37,7 @@ def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, well_sel
         
         # Load dish measurements
         dish_measurments = load_config_file(calib_path)
-        autofocus = AutoFocus(a1_manager, method, savedir)
+        autofocus = AutoFocusManager(a1_manager, method, savedir)
         
         # Setup the different wells
         if isinstance(well_selection, str):
@@ -55,7 +56,7 @@ def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, well_sel
                 continue
                 
             # Move to center of well
-            point_center = {'xy': dish_measurments[well]['center'], 'ZDrive': None, 'PFSOffset': None}
+            point_center = StageCoord(xy=dish_measurments[well]['center'])
             a1_manager.nikon.set_stage_position(point_center)
 
             # If first well, apply large focus range only for square gradient method

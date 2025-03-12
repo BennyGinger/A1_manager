@@ -1,6 +1,8 @@
 from pycromanager import Core
   
-  
+from utils.class_utils import StageCoord
+      
+
 class NikonTi2:
     """Class to control the A1_dmd through pycromanager."""
     __slots__ = 'core','objective','focus_device'
@@ -19,14 +21,14 @@ class NikonTi2:
         else:
             self.core.set_property('PFS','FocusMaintenance','Off')
     
-    def get_stage_position(self)-> dict:
-        return {'xy':(self.core.get_x_position(),self.core.get_y_position()),
-                'ZDrive':self.core.get_position('ZDrive'),
-                'PFSOffset':self.core.get_position('PFSOffset')}
+    def get_stage_position(self)-> StageCoord:
+        return StageCoord(xy=(self.core.get_x_position(),self.core.get_y_position()),
+                          ZDrive=self.core.get_position('ZDrive'),
+                          PFSOffset=self.core.get_position('PFSOffset'))
     
-    def set_stage_position(self, stage_position: dict)-> None:
-        self.core.set_xy_position(*stage_position['xy'])
-        if stage_position[self.focus_device]:
+    def set_stage_position(self, stage_position: StageCoord)-> None:
+        self.core.set_xy_position(*stage_position.xy)
+        if stage_position[self.focus_device] is not None:
             self.core.set_position(self.focus_device, stage_position[self.focus_device])
     
     def select_objective(self, objective: str)-> None:

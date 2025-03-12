@@ -7,7 +7,7 @@ def prompt_for_center(nikon: 'NikonTi2') -> tuple[float, float]:
     input("Move the center of the objective to the center of the well A1 and press 'Enter'")
     return nikon.get_stage_position()['xy']
 
-def prompt_for_edge_points(nikon: 'NikonTi2') -> tuple[tuple[float, float], tuple[float, float], tuple[float, float]]:
+def prompt_for_edge_points(nikon: 'NikonTi2') -> list[tuple[float, float]]:
     """Prompt the user to move the stage to the edge of the dish."""
     
     input("Move to the edge of the dish and press 'Enter'")
@@ -16,5 +16,4 @@ def prompt_for_edge_points(nikon: 'NikonTi2') -> tuple[tuple[float, float], tupl
     point2 = nikon.get_stage_position()['xy']
     input("Move to a final point of the edge of the dish and press 'Enter'")
     point3 = nikon.get_stage_position()['xy']
-    
-    return point1, point2, point3
+    return [point1, point2, point3]

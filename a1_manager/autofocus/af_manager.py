@@ -4,7 +4,7 @@ from autofocus.af_mtds import MMAutoFocus, SqGradAutoFocus, ManualFocus
 from main import A1Manager
 
 
-class AutoFocus:
+class AutoFocusManager:
     """Class to manage the autofocus process, given the autofocus method."""
     
     __slots__ = ('a1_manager','method','autofocus','savedir')

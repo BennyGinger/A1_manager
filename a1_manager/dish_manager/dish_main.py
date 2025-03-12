@@ -10,7 +10,7 @@ from python_tsp.distances import euclidean_distance_matrix
 from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
 from microscope_hardware.nikon import NikonTi2
 from microscope_software.aquisition import Aquisition
-from dish_manager.dish_grid import WellGrid
+from a1_manager.dish_manager.well_grid_manager import WellGrid
 from utils.utils import load_file
 
 # TODO: Add the possibility to enter a manual dish calibration
