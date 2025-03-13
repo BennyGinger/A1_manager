@@ -1,6 +1,6 @@
 from pycromanager import Core
   
-from utils.class_utils import StageCoord
+from utils.utility_classes import StageCoord
       
 
 class NikonTi2:

@@ -5,7 +5,7 @@ from matplotlib import pyplot as plt
 from main import A1Manager
 from a1_manager.autofocus.af_manager import AutoFocusManager
 from autofocus.af_utils import load_config_file, save_config_file
-from utils.class_utils import StageCoord
+from utils.utility_classes import StageCoord
 
 
 LARGE_FOCUS_RANGE = {'ZDrive':{'searchRange':1000, 'step':100},

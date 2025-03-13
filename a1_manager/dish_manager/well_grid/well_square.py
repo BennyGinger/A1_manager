@@ -2,9 +2,8 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from utils.class_utils import StageCoord
+from utils.utility_classes import StageCoord, WellSquareCoord
 from dish_manager.well_grid_manager import WellGridManager
-from dish_manager.dish_utils.well_utils import WellSquareCoord
 
 
 @dataclass
@@ -16,7 +15,7 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
     well_width: float = field(init=False)
     well_length: float = field(init=False)
 
-    def unpack_well_properties(self, well_measurments: WellSquareCoord, **kwargs)-> None: 
+    def _unpack_well_properties(self, well_measurments: WellSquareCoord)-> None: 
         """Unpack the well properties from the well measurements."""
         topleft = well_measurments.top_left
         bottomright = well_measurments.bottom_right
@@ -25,27 +24,27 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
         self.well_width = abs(self.y_br - self.y_tl)
         self.well_length = abs(self.x_br - self.x_tl)
     
-    def get_coord_list_per_axis(self)-> tuple[list,list]:
+    def _generate_coordinates_per_axis(self)-> tuple[list,list]:
         """Get the list of center coordinates for each axis."""
         # Calculate the center position of the first and last rectangle
-        first_y = self.y_tl + self.window_size[0] / 2 + self.align_correction[0]
-        last_y = self.y_br - self.window_size[0] / 2 - self.align_correction[0]
+        y_start = self.y_tl + self.window_size[0] / 2 + self.align_correction[0]
+        y_end = self.y_br - self.window_size[0] / 2 - self.align_correction[0]
         
-        first_x = self.x_tl - self.align_correction[1] - self.window_size[1] / 2
-        last_x = self.x_br + self.align_correction[1] + self.window_size[1] / 2
+        x_start = self.x_tl - self.align_correction[1] - self.window_size[1] / 2
+        x_end = self.x_br + self.align_correction[1] + self.window_size[1] / 2
         
         # Get all coordinates between the start and stop position
-        y_coord = np.linspace(first_y, last_y, int(self.numb_rectS[0]))
-        x_coord = np.linspace(first_x, last_x, int(self.numb_rectS[1]))
-        return y_coord,x_coord
+        y_coords = np.linspace(y_start, y_end, int(self.num_rects[0])).tolist()
+        x_coords = np.linspace(x_start, x_end, int(self.num_rects[1])).tolist()
+        return y_coords, x_coords
     
-    def update_well_grid(self, well_grid: dict, temp_point: StageCoord, count: int, x: float, y: float) -> int:
+    def _update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:
         """Update the well grid with the new rectangle center."""
+        offset_x, offset_y = self.window_center_offset_um
+        adjusted_x = x + offset_x
+        adjusted_y = y - offset_y
         point = temp_point.copy()
-        x = x + self.window_center_offset_um[0]
-        y = y - self.window_center_offset_um[1]
-        point['xy'] = (x,y)
+        point['xy'] = (adjusted_x, adjusted_y)
         well_grid[count] = point
-        count += 1
-        return count
+        return count + 1
     

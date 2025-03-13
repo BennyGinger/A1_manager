@@ -63,10 +63,10 @@ class Dish:
             dmd_profile = load_file('dmd_profile')
             if dmd_profile is None:
                 raise FileNotFoundError("No dmd_profile file found. Please calibrate the dmd first.")
-            self.grid_obj = WellGridManager(dmd_profile[fTurret]['center_xy_corr_pix']).get_well_grid_instance(self.dish_name)
+            self.grid_obj = WellGridManager(dmd_profile[fTurret]['center_xy_corr_pix']).load_subclass_instance(self.dish_name)
         else:
             # If no DMD attached then use the default center correction, i.e. [0,0]
-            self.grid_obj = WellGridManager([0, 0]).get_well_grid_instance(self.dish_name)
+            self.grid_obj = WellGridManager([0, 0]).load_subclass_instance(self.dish_name)
                  
     def save_dish_measurments(self)-> None:
         with open(join(self.calib_path), "w") as outfile:
@@ -147,9 +147,9 @@ class Dish:
         for well in self.dish_measurments.keys():
             # load the number of corners in the well, if the well is a circle
             if self.dish_name == 'ibidi-8well':
-                well_grid = self.grid_obj.get_well_grid_coordinates(aquisition, self.dish_measurments[well], overlap=overlap)
+                well_grid = self.grid_obj.create_well_grid(aquisition, self.dish_measurments[well], overlap=overlap)
             else:
-                well_grid = self.grid_obj.get_well_grid_coordinates(aquisition, self.dish_measurments[well], overlap=overlap, n_corners_in=n_corners_in)
+                well_grid = self.grid_obj.create_well_grid(aquisition, self.dish_measurments[well], overlap=overlap, n_corners_in=n_corners_in)
 
             # If field view is defined, then select a random subset of points
             if numb_field_view is not None: 
