@@ -6,7 +6,7 @@ from pathlib import Path
 # import os
 # from os.path import join
 # from os import listdir, getcwd, remove
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 
 import numpy as np
@@ -19,6 +19,8 @@ from skimage.draw import disk
 from itertools import combinations
 import cv2
 from skimage.measure import regionprops
+
+from utils.json_utils import decode_dataclass, encode_dataclass
 
 
 # def is_run_from_ipython()-> bool:
@@ -78,6 +80,8 @@ def find_project_root(current_path: Path) -> Path:
     raise FileNotFoundError("Project root with .git directory not found.")
 
 def load_config_file(file_name_key: str)-> dict | None:
+    """Load a json file from the config folder. Use the decode_dataclass function to decode the dataclass if needed."""
+    
     project_path = find_project_root(Path(__file__).resolve())
     config_path = project_path.joinpath('config')
     found_file = None
@@ -92,21 +96,29 @@ def load_config_file(file_name_key: str)-> dict | None:
     return load_file(found_file)
 
 def load_file(file_path: Path)-> dict | None:
+    """Load a json file. Use the decode_dataclass function to decode the dataclass if needed."""
+    
     if not file_path.exists():
         print(f"No file found at {file_path}")
         return None
     
     with open(file_path) as json_file:
-        loaded_file: dict = json.load(json_file)
+        loaded_file: dict = json.load(json_file, object_hook=decode_dataclass)
     return loaded_file
 
-def save_file(file_name_key: str, data: dict)-> None:
-    parent_path = Path(__file__).resolve().parent.parent
-    config_path = parent_path.joinpath('config')
+def save_config_file(file_name_key: str, data: dict)-> None:
+    """Save a dictionary to a json file in the config folder."""
+    
+    project_path = find_project_root(Path(__file__).resolve())
+    config_path = project_path.joinpath('config')
     save_name = f"{file_name_key}.json"
     save_path = config_path.joinpath(save_name)
-    with open(save_path, "w") as outfile:
-        json.dump(data, outfile)
+    save_file(save_path, data)
+    
+def save_file(file_path: Path, data: dict)-> None:
+    """Save a dictionary to a json file."""
+    with open(file_path, "w") as outfile:
+        json.dump(data, outfile, default=encode_dataclass, indent=4)
 
 # def check_file_date(file_name: str)-> None:
 #     if file_name.endswith('.npy'):
@@ -139,6 +151,7 @@ def save_file(file_name_key: str, data: dict)-> None:
 def bounding_box_nDim(mask: np.ndarray)-> tuple[np.ndarray, tuple[slice]]:
     """This function take a np.array (any dimension) and create a bounding box around the nonzero shape.
     Also return a slice object to be able to reconstruct to the originnal shape"""
+    
     # Determine the number of dimensions
     N = mask.ndim
     
@@ -155,12 +168,16 @@ def bounding_box_nDim(mask: np.ndarray)-> tuple[np.ndarray, tuple[slice]]:
     return (mask[s], s)
 
 def draw_square_from_circle(point: tuple, radius: int, mask_size: tuple)-> tuple:
+    """Draw a square around a circle with a given radius and center point."""
+    
     mask = np.zeros(shape=mask_size)
     rr,cc = disk(point,radius=radius,shape=mask_size)
     mask[rr,cc] = 1
     return bounding_box_nDim(mask)
 
 def get_centroid(image: np.ndarray) -> list:
+    """Get the centroid of a binary image."""
+    
     properties = regionprops(image)
     centroids = [prop.centroid for prop in properties]
     return centroids
@@ -174,6 +191,8 @@ def get_centroid(image: np.ndarray) -> list:
 #     return bgimg
 
 def threshold_img(img: np.ndarray)-> np.ndarray:
+    """Threshold an image using Otsu's method."""
+    
     _, mask = cv2.threshold(img,0,img.max(), cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     return mask.astype(bool)
 
@@ -218,6 +237,7 @@ def threshold_img(img: np.ndarray)-> np.ndarray:
 
 def image_to_rgb(img0: np.ndarray, channels: list[int]=[0,0])-> np.ndarray:
     """ Copied from cellpose. image is 2 x Ly x Lx or Ly x Lx x 2 - change to RGB Ly x Lx x 3 """
+    
     img = img0.copy()
     img = img.astype(np.float32)
     if img.ndim<3:
@@ -243,6 +263,7 @@ def image_to_rgb(img0: np.ndarray, channels: list[int]=[0,0])-> np.ndarray:
 
 def _normalize99(raw_img: np.ndarray, lower: int=1, upper: int=99)-> np.ndarray:
     """ Copied from cellpose. normalize image so 0.0 is 1st percentile and 1.0 is 99th percentile """
+    
     norm_img = raw_img.copy()
     x01 = np.percentile(norm_img, lower)
     x99 = np.percentile(norm_img, upper)

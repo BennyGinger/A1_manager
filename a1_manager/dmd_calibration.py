@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from main import A1Manager
-from utils.utils import create_date_savedir, load_config_file, save_file
+from utils.utils import create_date_savedir, load_config_file, save_config_file
 from microscope_hardware.dmd.dmd_calibration_module import CalibrateFTurret
 
 
@@ -53,6 +53,6 @@ def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> 
     
     
     # Update dmd profile and transformation matrix to Aquisition object
-    save_file('dmd_profile', dmd_profile)
-    save_file('transfo_matrix', transfo_matrix)
+    save_config_file('dmd_profile', dmd_profile)
+    save_config_file('transfo_matrix', transfo_matrix)
     aquisition.dmd.dmd_mask.reload_transfo_matrix()

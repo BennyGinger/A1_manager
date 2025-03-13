@@ -18,6 +18,25 @@ SETTINGS_IBIDI = {'row_number': 2,
 
 @dataclass
 class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
+    """Calibration handler for the Ibidi 8-well dish.
+    
+    Attributes:
+        row_number (int): Number of rows in the dish.
+        
+        col_number (int): Number of columns in the dish.
+        
+        length (float): Length of the dish along the x-axis (in microns).
+        
+        width (float): Width of the dish along the y-axis (in microns).
+        
+        well_length (float): Length of a well (in microns).
+        
+        well_width (float): Width of a well (in microns).
+        
+        well_gap_length (tuple[float, float, float]): Length of the gaps between wells (in microns).
+        
+        well_gap_width (float): Width of the gaps between wells (in microns).
+    """
     
     row_number: int = field(default_factory=int)
     col_number: int = field(default_factory=int)
@@ -31,16 +50,8 @@ class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
     def __post_init__(self)-> None:
         self.unpack_settings(SETTINGS_IBIDI)
         
-    def calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellSquareCoord]:
-        """Calibrates the Ibidi dish by computing the coordinates for each well.
-        
-        Prompts the user to move the objective to the center of well A1.
-        
-        Args:
-            nikon: An instance of NikonTi2 that control the microscope.
-        
-        Returns:
-            A dictionary mapping well names (e.g., 'A1') and their coordinates (top-left and bottom-right corners)."""
+    def _calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellSquareCoord]:
+        """Calibrates the Ibidi 8-well dish by computing each well's top-left and bottom-right corners. If the top-left center is not provided, the user is prompted to move to the A1 well. Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellSquareCoord objects."""
             
         # Prompt the user to move the stage to the center of the A1 well
         x_center, y_center = prompt_for_center(nikon)
@@ -66,4 +77,5 @@ class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
                 # Save the well
                 dish_measurements[f"{letter}{well_number}"] = WellSquareCoord(top_left=(well_x_tl, well_y_tl), 
                                                                          bottom_right=(well_x_br, well_y_br))
+        print("Calibration successful for Ibidi dish!")
         return dish_measurements

@@ -10,7 +10,16 @@ from dish_manager.dish_utils.geometry_utils import find_circle
 SETTINGS_35MM = {'expected_radius': 10.5 * 1000} # in micron
 
 @dataclass
-class Dish35mm(DishCalibManager):
+class Dish35mm(DishCalibManager, dish_name='35mm'):
+    """Calibration handler for the 35mm dish.
+    
+    Attributes:
+        expected_radius (float): Expected radius of the dish (in microns).
+        
+        expected_radius_upper (float): Upper bound for the expected radius.
+        
+        expected_radius_lower (float): Lower bound for the expected radius.
+    """
     
     expected_radius: float = field(default_factory=float)
     expected_radius_upper: float = field(init=False)
@@ -24,7 +33,7 @@ class Dish35mm(DishCalibManager):
         self.expected_radius_upper = self.expected_radius + (self.expected_radius * correction_percentage)
         self.expected_radius_lower = self.expected_radius - (self.expected_radius * correction_percentage)
     
-    def calibrate_dish(self, nikon: NikonTi2, list_points: list[tuple[float, float]] | None = None)-> dict[str, WellCircleCoord]:
+    def _calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellCircleCoord]:
         """Calibrates the 35mm dish by asking for three points along the edge of the circle.
         Returns a dictionary mapping a well identifier (e.g., 'A1') to a WellCircle.
         """
@@ -32,9 +41,9 @@ class Dish35mm(DishCalibManager):
         success_calibration = False    
         while not success_calibration:
             # Define 3 points on the middle ring. The middle of the objective must be on the inner part of the ring
-            point1, point2, point3 = self.get_edge_points(nikon, list_points)
+            point1, point2, point3 = prompt_for_edge_points(nikon)
             # Center of circle
-            center, measured_radius = find_circle(point1,point2,point3)
+            center, measured_radius = find_circle(point1, point2, point3)
 
             if not self.expected_radius_lower < measured_radius < self.expected_radius_upper:
                 print(f"\nCalibration failed, start again! Radius={measured_radius} vs expected radius={self.expected_radius}")
@@ -43,12 +52,3 @@ class Dish35mm(DishCalibManager):
             print(f"\nCalibration successful! Radius={measured_radius} vs expected radius={self.expected_radius}")
             success_calibration = True
         return {'A1': WellCircleCoord(center=center, radius=measured_radius)}
-
-    def get_edge_points(self, nikon: NikonTi2, list_points: list[tuple[float, float]] | None = None) -> tuple[tuple[float, float], tuple[float, float], tuple[float, float]]:
-        if list_points is not None:
-            if len(list_points) != 3:
-                raise ValueError("List of points must have 3 points of tuple(float,float)")
-            return list_points
-        # Prompt the user to move the stage to the edge of the dish
-        return prompt_for_edge_points(nikon)
-

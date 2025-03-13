@@ -15,7 +15,21 @@ SETTINGS_96WELL = {
     'width': 63.0 * 1000}  # in micron
 
 @dataclass
-class Dish96well(DishCalibManager):
+class Dish96well(DishCalibManager, dish_name="96well"):
+    """Calibration handler for the 96-well plate.
+    
+    Attributes:
+        row_number (int): Number of rows in the dish.
+        
+        col_number (int): Number of columns in the dish.
+        
+        well_radius (float): Radius of the well (in microns).
+        
+        length (float): Length of the dish along the x-axis (in microns).
+        
+        width (float): Width of the dish along the y-axis (in microns).
+    """
+    
     row_number: int = field(default_factory=int)
     col_number: int = field(default_factory=int)
     well_radius: float = field(default_factory=float)
@@ -25,10 +39,10 @@ class Dish96well(DishCalibManager):
     def __post_init__(self) -> None:
         self.unpack_settings(SETTINGS_96WELL)
 
-    def calibrate_dish(self, nikon: NikonTi2, top_left_center: tuple[float,float] | None = None) -> dict[str, WellCircleCoord]:
+    def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord]:
         """Calibrates a 96-well plate by computing each well's center. If the top-left center is not provided, the user is prompted to move to the A1 well. Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle objects."""
         
-        x_tl, y_tl = self.get_center_point(nikon, top_left_center)
+        x_tl, y_tl = prompt_for_center(nikon)
 
         # Create wells
         dish_measurements: dict[str, WellCircleCoord] = {}
@@ -39,11 +53,5 @@ class Dish96well(DishCalibManager):
                 y_center = y_tl + (self.width / (self.row_number - 1)) * i
                 dish_measurements[f"{letter}{well_number}"] = WellCircleCoord(center=(x_center, y_center), radius=self.well_radius)
 
-        print(f"Calibration successful!")
+        print("Calibration successful for the 96-well plate.")
         return dish_measurements
-
-    def get_center_point(self, nikon: NikonTi2, top_left_center: tuple[float,float] | None = None) -> tuple[float,float]:
-        if top_left_center is None:
-            # Define the center of the dish
-            return prompt_for_center(nikon)
-        return top_left_center

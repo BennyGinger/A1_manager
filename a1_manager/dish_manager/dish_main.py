@@ -127,7 +127,7 @@ class Dish:
             return None
         
         # If not calibrate the dish
-        temp_measurments = self.calib_obj.calibrate_dish(nikon, **kwargs)
+        temp_measurments = self.calib_obj._calibrate_dish(nikon, **kwargs)
         
         # Save only the selected wells
         self.dish_measurments = self.filter_selected_wells(temp_measurments)

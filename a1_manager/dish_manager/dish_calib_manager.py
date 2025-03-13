@@ -3,16 +3,25 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import ClassVar
 
-from utils.utils import find_project_root
+from utils.utility_classes import WellCircleCoord, WellSquareCoord
+from utils.utils import find_project_root, load_file, save_file
 from microscope_hardware.nikon import NikonTi2
 
 
 @dataclass
 class DishCalibManager(ABC):
-    """Main class to calibrate a dish. The subclasses are the different types of dishes that can be calibrated."""
+    """Main class to calibrate a dish. The subclasses are the different types of dishes that can be calibrated.
+    
+    Attributes:
+        dish_name (str): Identifier for the dish type (e.g., '35mm', '96well', 'ibidi-8well').
+        
+        run_dir (Path): Path to the directory where the calibration files will be stored.
+        
+        calib_path (Path): Path to the calibration file"""
     
     # Class variable. Dictionary mapping dish names to their corresponding classes
     _dish_classes: ClassVar[dict[str, type['DishCalibManager']]] = {}
+    
     # Instance variables.
     dish_name: str
     run_dir: Path
@@ -45,16 +54,8 @@ class DishCalibManager(ABC):
 
         return dish_class(dish_name=dish_name, run_dir=run_dir)
     
-    def __post_init__(self) -> None:
-        """Create the calibration directory."""
-        
-        # Initialize the calibration path
-        self._initialize_calibration_path()
-        
-        # 
-        
-
-    def _initialize_calibration_path(self):
+    def __post_init__ (self) -> None:
+        """Set the path to the calibration file."""
         calib_name = f"calib_{self.dish_name}.json"
         if self.dish_name == "96well":
             root_path = find_project_root(Path(__file__).resolve()) 
@@ -71,9 +72,20 @@ class DishCalibManager(ABC):
             if hasattr(self, key):
                 setattr(self, key, value)
     
+    def calibrate_dish(self, nikon: NikonTi2, overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
+        """Calibrate the dish by computing the coordinates for each well. If the calibration file already exists, it will be loaded instead of recalibrating."""
+        
+        if self.calib_path.exists() and not overwrite:
+            print(f"Calibration file already exists at {self.calib_path}.")
+            return load_file(self.calib_path)
+        
+        dish_calibration = self._calibrate_dish(nikon)
+        save_file(self.calib_path, dish_calibration)
+        return dish_calibration
+    
     @abstractmethod
-    def calibrate_dish(self, nikon: NikonTi2, **kwargs) -> dict[str, 'DishCalibManager']:
-        """Abstract method to calibrate a dish. The calibration process is specific to each dish."""
+    def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord | WellSquareCoord]:
+        """Abstract method to calibrate a dish. The calibration process is specific to each dish. It returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle or WellSquare objects coordinates."""
         pass
 
 

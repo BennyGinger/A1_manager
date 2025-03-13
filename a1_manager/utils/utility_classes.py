@@ -37,7 +37,7 @@ class StageCoord:
     
 @dataclass
 class WellBaseCoord:
-    """Base class for well coordinates.
+    """Base class to store the coordinates of a well. Support dict-like access.
     
     Attributes:
         ZDrive: float: The ZDrive position.
@@ -46,13 +46,14 @@ class WellBaseCoord:
     ZDrive: float | None = None
     PFSOffset: float | None = None
     
-    def __get_item__(self, key: str):
+    def __getitem__(self, key: str):
         return getattr(self, key)
     
     def items(self):
         return self.__dict__.items()
     
     def get_template_point_coord(self) -> StageCoord:
+        """Return a template StageCoord object (i.e. without any xy coord) with the focus values of the well."""
         temp_point = StageCoord()
         for k,v in self.items():
             if hasattr(temp_point, k):
