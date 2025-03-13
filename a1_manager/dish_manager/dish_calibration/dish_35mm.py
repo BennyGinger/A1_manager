@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from dish_manager.dish_utils.well_utils import WellCircleCoord
+from utils.utility_classes import WellCircleCoord
 from dish_manager.dish_utils.prompt_utils import prompt_for_edge_points
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager

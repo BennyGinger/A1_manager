@@ -1,1 +1,962 @@
-{"A1": {"radius": 3400.0, "center": [49205.4, -32139.4], "ZDrive": null, "PFSOffset": null}, "A2": {"radius": 3400.0, "center": [40205.4, -32139.4], "ZDrive": null, "PFSOffset": null}, "A3": {"radius": 3400.0, "center": [31205.4, -32139.4], "ZDrive": null, "PFSOffset": null}, "A4": {"radius": 3400.0, "center": [22205.4, -32139.4], "ZDrive": null, "PFSOffset": null}, "A5": {"radius": 3400.0, "center": [13205.400000000001, -32139.4], "ZDrive": null, "PFSOffset": null}, "A6": {"radius": 3400.0, "center": [4205.4000000000015, -32139.4], "ZDrive": null, "PFSOffset": null}, "A7": {"radius": 3400.0, "center": [-4794.5999999999985, -32139.4], "ZDrive": null, "PFSOffset": null}, "A8": {"radius": 3400.0, "center": [-13794.599999999999, -32139.4], "ZDrive": null, "PFSOffset": null}, "A9": {"radius": 3400.0, "center": [-22794.6, -32139.4], "ZDrive": null, "PFSOffset": null}, "A10": {"radius": 3400.0, "center": [-31794.6, -32139.4], "ZDrive": null, "PFSOffset": null}, "A11": {"radius": 3400.0, "center": [-40794.6, -32139.4], "ZDrive": null, "PFSOffset": null}, "A12": {"radius": 3400.0, "center": [-49794.6, -32139.4], "ZDrive": null, "PFSOffset": null}, "B1": {"radius": 3400.0, "center": [49205.4, -23139.4], "ZDrive": null, "PFSOffset": null}, "B2": {"radius": 3400.0, "center": [40205.4, -23139.4], "ZDrive": null, "PFSOffset": null}, "B3": {"radius": 3400.0, "center": [31205.4, -23139.4], "ZDrive": null, "PFSOffset": null}, "B4": {"radius": 3400.0, "center": [22205.4, -23139.4], "ZDrive": null, "PFSOffset": null}, "B5": {"radius": 3400.0, "center": [13205.400000000001, -23139.4], "ZDrive": null, "PFSOffset": null}, "B6": {"radius": 3400.0, "center": [4205.4000000000015, -23139.4], "ZDrive": null, "PFSOffset": null}, "B7": {"radius": 3400.0, "center": [-4794.5999999999985, -23139.4], "ZDrive": null, "PFSOffset": null}, "B8": {"radius": 3400.0, "center": [-13794.599999999999, -23139.4], "ZDrive": null, "PFSOffset": null}, "B9": {"radius": 3400.0, "center": [-22794.6, -23139.4], "ZDrive": null, "PFSOffset": null}, "B10": {"radius": 3400.0, "center": [-31794.6, -23139.4], "ZDrive": null, "PFSOffset": null}, "B11": {"radius": 3400.0, "center": [-40794.6, -23139.4], "ZDrive": null, "PFSOffset": null}, "B12": {"radius": 3400.0, "center": [-49794.6, -23139.4], "ZDrive": null, "PFSOffset": null}, "C1": {"radius": 3400.0, "center": [49205.4, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C2": {"radius": 3400.0, "center": [40205.4, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C3": {"radius": 3400.0, "center": [31205.4, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C4": {"radius": 3400.0, "center": [22205.4, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C5": {"radius": 3400.0, "center": [13205.400000000001, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C6": {"radius": 3400.0, "center": [4205.4000000000015, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C7": {"radius": 3400.0, "center": [-4794.5999999999985, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C8": {"radius": 3400.0, "center": [-13794.599999999999, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C9": {"radius": 3400.0, "center": [-22794.6, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C10": {"radius": 3400.0, "center": [-31794.6, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C11": {"radius": 3400.0, "center": [-40794.6, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "C12": {"radius": 3400.0, "center": [-49794.6, -14139.400000000001], "ZDrive": null, "PFSOffset": null}, "D1": {"radius": 3400.0, "center": [49205.4, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D2": {"radius": 3400.0, "center": [40205.4, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D3": {"radius": 3400.0, "center": [31205.4, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D4": {"radius": 3400.0, "center": [22205.4, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D5": {"radius": 3400.0, "center": [13205.400000000001, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D6": {"radius": 3400.0, "center": [4205.4000000000015, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D7": {"radius": 3400.0, "center": [-4794.5999999999985, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D8": {"radius": 3400.0, "center": [-13794.599999999999, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D9": {"radius": 3400.0, "center": [-22794.6, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D10": {"radius": 3400.0, "center": [-31794.6, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D11": {"radius": 3400.0, "center": [-40794.6, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "D12": {"radius": 3400.0, "center": [-49794.6, -5139.4000000000015], "ZDrive": null, "PFSOffset": null}, "E1": {"radius": 3400.0, "center": [49205.4, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E2": {"radius": 3400.0, "center": [40205.4, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E3": {"radius": 3400.0, "center": [31205.4, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E4": {"radius": 3400.0, "center": [22205.4, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E5": {"radius": 3400.0, "center": [13205.400000000001, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E6": {"radius": 3400.0, "center": [4205.4000000000015, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E7": {"radius": 3400.0, "center": [-4794.5999999999985, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E8": {"radius": 3400.0, "center": [-13794.599999999999, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E9": {"radius": 3400.0, "center": [-22794.6, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E10": {"radius": 3400.0, "center": [-31794.6, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E11": {"radius": 3400.0, "center": [-40794.6, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "E12": {"radius": 3400.0, "center": [-49794.6, 3860.5999999999985], "ZDrive": null, "PFSOffset": null}, "F1": {"radius": 3400.0, "center": [49205.4, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F2": {"radius": 3400.0, "center": [40205.4, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F3": {"radius": 3400.0, "center": [31205.4, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F4": {"radius": 3400.0, "center": [22205.4, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F5": {"radius": 3400.0, "center": [13205.400000000001, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F6": {"radius": 3400.0, "center": [4205.4000000000015, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F7": {"radius": 3400.0, "center": [-4794.5999999999985, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F8": {"radius": 3400.0, "center": [-13794.599999999999, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F9": {"radius": 3400.0, "center": [-22794.6, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F10": {"radius": 3400.0, "center": [-31794.6, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F11": {"radius": 3400.0, "center": [-40794.6, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "F12": {"radius": 3400.0, "center": [-49794.6, 12860.599999999999], "ZDrive": null, "PFSOffset": null}, "G1": {"radius": 3400.0, "center": [49205.4, 21860.6], "ZDrive": null, "PFSOffset": null}, "G2": {"radius": 3400.0, "center": [40205.4, 21860.6], "ZDrive": null, "PFSOffset": null}, "G3": {"radius": 3400.0, "center": [31205.4, 21860.6], "ZDrive": null, "PFSOffset": null}, "G4": {"radius": 3400.0, "center": [22205.4, 21860.6], "ZDrive": null, "PFSOffset": null}, "G5": {"radius": 3400.0, "center": [13205.400000000001, 21860.6], "ZDrive": null, "PFSOffset": null}, "G6": {"radius": 3400.0, "center": [4205.4000000000015, 21860.6], "ZDrive": null, "PFSOffset": null}, "G7": {"radius": 3400.0, "center": [-4794.5999999999985, 21860.6], "ZDrive": null, "PFSOffset": null}, "G8": {"radius": 3400.0, "center": [-13794.599999999999, 21860.6], "ZDrive": null, "PFSOffset": null}, "G9": {"radius": 3400.0, "center": [-22794.6, 21860.6], "ZDrive": null, "PFSOffset": null}, "G10": {"radius": 3400.0, "center": [-31794.6, 21860.6], "ZDrive": null, "PFSOffset": null}, "G11": {"radius": 3400.0, "center": [-40794.6, 21860.6], "ZDrive": null, "PFSOffset": null}, "G12": {"radius": 3400.0, "center": [-49794.6, 21860.6], "ZDrive": null, "PFSOffset": null}, "H1": {"radius": 3400.0, "center": [49205.4, 30860.6], "ZDrive": null, "PFSOffset": null}, "H2": {"radius": 3400.0, "center": [40205.4, 30860.6], "ZDrive": null, "PFSOffset": null}, "H3": {"radius": 3400.0, "center": [31205.4, 30860.6], "ZDrive": null, "PFSOffset": null}, "H4": {"radius": 3400.0, "center": [22205.4, 30860.6], "ZDrive": null, "PFSOffset": null}, "H5": {"radius": 3400.0, "center": [13205.400000000001, 30860.6], "ZDrive": null, "PFSOffset": null}, "H6": {"radius": 3400.0, "center": [4205.4000000000015, 30860.6], "ZDrive": null, "PFSOffset": null}, "H7": {"radius": 3400.0, "center": [-4794.5999999999985, 30860.6], "ZDrive": null, "PFSOffset": null}, "H8": {"radius": 3400.0, "center": [-13794.599999999999, 30860.6], "ZDrive": null, "PFSOffset": null}, "H9": {"radius": 3400.0, "center": [-22794.6, 30860.6], "ZDrive": null, "PFSOffset": null}, "H10": {"radius": 3400.0, "center": [-31794.6, 30860.6], "ZDrive": null, "PFSOffset": null}, "H11": {"radius": 3400.0, "center": [-40794.6, 30860.6], "ZDrive": null, "PFSOffset": null}, "H12": {"radius": 3400.0, "center": [-49794.6, 30860.6], "ZDrive": null, "PFSOffset": null}}
+{
+    "A1": {
+        "radius": 3400.0,
+        "center": [
+            49205.4,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A2": {
+        "radius": 3400.0,
+        "center": [
+            40205.4,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A3": {
+        "radius": 3400.0,
+        "center": [
+            31205.4,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A4": {
+        "radius": 3400.0,
+        "center": [
+            22205.4,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A5": {
+        "radius": 3400.0,
+        "center": [
+            13205.400000000001,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A6": {
+        "radius": 3400.0,
+        "center": [
+            4205.4000000000015,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A7": {
+        "radius": 3400.0,
+        "center": [
+            -4794.5999999999985,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A8": {
+        "radius": 3400.0,
+        "center": [
+            -13794.599999999999,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A9": {
+        "radius": 3400.0,
+        "center": [
+            -22794.6,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A10": {
+        "radius": 3400.0,
+        "center": [
+            -31794.6,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A11": {
+        "radius": 3400.0,
+        "center": [
+            -40794.6,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "A12": {
+        "radius": 3400.0,
+        "center": [
+            -49794.6,
+            -32139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B1": {
+        "radius": 3400.0,
+        "center": [
+            49205.4,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B2": {
+        "radius": 3400.0,
+        "center": [
+            40205.4,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B3": {
+        "radius": 3400.0,
+        "center": [
+            31205.4,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B4": {
+        "radius": 3400.0,
+        "center": [
+            22205.4,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B5": {
+        "radius": 3400.0,
+        "center": [
+            13205.400000000001,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B6": {
+        "radius": 3400.0,
+        "center": [
+            4205.4000000000015,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B7": {
+        "radius": 3400.0,
+        "center": [
+            -4794.5999999999985,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B8": {
+        "radius": 3400.0,
+        "center": [
+            -13794.599999999999,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B9": {
+        "radius": 3400.0,
+        "center": [
+            -22794.6,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B10": {
+        "radius": 3400.0,
+        "center": [
+            -31794.6,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B11": {
+        "radius": 3400.0,
+        "center": [
+            -40794.6,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "B12": {
+        "radius": 3400.0,
+        "center": [
+            -49794.6,
+            -23139.4
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C1": {
+        "radius": 3400.0,
+        "center": [
+            49205.4,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C2": {
+        "radius": 3400.0,
+        "center": [
+            40205.4,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C3": {
+        "radius": 3400.0,
+        "center": [
+            31205.4,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C4": {
+        "radius": 3400.0,
+        "center": [
+            22205.4,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C5": {
+        "radius": 3400.0,
+        "center": [
+            13205.400000000001,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C6": {
+        "radius": 3400.0,
+        "center": [
+            4205.4000000000015,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C7": {
+        "radius": 3400.0,
+        "center": [
+            -4794.5999999999985,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C8": {
+        "radius": 3400.0,
+        "center": [
+            -13794.599999999999,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C9": {
+        "radius": 3400.0,
+        "center": [
+            -22794.6,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C10": {
+        "radius": 3400.0,
+        "center": [
+            -31794.6,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C11": {
+        "radius": 3400.0,
+        "center": [
+            -40794.6,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "C12": {
+        "radius": 3400.0,
+        "center": [
+            -49794.6,
+            -14139.400000000001
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D1": {
+        "radius": 3400.0,
+        "center": [
+            49205.4,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D2": {
+        "radius": 3400.0,
+        "center": [
+            40205.4,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D3": {
+        "radius": 3400.0,
+        "center": [
+            31205.4,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D4": {
+        "radius": 3400.0,
+        "center": [
+            22205.4,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D5": {
+        "radius": 3400.0,
+        "center": [
+            13205.400000000001,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D6": {
+        "radius": 3400.0,
+        "center": [
+            4205.4000000000015,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D7": {
+        "radius": 3400.0,
+        "center": [
+            -4794.5999999999985,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D8": {
+        "radius": 3400.0,
+        "center": [
+            -13794.599999999999,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D9": {
+        "radius": 3400.0,
+        "center": [
+            -22794.6,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D10": {
+        "radius": 3400.0,
+        "center": [
+            -31794.6,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D11": {
+        "radius": 3400.0,
+        "center": [
+            -40794.6,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "D12": {
+        "radius": 3400.0,
+        "center": [
+            -49794.6,
+            -5139.4000000000015
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E1": {
+        "radius": 3400.0,
+        "center": [
+            49205.4,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E2": {
+        "radius": 3400.0,
+        "center": [
+            40205.4,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E3": {
+        "radius": 3400.0,
+        "center": [
+            31205.4,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E4": {
+        "radius": 3400.0,
+        "center": [
+            22205.4,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E5": {
+        "radius": 3400.0,
+        "center": [
+            13205.400000000001,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E6": {
+        "radius": 3400.0,
+        "center": [
+            4205.4000000000015,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E7": {
+        "radius": 3400.0,
+        "center": [
+            -4794.5999999999985,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E8": {
+        "radius": 3400.0,
+        "center": [
+            -13794.599999999999,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E9": {
+        "radius": 3400.0,
+        "center": [
+            -22794.6,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E10": {
+        "radius": 3400.0,
+        "center": [
+            -31794.6,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E11": {
+        "radius": 3400.0,
+        "center": [
+            -40794.6,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "E12": {
+        "radius": 3400.0,
+        "center": [
+            -49794.6,
+            3860.5999999999985
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F1": {
+        "radius": 3400.0,
+        "center": [
+            49205.4,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F2": {
+        "radius": 3400.0,
+        "center": [
+            40205.4,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F3": {
+        "radius": 3400.0,
+        "center": [
+            31205.4,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F4": {
+        "radius": 3400.0,
+        "center": [
+            22205.4,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F5": {
+        "radius": 3400.0,
+        "center": [
+            13205.400000000001,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F6": {
+        "radius": 3400.0,
+        "center": [
+            4205.4000000000015,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F7": {
+        "radius": 3400.0,
+        "center": [
+            -4794.5999999999985,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F8": {
+        "radius": 3400.0,
+        "center": [
+            -13794.599999999999,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F9": {
+        "radius": 3400.0,
+        "center": [
+            -22794.6,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F10": {
+        "radius": 3400.0,
+        "center": [
+            -31794.6,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F11": {
+        "radius": 3400.0,
+        "center": [
+            -40794.6,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "F12": {
+        "radius": 3400.0,
+        "center": [
+            -49794.6,
+            12860.599999999999
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G1": {
+        "radius": 3400.0,
+        "center": [
+            49205.4,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G2": {
+        "radius": 3400.0,
+        "center": [
+            40205.4,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G3": {
+        "radius": 3400.0,
+        "center": [
+            31205.4,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G4": {
+        "radius": 3400.0,
+        "center": [
+            22205.4,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G5": {
+        "radius": 3400.0,
+        "center": [
+            13205.400000000001,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G6": {
+        "radius": 3400.0,
+        "center": [
+            4205.4000000000015,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G7": {
+        "radius": 3400.0,
+        "center": [
+            -4794.5999999999985,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G8": {
+        "radius": 3400.0,
+        "center": [
+            -13794.599999999999,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G9": {
+        "radius": 3400.0,
+        "center": [
+            -22794.6,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G10": {
+        "radius": 3400.0,
+        "center": [
+            -31794.6,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G11": {
+        "radius": 3400.0,
+        "center": [
+            -40794.6,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "G12": {
+        "radius": 3400.0,
+        "center": [
+            -49794.6,
+            21860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H1": {
+        "radius": 3400.0,
+        "center": [
+            49205.4,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H2": {
+        "radius": 3400.0,
+        "center": [
+            40205.4,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H3": {
+        "radius": 3400.0,
+        "center": [
+            31205.4,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H4": {
+        "radius": 3400.0,
+        "center": [
+            22205.4,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H5": {
+        "radius": 3400.0,
+        "center": [
+            13205.400000000001,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H6": {
+        "radius": 3400.0,
+        "center": [
+            4205.4000000000015,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H7": {
+        "radius": 3400.0,
+        "center": [
+            -4794.5999999999985,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H8": {
+        "radius": 3400.0,
+        "center": [
+            -13794.599999999999,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H9": {
+        "radius": 3400.0,
+        "center": [
+            -22794.6,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H10": {
+        "radius": 3400.0,
+        "center": [
+            -31794.6,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H11": {
+        "radius": 3400.0,
+        "center": [
+            -40794.6,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    },
+    "H12": {
+        "radius": 3400.0,
+        "center": [
+            -49794.6,
+            30860.6
+        ],
+        "ZDrive": null,
+        "PFSOffset": null,
+        "__class__": "WellCircleCoord"
+    }
+}

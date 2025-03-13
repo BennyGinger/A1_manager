@@ -1,4 +1,4 @@
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from typing import Literal, overload
 
 
@@ -69,8 +69,8 @@ class WellSquareCoord(WellBaseCoord):
         top_left: Tuple[float, float]: The coordinates of the top left corner.
         bottom_right: Tuple[float, float]: The coordinates of the bottom right corner."""
     
-    top_left: tuple[float, float]
-    bottom_right: tuple[float, float]
+    top_left: tuple[float, float] = None
+    bottom_right: tuple[float, float] = None
 
 @dataclass
 class WellCircleCoord(WellBaseCoord):
@@ -82,5 +82,5 @@ class WellCircleCoord(WellBaseCoord):
         center: Tuple[float, float]: The coordinates of the center of the circle.
         radius: float: The radius of the circle."""
     
-    center: tuple[float, float]
-    radius: float
+    center: tuple[float, float] = None
+    radius: float = None

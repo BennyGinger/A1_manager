@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from string import ascii_uppercase
 
 from dish_manager.dish_utils.prompt_utils import prompt_for_center
-from dish_manager.dish_utils.well_utils import WellCircleCoord
+from utils.utility_classes import WellCircleCoord
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
 

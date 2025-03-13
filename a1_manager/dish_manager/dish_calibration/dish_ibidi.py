@@ -4,7 +4,7 @@ from string import ascii_uppercase
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
 from dish_manager.dish_utils.prompt_utils import prompt_for_center
-from dish_manager.dish_utils.well_utils import WellSquareCoord
+from utils.utility_classes import WellSquareCoord
 
 
 SETTINGS_IBIDI = {'row_number': 2,
@@ -31,7 +31,7 @@ class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
     def __post_init__(self)-> None:
         self.unpack_settings(SETTINGS_IBIDI)
         
-    def calibrate_dish(self, nikon: 'NikonTi2')-> dict[str, 'WellSquareCoord']:
+    def calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellSquareCoord]:
         """Calibrates the Ibidi dish by computing the coordinates for each well.
         
         Prompts the user to move the objective to the center of well A1.

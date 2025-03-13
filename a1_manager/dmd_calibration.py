@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from main import A1Manager
-from utils.utils import create_date_savedir, load_file, save_file
+from utils.utils import create_date_savedir, load_config_file, save_file
 from microscope_hardware.dmd.dmd_calibration_module import CalibrateFTurret
 
 
@@ -18,7 +18,7 @@ def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> 
     
     
     # Load dmd_profile and transfo matrix if exist or create empty dicts
-    dmd_profile = load_file('dmd_profile')
+    dmd_profile = load_config_file('dmd_profile')
     dmd_profile = {} if dmd_profile is None else dmd_profile
     transfo_matrix = aquisition.dmd.dmd_mask.transfo_matrix
     transfo_matrix = {} if transfo_matrix is None else transfo_matrix

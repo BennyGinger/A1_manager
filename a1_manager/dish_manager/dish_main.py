@@ -11,7 +11,7 @@ from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
 from microscope_hardware.nikon import NikonTi2
 from microscope_software.aquisition import Aquisition
 from a1_manager.dish_manager.well_grid_manager import WellGridManager
-from utils.utils import load_file
+from utils.utils import load_config_file
 
 # TODO: Add the possibility to enter a manual dish calibration
 
@@ -60,7 +60,7 @@ class Dish:
         
         if fTurret is not None:
             # load the DMD profile and get the grid object
-            dmd_profile = load_file('dmd_profile')
+            dmd_profile = load_config_file('dmd_profile')
             if dmd_profile is None:
                 raise FileNotFoundError("No dmd_profile file found. Please calibrate the dmd first.")
             self.grid_obj = WellGridManager(dmd_profile[fTurret]['center_xy_corr_pix']).load_subclass_instance(self.dish_name)

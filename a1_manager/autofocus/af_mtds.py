@@ -25,7 +25,7 @@ class MMAutoFocus:
         if a1_manager.lamp_name=='DiaLamp':
             self.normalisation = 'NormalizedVariance' 
     
-    def load_method(self, searchRange: int)-> Studio.CoreAutofocus:
+    def load_method(self, searchRange: int)-> Studio:
         # Create Autofocus manager
         autofocus_manager = Studio().get_autofocus_manager()
         # Get autofocus method
@@ -43,7 +43,7 @@ class MMAutoFocus:
         return self.core.get_position()
     
     @staticmethod
-    def oughtaFocus(afm_method: Studio.CoreAutofocus, searchRange: int=100, normalisation: str='FFTBandpass')-> Studio.CoreAutofocus: 
+    def oughtaFocus(afm_method: Studio, searchRange: int=100, normalisation: str='FFTBandpass')-> Studio: 
         # Set properties
         ## Fixed prop.
         afm_method.set_property_value('ShowImages', 'No') #determines whether images will be displayed in the Live Window during the autofocus routine.

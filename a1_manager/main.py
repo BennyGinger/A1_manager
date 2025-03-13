@@ -9,11 +9,11 @@ from microscope_hardware.nikon import NikonTi2
 from microscope_hardware.cameras import AndorCamera
 from microscope_hardware.dmd_manager import DMD 
 from microscope_hardware.lamps_factory import get_lamp
-from utils.utils import load_file
+from utils.utils import load_config_file
 
 # TODO: Correct the Turret filter for all channels
 
-OPTICAL_CONFIGURATION = load_file('optical_configuration')
+OPTICAL_CONFIGURATION = load_config_file('optical_configuration')
 
 IS_DMD_ATTACHED = {'pE-800': True, 'pE-4000': False, 'DiaLamp': False}
 

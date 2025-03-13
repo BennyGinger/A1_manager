@@ -77,7 +77,7 @@ def find_project_root(current_path: Path) -> Path:
             return parent
     raise FileNotFoundError("Project root with .git directory not found.")
 
-def load_file(file_name_key: str)-> dict | None:
+def load_config_file(file_name_key: str)-> dict | None:
     project_path = find_project_root(Path(__file__).resolve())
     config_path = project_path.joinpath('config')
     found_file = None
@@ -89,7 +89,14 @@ def load_file(file_name_key: str)-> dict | None:
         print(f"No {file_name_key} found.")
         return None
     
-    with open(found_file) as json_file:
+    return load_file(found_file)
+
+def load_file(file_path: Path)-> dict | None:
+    if not file_path.exists():
+        print(f"No file found at {file_path}")
+        return None
+    
+    with open(file_path) as json_file:
         loaded_file: dict = json.load(json_file)
     return loaded_file
 

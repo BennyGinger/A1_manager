@@ -3,7 +3,7 @@ from cv2 import warpAffine
 from pycromanager import Core
 import numpy as np
 
-from utils.utils import load_file
+from utils.utils import load_config_file
 
 # Device constants for easy configuration
 DEFAULT_SLM_NAME = 'Mosaic3'
@@ -18,7 +18,7 @@ class DMDMask:
         self.filter_turret_name = filter_turret_name
         # Get DMD size == (x,y)
         self.dmd_size = (self.core.get_slm_width(self.slm_name), self.core.get_slm_height(self.slm_name))
-        self.transfo_matrix = load_file('transfo_matrix')
+        self.transfo_matrix = load_config_file('transfo_matrix')
     
     def get_predefined_mask(self, mask_type: str) -> np.ndarray:
         """
@@ -66,7 +66,7 @@ class DMDMask:
         """
         Reload the transformation matrix from file.
         """
-        self.transfo_matrix = load_file('transfo_matrix')
+        self.transfo_matrix = load_config_file('transfo_matrix')
 
     @staticmethod
     def _scale_down_array(array: np.ndarray, target_size: tuple[int,int])-> np.ndarray:

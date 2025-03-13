@@ -11,7 +11,7 @@ from cv2 import getAffineTransform
 from skimage.draw import disk
 
 from main import A1Manager
-from utils.utils import image_to_rgb, save_img, load_file, draw_square_from_circle, bounding_box_nDim, get_centroid, threshold_img
+from utils.utils import image_to_rgb, save_img, load_config_file, draw_square_from_circle, bounding_box_nDim, get_centroid, threshold_img
 
 
 @dataclass
@@ -32,7 +32,7 @@ class CalibrateFTurret:
         self.img_savedir.mkdir(exist_ok=True)
 
         # Load existing DMD profile if available
-        dmd_profile = load_file('dmd_profile')
+        dmd_profile = load_config_file('dmd_profile')
         if dmd_profile is not None:
             self.fTurret_profile = dmd_profile[self.fTurret]
         
