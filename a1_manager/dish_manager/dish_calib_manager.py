@@ -72,22 +72,28 @@ class DishCalibManager(ABC):
             if hasattr(self, key):
                 setattr(self, key, value)
     
-    def calibrate_dish(self, nikon: NikonTi2, overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
-        """Calibrate the dish by computing the coordinates for each well. If the calibration file already exists, it will be loaded instead of recalibrating."""
+    def calibrate_dish(self, nikon: NikonTi2, well_selection: list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
+        """Calibrate the dish by computing the coordinates for each well. If the calibration file already exists, it will be loaded instead of recalibrating. Only the wells that will be measured (i.e., in well_selection) will be returned."""
         
         if self.calib_path.exists() and not overwrite:
             print(f"Calibration file already exists at {self.calib_path}.")
-            return load_file(self.calib_path)
+            dish_calibration = load_file(self.calib_path)
+            # Filter the wells based on the provided well selection
+            return self._filter_wells(well_selection, dish_calibration)
         
         dish_calibration = self._calibrate_dish(nikon)
-        save_file(self.calib_path, dish_calibration)
-        return dish_calibration
+        filtered_dish_calibration = self._filter_wells(well_selection, dish_calibration)
+        save_file(self.calib_path, filtered_dish_calibration)
+        return filtered_dish_calibration
     
     @abstractmethod
     def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord | WellSquareCoord]:
         """Abstract method to calibrate a dish. The calibration process is specific to each dish. It returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle or WellSquare objects coordinates."""
         pass
-
-
+    
+    @staticmethod
+    def _filter_wells(well_selection: list[str], dish_measurements: dict[str, WellCircleCoord | WellSquareCoord]) -> dict[str, WellCircleCoord | WellSquareCoord]:
+        """Filter the dish measurements based on the provided well selection."""
+        return {well: coord for well, coord in dish_measurements.items() if well in well_selection}
 
   
