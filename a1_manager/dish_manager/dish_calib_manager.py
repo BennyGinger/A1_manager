@@ -72,7 +72,7 @@ class DishCalibManager(ABC):
             if hasattr(self, key):
                 setattr(self, key, value)
     
-    def calibrate_dish(self, nikon: NikonTi2, well_selection: list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
+    def calibrate_dish(self, nikon: NikonTi2, well_selection: str | list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
         """Calibrate the dish by computing the coordinates for each well. If the calibration file already exists, it will be loaded instead of recalibrating. Only the wells that will be measured (i.e., in well_selection) will be returned."""
         
         if self.calib_path.exists() and not overwrite:
@@ -92,8 +92,17 @@ class DishCalibManager(ABC):
         pass
     
     @staticmethod
-    def _filter_wells(well_selection: list[str], dish_measurements: dict[str, WellCircleCoord | WellSquareCoord]) -> dict[str, WellCircleCoord | WellSquareCoord]:
-        """Filter the dish measurements based on the provided well selection."""
+    def _filter_wells(well_selection: str | list[str], dish_measurements: dict[str, WellCircleCoord | WellSquareCoord]) -> dict[str, WellCircleCoord | WellSquareCoord]:
+        """Filter the dish measurements based on the provided well selection. If well_selection is 'all', return all the measurements."""
+        
+        if isinstance(well_selection, str):
+            if well_selection.lower() == 'all':
+                return dish_measurements
+            
+            if well_selection not in dish_measurements.keys():
+                raise ValueError(f"Well {well_selection} not found in dish measurements.")
+            well_selection = [well_selection]
+        
         return {well: coord for well, coord in dish_measurements.items() if well in well_selection}
 
   
