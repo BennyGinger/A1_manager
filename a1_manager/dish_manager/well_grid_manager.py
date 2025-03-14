@@ -1,9 +1,12 @@
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
-from functools import cached_property
 from typing import Iterable, ClassVar
 
-from dish_manager.dish_utils.geometry_utils import compute_optimal_overlap
+import numpy as np
+
+from dish_manager.dish_utils.geometry_utils import randomise_fov
+from utils.utils import load_config_file
+from dish_manager.well_grid.grid_generator import GridBuilder
 from utils.utility_classes import StageCoord, WellBaseCoord
 from main import A1Manager
 
@@ -14,13 +17,10 @@ class WellGridManager(ABC):
     
     # Class variable. Dictionary mapping dish names to their corresponding classes
     _well_classes: ClassVar[dict[str, type['WellGridManager']]] = {}
+    
     # Instance variables. All tuples are in xy axis respectively
-    dmd_window_only: bool = field(init=False)
     window_size: tuple[float, float] = field(init=False)
-    window_center_offset_um: tuple[float, float] = field(init=False)
-    overlaps: tuple[float,float] = field(init=False)
-    num_rects: tuple[int,int] = field(init=False)
-    align_correction: tuple[float,float] = field(init=False)
+    window_center_offset_um: tuple[float, float] = field(init=False) 
     
     def __init_subclass__(cls, dish_name: str = None, **kwargs) -> None:
         """Automatically registers subclasses with a given dish_name. Meaning that the subclasses of WellGrid will automatically filled the _dish_classes dictionary. All the subclasses must have the dish_name attribute and are stored in the 'well_grid/' folder."""
@@ -33,7 +33,7 @@ class WellGridManager(ABC):
                 WellGridManager._well_classes[name] = cls
     
     @classmethod
-    def load_subclass_instance(cls, dish_name: str, window_center_offset_pix: list[int], dmd_window_only: bool, a1_manager: A1Manager)-> 'WellGridManager':
+    def load_subclass_instance(cls, dish_name: str, dmd_window_only: bool, a1_manager: A1Manager) -> 'WellGridManager':
         """Factory method to obtain a well grid instance for a given dish.
         
         Args:
@@ -50,46 +50,47 @@ class WellGridManager(ABC):
         
         # Instantiate and return the appropriate subclass
         grid_instance = well_class()
-        grid_instance._configure_grid_instance(a1_manager, tuple(window_center_offset_pix), dmd_window_only)
+        grid_instance._configure_grid_instance(a1_manager, dmd_window_only)
         return grid_instance
         
-    def _configure_grid_instance(self, a1_manager: A1Manager, window_center_offset_pix: tuple[int, int], dmd_window_only: bool)-> None:
+    def _configure_grid_instance(self, a1_manager: A1Manager, dmd_window_only: bool) -> None:
         """Extract the size of the window and adjust the center offset."""
         
-        # Add the dmd window only flag
-        self._update_dmd_window_flag(a1_manager, dmd_window_only)
-        
-        # Determine the size of the window
-        self._set_window_size(a1_manager)
-        
-        # Adjust the center offset
-        self._adjust_center_offset(a1_manager, window_center_offset_pix)
-    
-    def _update_dmd_window_flag(self, a1_manager, dmd_window_only: bool)-> None:
-        """Update the DMD window only flag."""
-        
+        # Update the dmd window only flag
         if not a1_manager.is_dmd_attached:
             dmd_window_only = False
-        self.dmd_window_only = dmd_window_only
-    
-    def _set_window_size(self, a1_manager: A1Manager)-> None:
-        """Set the window size based on the DMD window only flag."""
         
-        self.window_size = a1_manager.window_size(self.dmd_window_only)
+        # Set the size of the window
+        self.window_size = a1_manager.window_size(dmd_window_only)
+        
+        # Adjust the center offset
+        self._adjust_center_offset(a1_manager, dmd_window_only)
 
-    def _adjust_center_offset(self, a1_manager: A1Manager, window_center_offset_pix: tuple[int, int])-> None:
-        """Adjust the center offset based on the DMD window only flag and convert the correction values to microns."""
+    def _adjust_center_offset(self, a1_manager: A1Manager, dmd_window_only: bool) -> None:
+        """Adjust the center offset based on the dmd window."""
         
-        if not self.dmd_window_only or window_center_offset_pix == (0,0):
+        # If no dmd window is used, the offset is zero
+        if not dmd_window_only :
             self.window_center_offset_um = (0,0)
-
-        else:
-            # Adjust the correction values to the binning in use
-            binned = tuple([int(corr//a1_manager.camera.binning) for corr in window_center_offset_pix])
-            # Convert correction values to um
-            self.window_center_offset_um = tuple([a1_manager.size_pixel2micron(corr) for corr in binned])
+            return None
+        
+        # Get the fTurret to load the correct dmd_profile
+        f_turret = a1_manager.core.get_property('FilterTurret1','Label')
+        
+        # Load the dmd profile
+        dmd_profile = load_config_file('dmd_profile')
+        if dmd_profile is None:
+            raise FileNotFoundError("No dmd_profile file found. Please calibrate the dmd first.")
+        
+        # Get the correction values for the current dmd profile
+        window_center_offset_pix: list[int] = dmd_profile[f_turret]["center_xy_corr_pix"]
+        
+        # Adjust the correction values to the binning in use
+        binned = tuple([int(corr//a1_manager.camera.binning) for corr in window_center_offset_pix])
+        # Convert correction values to um
+        self.window_center_offset_um = tuple([a1_manager.size_pixel2micron(corr) for corr in binned])
     
-    @cached_property
+    @property
     def axis_length(self)-> tuple[float,float]:
         """Return the length of the x and y axis of the well, respectively"""
         if hasattr(self, 'radius'):
@@ -101,39 +102,13 @@ class WellGridManager(ABC):
         """Subclasses must implement this method to unpack well-specific properties."""
         pass
     
-    def _define_overlap(self, overlap: float | None)-> None:
-        """Sets the overlap between rectangles. If an overlap is provided, it is used; otherwise, computes an optimal value."""
-        
-        if overlap is not None:
-            self.overlaps = (overlap, overlap)
-        else:
-            self.overlaps = compute_optimal_overlap(self.window_size, *self.axis_length)
-    
-    def _define_number_of_rectangles(self) -> None:
-        """
-        Determines the maximum number of rectangles that can fit along each axis.
-        """
-        x_axis, y_axis = self.axis_length
-        num_x = int(x_axis) // int(self.rect_size[0] * (1 - self.overlaps[0]))
-        num_y = int(y_axis) // int(self.rect_size[1] * (1 - self.overlaps[1]))
-        self.num_rects = (num_x, num_y)
-    
-    def _align_rectangles_on_axis(self) -> None:
-        """
-        Computes the correction factors to center the grid along the x and y axes.
-        """
-        x_axis, y_axis = self.axis_length
-        corr_x = (x_axis - (self.rect_size[0] * self.num_rects[0] * (1 - self.overlaps[0]))) / 2
-        corr_y = (y_axis - (self.rect_size[1] * self.num_rects[1] * (1 - self.overlaps[1]))) / 2
-        self.align_correction = (corr_x, corr_y)
-    
     @abstractmethod
-    def _generate_coordinates_per_axis(self) -> tuple[list,list]:
+    def _generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float]) -> tuple[list,list]:
         """Subclasses must implement this method to compute the coordinates of the rectangles along each axis."""
         pass
     
     def _build_well_grid(self, x_coords: list[float], y_coords: list[float], temp_point: StageCoord) -> dict[int, StageCoord]:
-        """Build the well grid based on the x and y coordinates."""
+        """Used by the child class to build the well grid based on the x and y coordinates."""
         
         well_grid: dict[int, StageCoord] = {}
         count: int = 0
@@ -149,29 +124,29 @@ class WellGridManager(ABC):
         pass
     
     #################### Main method ####################
-    def create_well_grid(self, well_measurements: WellBaseCoord, overlap: float = None, **kwargs)-> dict[int, StageCoord]:
-        """Create a grid of rectangles that covers the well. The rectangles are centered along the dish axis. The grid is optimized to minimize the number of rectangles and the overlap between them."""
+    def create_well_grid(self, well_measurements: WellBaseCoord, numb_field_view: int | None, overlap: float = None, **kwargs) -> dict[int, StageCoord]:
+        """Create a grid of rectangles that covers the well. The rectangles are centered along the dish axis. The grid is optimized to minimize the number of rectangles and the overlap between them. If numb_field_view is not None, the grid is randomized to select a subset of the rectangles. Path of those randomised rectangles is optimised using TSP."""
         
         # Extract dish and imaging properties
         self._unpack_well_properties(well_measurements, **kwargs)
         
-        # If overlap is None, then determine optimum overlap
-        self._define_overlap(overlap)
-        
-        # Determine the maximum number of rectangles that can fit each axis, i.e. create a rectangular grid
-        self._define_number_of_rectangles()
-        
-        # Correction factor to center all rectangles along the dish axis
-        self._align_rectangles_on_axis()
+        # Calculate the layout parameters for the grid
+        grid_builder = GridBuilder()
+        num_rects, align_correction = grid_builder.calculate_layout_parameters(self.window_size, self.axis_length, overlap)
         
         # Get list of all coords of rectangle centers on each axis
-        x_coord, y_coord = self._generate_coordinates_per_axis()
+        x_coord, y_coord = self._generate_coordinates_per_axis(num_rects, align_correction)
         
         # Create an "empty" template point that contains the focus plane of the current well
         temp_point = well_measurements.get_template_point_coord()
         
         # Build the well grid
-        return self._build_well_grid(x_coord, y_coord, temp_point)
+        well_grid = self._build_well_grid(x_coord, y_coord, temp_point)
+        
+        # Randomize the field of view if necessary
+        if numb_field_view is None:
+            return well_grid
+        return randomise_fov(well_grid, numb_field_view)
     
     
 

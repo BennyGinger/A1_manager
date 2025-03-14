@@ -24,18 +24,18 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
         self.well_width = abs(self.y_br - self.y_tl)
         self.well_length = abs(self.x_br - self.x_tl)
     
-    def _generate_coordinates_per_axis(self)-> tuple[list,list]:
+    def _generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float])-> tuple[list,list]:
         """Get the list of center coordinates for each axis."""
         # Calculate the center position of the first and last rectangle
-        y_start = self.y_tl + self.window_size[0] / 2 + self.align_correction[0]
-        y_end = self.y_br - self.window_size[0] / 2 - self.align_correction[0]
+        y_start = self.y_tl + self.window_size[0] / 2 + align_correction[0]
+        y_end = self.y_br - self.window_size[0] / 2 - align_correction[0]
         
-        x_start = self.x_tl - self.align_correction[1] - self.window_size[1] / 2
-        x_end = self.x_br + self.align_correction[1] + self.window_size[1] / 2
+        x_start = self.x_tl - align_correction[1] - self.window_size[1] / 2
+        x_end = self.x_br + align_correction[1] + self.window_size[1] / 2
         
         # Get all coordinates between the start and stop position
-        y_coords = np.linspace(y_start, y_end, int(self.num_rects[0])).tolist()
-        x_coords = np.linspace(x_start, x_end, int(self.num_rects[1])).tolist()
+        y_coords = np.linspace(y_start, y_end, int(num_rects[0])).tolist()
+        x_coords = np.linspace(x_start, x_end, int(num_rects[1])).tolist()
         return y_coords, x_coords
     
     def _update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:

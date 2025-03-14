@@ -20,19 +20,19 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
         self.center = well_measurments['center']
         self.n_corners_in = 4 if n_corners_in is None else n_corners_in
     
-    def _generate_coordinates_per_axis(self)-> tuple[list[float], list[float]]:
+    def _generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float])-> tuple[list[float], list[float]]:
         """Compute the x and y coordinates for rectangle centers within the circular well. The x-coordinates span from the left boundary to the right boundary and the y-coordinates from the top boundary to the bottom boundary."""
         
         # Calculate the center position of the first and last rectangle
-        x_start = self.center[0] - self.radius + self.align_correction[0] + self.window_size[0] / 2
-        x_end = self.center[0] + self.radius - self.align_correction[0] - self.window_size[0] / 2
+        x_start = self.center[0] - self.radius + align_correction[0] + self.window_size[0] / 2
+        x_end = self.center[0] + self.radius - align_correction[0] - self.window_size[0] / 2
         
-        y_start = self.center[1] + self.radius - self.align_correction[1] - self.window_size[1] / 2
-        y_end = self.center[1] - self.radius + self.align_correction[1] + self.window_size[1] / 2
+        y_start = self.center[1] + self.radius - align_correction[1] - self.window_size[1] / 2
+        y_end = self.center[1] - self.radius + align_correction[1] + self.window_size[1] / 2
         
         # Get all coordinates between the start and stop position
-        y_coords = np.linspace(y_start, y_end, int(self.num_rects[1])).tolist()
-        x_coords = np.linspace(x_start, x_end, int(self.num_rects[0])).tolist()
+        y_coords = np.linspace(y_start, y_end, int(num_rects[1])).tolist()
+        x_coords = np.linspace(x_start, x_end, int(num_rects[0])).tolist()
         return x_coords, y_coords
     
     def _update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:
