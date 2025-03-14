@@ -1,3 +1,5 @@
+from __future__ import annotations # Enable type annotation to be stored as string
+
 from skimage.transform import resize
 from cv2 import warpAffine
 from pycromanager import Core

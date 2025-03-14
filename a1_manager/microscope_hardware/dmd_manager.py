@@ -1,3 +1,4 @@
+from __future__ import annotations # Enable type annotation to be stored as string
 from pathlib import Path
 
 from pycromanager import Core

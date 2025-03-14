@@ -1,3 +1,4 @@
+from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -14,8 +15,10 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
     well_length: float = field(init=False)
     n_corners_in: int = field(init=False)
     
-    def _unpack_well_properties(self, well_measurments: WellCircleCoord, n_corners_in: int = None)-> None:
-        """Unpack the well properties from the measurements."""
+    def _unpack_well_properties(self, well_measurments: WellCircleCoord, **kwargs)-> None:
+        """Unpack the well properties from the measurements. Kawrgs is used to pass the number of corners that need to be inside the circle."""
+        
+        n_corners_in = kwargs.get('n_corners_in')
         self.radius = well_measurments['radius']
         self.center = well_measurments['center']
         self.n_corners_in = 4 if n_corners_in is None else n_corners_in

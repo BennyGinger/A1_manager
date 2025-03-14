@@ -1,26 +1,26 @@
+from __future__ import annotations # Enable type annotation to be stored as string
+from pathlib import Path
+from datetime import datetime
+import json
+from itertools import combinations
+
+import numpy as np
+import tifffile as tiff
+from skimage.draw import disk
+import cv2
+from skimage.measure import regionprops
+
+from utils.json_utils import decode_dataclass, encode_dataclass
+# from skimage.transform import resize
+# TODO: Remove bg_sub
+# from smo import SMO
 # from concurrent.futures import ThreadPoolExecutor
 # from functools import partial, wraps
-from pathlib import Path
 # from time import time
 # from typing import Callable, Iterable
 # import os
 # from os.path import join
 # from os import listdir, getcwd, remove
-from datetime import datetime
-import json
-
-import numpy as np
-import tifffile as tiff
-# from tifffile import imwrite
-# TODO: Remove bg_sub
-# from smo import SMO
-from skimage.draw import disk
-# from skimage.transform import resize
-from itertools import combinations
-import cv2
-from skimage.measure import regionprops
-
-from utils.json_utils import decode_dataclass, encode_dataclass
 
 
 # def is_run_from_ipython()-> bool:

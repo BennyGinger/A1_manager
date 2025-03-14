@@ -1,8 +1,7 @@
+from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import Iterable, ClassVar
-
-import numpy as np
 
 from dish_manager.dish_utils.geometry_utils import randomise_fov
 from utils.utils import load_config_file
@@ -124,11 +123,13 @@ class WellGridManager(ABC):
         pass
     
     #################### Main method ####################
-    def create_well_grid(self, well_measurements: WellBaseCoord, numb_field_view: int | None, overlap: float = None, **kwargs) -> dict[int, StageCoord]:
-        """Create a grid of rectangles that covers the well. The rectangles are centered along the dish axis. The grid is optimized to minimize the number of rectangles and the overlap between them. If numb_field_view is not None, the grid is randomized to select a subset of the rectangles. Path of those randomised rectangles is optimised using TSP."""
+    def create_well_grid(self, well_measurements: WellBaseCoord, numb_field_view: int | None, overlap: float = None, n_corners_in: int=4) -> dict[int, StageCoord]:
+        """Create a grid of rectangles that covers the well. The rectangles are centered along the dish axis. The grid is optimized to minimize the number of rectangles and the overlap between them. If numb_field_view is not None, the grid is randomized to select a subset of the rectangles. Path of those randomised rectangles is optimised using TSP.
+        
+        Note: n_corners_in is only used for the 35mm and 96well dish. It will be ignored by the ibidi-8well dish."""
         
         # Extract dish and imaging properties
-        self._unpack_well_properties(well_measurements, **kwargs)
+        self._unpack_well_properties(well_measurements, n_corners_in=n_corners_in)
         
         # Calculate the layout parameters for the grid
         grid_builder = GridBuilder()

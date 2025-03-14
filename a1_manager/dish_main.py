@@ -1,43 +1,25 @@
+from __future__ import annotations # Enable type annotation to be stored as string
 from pathlib import Path
 
-from dish_manager.well_grid_manager import WellGridManager
+from utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 from main import A1Manager
-from utils.utility_classes import WellCircleCoord, WellSquareCoord
-from microscope_hardware.nikon import NikonTi2
-from dish_manager.dish_calib_manager import DishCalibManager
+from dish_manager.main_dish_manager import DishManager
 
 
-def calibrate_dish(dish_name: str, run_dir: Path, nikon: NikonTi2, well_selection: list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
-    """Calibrate the dish with the specified dish name. The calibration measurements are saved in a json file in the run directory, except for the 96well dish where the calibration measurements are pre-defined."""
+def launch_dish_workflow(dish_name: str, run_dir: Path, a1_manager: A1Manager, well_selection: str | list[str], af_method: str, dmd_window_only: bool, numb_field_view: int=None, overlap_percent: int=None, overwrite_calibration: bool = False, overwrite_autofocus: bool = False, **kwargs) -> tuple[dict[str, WellCircleCoord | WellSquareCoord], dict[str, dict[int, StageCoord]]]:
+    """Launch the dish workflow to calibrate the dish, perform autofocus, and create the well grids."""
     
-    # Initialize the dish calibration manager
-    dish = DishCalibManager.dish_calib_factory(dish_name, run_dir)
+    # Initialize the dish manager
+    dish_manager = DishManager(dish_name, run_dir, a1_manager) 
     
-    # Get the calibration measurements or calibrate the dish
-    dish_calibration = dish.calibrate_dish(nikon, well_selection, overwrite)
-    return dish_calibration
-
-def create_well_grid(dish_name: str, dmd_window_only: bool, a1_manager: A1Manager, dish_calibration: dict[str, WellCircleCoord | WellSquareCoord], numb_field_view: int=None, overlap_percent: int=None, n_corners_in: int = 4):
-    """Create a well grid for a dish."""
+    # Calibrate the dish
+    dish_manager.calibrate_dish(well_selection, overwrite_calibration)
     
-    # Update overlap
-    if numb_field_view is not None:
-            overlap_percent = None # Then the grid will be maximised, i.e. with the optimum overlap
-        
-    if overlap_percent is not None:
-        overlap_deci = overlap_percent / 100 # Convert from % to decimal
+    # Perform autofocus, savedir for the square gradient method is optional and can be passed as a keyword argument
+    dish_calibration = dish_manager.autofocus_dish(af_method, overwrite_autofocus, **kwargs)
     
-    # Initialize the well grid manager
-    well_grid_manager = WellGridManager.load_subclass_instance(dish_name, dmd_window_only, a1_manager)
-    
-    # Determine the settings for the grid
-    well_grid_settings = {'overlap': overlap_deci, 'numb_field_view': numb_field_view}
-    if dish_name != 'ibidi-8well':
-        well_grid_settings['n_corners_in'] = n_corners_in
-    
-    # Create the well grid
-    dish_grids = {}
-    for well, well_coord in dish_calibration.items():
-        dish_grids[well] = well_grid_manager.create_well_grid(well_coord, **well_grid_settings)
+    # Get the grids, n_corners_in is optional and can be passed as a keyword argument
+    dish_grids = dish_manager.create_well_grids(dmd_window_only, numb_field_view, overlap_percent, **kwargs)
+    return dish_calibration, dish_grids
     
     

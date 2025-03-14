@@ -1,3 +1,5 @@
+from __future__ import annotations # Enable type annotation to be stored as string
+
 from microscope_hardware.nikon import NikonTi2
 
 

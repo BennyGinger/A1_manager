@@ -1,3 +1,4 @@
+from __future__ import annotations # Enable type annotation to be stored as string
 from pathlib import Path
 
 from autofocus.af_mtds import MMAutoFocus, SqGradAutoFocus, ManualFocus

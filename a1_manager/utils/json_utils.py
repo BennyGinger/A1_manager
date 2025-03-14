@@ -1,6 +1,7 @@
+from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import asdict
 
-from a1_manager.utils.utility_classes import WellCircleCoord, WellSquareCoord
+from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 
 
 def encode_dataclass(obj: any) -> dict:
@@ -24,8 +25,15 @@ def decode_dataclass(data: dict)-> WellCircleCoord | WellSquareCoord:
     
     if "__class__" in data:
         cls_name = data.pop("__class__")
+        
+        # Convert all lists to tuples
+        data = {k: (tuple(v) if isinstance(v, list) else v) for k, v in data.items()}
+        
+        # Return the decoded dataclass object
         if cls_name == "WellSquareCoord":
             return WellSquareCoord(**data)
         elif cls_name == "WellCircleCoord":
             return WellCircleCoord(**data)
+        elif cls_name == "StageCoord":
+            return StageCoord(**data)
     return data

@@ -1,3 +1,4 @@
+from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from functools import cached_property

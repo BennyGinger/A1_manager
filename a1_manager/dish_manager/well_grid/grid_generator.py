@@ -1,3 +1,4 @@
+from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 
 from dish_manager.dish_utils.geometry_utils import compute_optimal_overlap

@@ -1,3 +1,5 @@
+from __future__ import annotations # Enable type annotation to be stored as string
+
 from pycromanager import Core
 
 from microscope_hardware.lamps.base_lamp import Lamp

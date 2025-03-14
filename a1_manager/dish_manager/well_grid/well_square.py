@@ -1,3 +1,4 @@
+from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -15,8 +16,9 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
     well_width: float = field(init=False)
     well_length: float = field(init=False)
 
-    def _unpack_well_properties(self, well_measurments: WellSquareCoord)-> None: 
-        """Unpack the well properties from the well measurements."""
+    def _unpack_well_properties(self, well_measurments: WellSquareCoord, **kwargs)-> None: 
+        """Unpack the well properties from the well measurements. Kwarg is not used in this subclass and can be ignored."""
+        
         topleft = well_measurments.top_left
         bottomright = well_measurments.bottom_right
         self.y_tl, self.x_tl = topleft
