@@ -27,7 +27,7 @@ class Dish35mm(DishCalibManager, dish_name='35mm'):
     expected_radius_lower: float = field(init=False)
     
     def __post_init__(self)-> None:
-        self.unpack_settings(SETTINGS_35MM)
+        self._unpack_settings(SETTINGS_35MM)
         
         # Determine upper and lower bounds for the expected radius
         correction_percentage: float = 0.05 # decimal percentage

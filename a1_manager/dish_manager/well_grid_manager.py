@@ -15,7 +15,7 @@ class WellGridManager(ABC):
     """Abstract-based class for managing the creating of well grid, consisting of rectangles that cover a well."""
     
     # Class variable. Dictionary mapping dish names to their corresponding classes
-    _well_classes: ClassVar[dict[str, type['WellGridManager']]] = {}
+    _well_classes: ClassVar[dict[str, type[WellGridManager]]] = {}
     
     # Instance variables. All tuples are in xy axis respectively
     window_size: tuple[float, float] = field(init=False)
@@ -32,12 +32,13 @@ class WellGridManager(ABC):
                 WellGridManager._well_classes[name] = cls
     
     @classmethod
-    def load_subclass_instance(cls, dish_name: str, dmd_window_only: bool, a1_manager: A1Manager) -> 'WellGridManager':
+    def load_subclass_instance(cls, dish_name: str, dmd_window_only: bool, a1_manager: A1Manager) -> WellGridManager:
         """Factory method to obtain a well grid instance for a given dish.
         
         Args:
             dish_name: Identifier of the dish (e.g., '35mm', '96well', 'ibidi-8well').
-            center_correction_pixel: Correction values to be used by the grid.
+            dmd_window_only: Whether to use or not the dmd window size to build the grid, Else, would use the full size window (which depends on the camera settings)
+            a1_manager: Class object that control the microscope.
         
         Returns:
             An instance of a WellGrid subclass corresponding to the dish."""
@@ -112,6 +113,7 @@ class WellGridManager(ABC):
         well_grid: dict[int, StageCoord] = {}
         count: int = 0
         for i, x in enumerate(x_coords):
+            # To optimise the movement of the stage, while taking images
             y_iterable: Iterable[float] = y_coords if i % 2 == 0 else list(reversed(y_coords))
             for y in y_iterable:
                 count = self._update_well_grid(well_grid, temp_point, count, x, y)
@@ -124,7 +126,7 @@ class WellGridManager(ABC):
     
     #################### Main method ####################
     def create_well_grid(self, well_measurements: WellBaseCoord, numb_field_view: int | None, overlap: float = None, n_corners_in: int=4) -> dict[int, StageCoord]:
-        """Create a grid of rectangles that covers the well. The rectangles are centered along the dish axis. The grid is optimized to minimize the number of rectangles and the overlap between them. If numb_field_view is not None, the grid is randomized to select a subset of the rectangles. Path of those randomised rectangles is optimised using TSP.
+        """Main method called by the child class. Create a grid of rectangles that covers the well. The rectangles are centered along the dish axis. The grid is optimized to minimize the number of rectangles and the overlap between them. If numb_field_view is not None, the grid is randomized to select a subset of the rectangles. Path of those randomised rectangles is optimised using TSP.
         
         Note: n_corners_in is only used for the 35mm and 96well dish. It will be ignored by the ibidi-8well dish."""
         

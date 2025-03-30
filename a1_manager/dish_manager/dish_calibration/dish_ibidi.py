@@ -49,7 +49,7 @@ class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
     well_gap_width: float = field(default_factory=float)
 
     def __post_init__(self)-> None:
-        self.unpack_settings(SETTINGS_IBIDI)
+        self._unpack_settings(SETTINGS_IBIDI)
         
     def _calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellSquareCoord]:
         """Calibrates the Ibidi 8-well dish by computing each well's top-left and bottom-right corners. If the top-left center is not provided, the user is prompted to move to the A1 well. Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellSquareCoord objects."""

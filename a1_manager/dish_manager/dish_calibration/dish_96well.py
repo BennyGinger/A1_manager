@@ -38,7 +38,7 @@ class Dish96well(DishCalibManager, dish_name="96well"):
     width: float = field(default_factory=float)  # in micron, from center A1 to center H1
 
     def __post_init__(self) -> None:
-        self.unpack_settings(SETTINGS_96WELL)
+        self._unpack_settings(SETTINGS_96WELL)
 
     def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord]:
         """Calibrates a 96-well plate by computing each well's center. If the top-left center is not provided, the user is prompted to move to the A1 well. Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle objects."""

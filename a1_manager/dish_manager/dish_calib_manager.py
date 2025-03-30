@@ -17,7 +17,7 @@ class DishCalibManager(ABC):
         calib_path (Path): Path to the calibration file"""
     
     # Class variable. Dictionary mapping dish names to their corresponding classes
-    _dish_classes: ClassVar[dict[str, type['DishCalibManager']]] = {}
+    _dish_classes: ClassVar[dict[str, type[DishCalibManager]]] = {}
     
     # Instance variables.
     calib_path: Path
@@ -30,12 +30,12 @@ class DishCalibManager(ABC):
             DishCalibManager._dish_classes[dish_name] = cls
     
     @classmethod
-    def dish_calib_factory(cls, dish_name: str, calib_path: Path) -> 'DishCalibManager':
+    def dish_calib_factory(cls, dish_name: str, calib_path: Path) -> DishCalibManager:
         """Factory method to create a calibration instance for the specified dish.
         
         Args:
             dish_name: The identifier for the dish type (e.g., '35mm', '96well', 'ibidi-8well').
-            run_dir: Path to the directory where the calibration files will be stored.
+            calib_path: Path to the calibration file.
         
         Returns:
             An instance of a subclass of DishCalibrationManager appropriate for the dish.
@@ -49,7 +49,7 @@ class DishCalibManager(ABC):
 
         return dish_class(calib_path)
     
-    def unpack_settings(self, settings: dict) -> None:
+    def _unpack_settings(self, settings: dict) -> None:
         """Update instance attributes based on the provided settings dictionary."""
         
         for key, value in settings.items():
