@@ -22,21 +22,25 @@ class Lamp:
         turret_state = 0 if lamp_name == 'DiaLamp' else 1
         self.core.set_property('Turret1Shutter', 'State', turret_state)
     
+    # TODO:Note form Raph: Is this method meant to be also called from outside the class? If not, we can make it private.
     def select_filters(self, fTurret: int, fWheel: int)-> None:
+        """Select filter turret and filter wheel."""
         if fTurret not in range(6):
             raise ValueError(
-                f"fTurret {fTurret} is out of range. "
+                f"fTurret {fTurret} is out of range."
                 "Valid options: 0=BF, 1=GFP, 2=LED-Cy5-A, 3=Quad(409/493/573/652), 4=Duo(505/606), 5=Tripla(459/526/596)"
             )
         if fWheel not in range(7):
             raise ValueError(
-                f"fWheel {fWheel} is out of range. "
+                f"fWheel {fWheel} is out of range."
                 "Valid options: 0=432/515/595/730, 1=447/60, 2=474/27, 3=544/23, 4=641/75, 5=520/28, 6=524/628"
             )
         self.core.set_property('FilterTurret1', 'State', fTurret)
         self.core.set_property('FilterWheel1', 'State', fWheel)
-        
+    
+    # TODO:Note form Raph: Is this method meant to be also called from outside the class? If not, we can make it private.
     def select_intensity(self, led: str, intensity: float)-> None:
+        """"Set the intensity of the LED lamp."""
         self.reset_intensity()
         
         # For pE-800, convert 405 to 400 since it does not support 405.
@@ -51,7 +55,9 @@ class Lamp:
         # Set the intensity of the given channel
         self.core.set_property(self.lamp_name, f'Intensity{channel}', str(intensity))
 
-    def reset_intensity(self)-> None: 
+    # TODO: Note form Raph: Is this method meant to be also called from outside the class? If not, we can make it private.
+    def reset_intensity(self)-> None:
+        """Reset the intensity of all channels to 0."""
         for channel in self.LEDdefault.values():
             self.core.set_property(self.lamp_name, f'Intensity{channel}', 0)
     
@@ -60,6 +66,12 @@ class Lamp:
         self.core.set_property(self.lamp_name, 'Global State', state)
                 
     def preset_channel(self, oc_dict: dict, intensity: float | None)-> None:
+        """
+        Set the optical configuration for the lamp.
+        Args:
+            oc_dict (dict): Optical configuration dictionary.
+            intensity (float | None): Intensity value to set.
+        """
         if intensity is not None:
             oc_dict['intensity'] = intensity
         
@@ -70,16 +82,20 @@ class Lamp:
     
     @staticmethod
     def convert_405_to_400(led: str | list[str]) -> str | list[str]:
+        """Convert 405 to 400 for pE-800."""
         if isinstance(led, list):
             return ['400' if item == '405' else item for item in led]
         return '400' if led == '405' else led
 
     # LED handling is lamp specific – subclasses must implement these.
     def select_LED(self, led: str | list[str]) -> None:
+        """Select the LED lamp."""
         raise NotImplementedError("Subclasses must implement select_LED.")
     
     def reset_LED(self) -> None:
+        """Reset the LED lamp."""
         raise NotImplementedError("Subclasses must implement reset_LED.")
     
     def validate_led_selection(self, led: str | list[str]) -> list[str]:
+        """Validate the LED selection."""
         raise NotImplementedError("Subclasses must implement validate_led_selection.")
