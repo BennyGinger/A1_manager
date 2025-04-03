@@ -6,7 +6,8 @@ from microscope_hardware.lamps.base_lamp import Lamp
 
 
 def get_lamp(core: Core, lamp_name: str) -> Lamp:
-    """Factory function to create a lamp object based on the lamp name.
+    """
+    Factory function to create a lamp object based on the lamp name.
     Pass the core instance and lamp name to the appropriate lamp class.
     Possible lamp names:
     - 'pE-800'
