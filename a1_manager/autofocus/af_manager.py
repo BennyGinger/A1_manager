@@ -25,9 +25,9 @@ class AutoFocusManager:
             raise ValueError(f"Method {method} not found. Choose from {list(self._method_mapping.keys())}")
         
         self.autofocus = self._method_mapping[method](a1_manager)
-        
     
     def find_focus(self, searchRange: int=500, step: int=50)-> float:
+        """Find the best focus point using the autofocus method."""
         input_settings = {}
         if self.method != 'Manual':
             input_settings = {'searchRange':searchRange}
@@ -39,12 +39,3 @@ class AutoFocusManager:
         focus_device = self.a1_manager.core.get_property('Core', 'Focus') # ZDrive, PFSOffset, MarZ
         self.a1_manager.core.set_position(focus_device, focus_point)
         return focus_point
-
-
- 
-
-
-
-
-
-

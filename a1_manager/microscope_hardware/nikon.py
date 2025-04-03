@@ -17,7 +17,15 @@ class NikonTi2:
         self.select_focus_device(focus_device)
         
     def select_focus_device(self, focus_device: str='ZDrive')-> None: # ZDrive, PFSOffset, MarZ
-        """Select the focus device to use. Possible options: ZDrive, PFSOffset, MarZ. Default is ZDrive."""
+        """
+        Select the focus device to use.
+        Possible options:
+        - ZDrive
+        - PFSOffset
+        - MarZ
+        
+        Default is ZDrive.
+        """
         self.core.set_property('Core','Focus',focus_device)
         if focus_device == 'PFSOffset':
             self.core.set_property('PFS','FocusMaintenance','On')
