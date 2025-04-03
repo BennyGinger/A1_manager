@@ -13,22 +13,20 @@ SETTINGS_96WELL = {
     "col_number": 12,
     "well_radius": 7 / 2 * 1000,  # in micron,
     'length': 99.0 * 1000,  # in micron
-    'width': 63.0 * 1000}  # in micron
+    'width': 63.0 * 1000  # in micron
+    }
 
 @dataclass
 class Dish96well(DishCalibManager, dish_name="96well"):
-    """Calibration handler for the 96-well plate.
+    """
+    Calibration handler for the 96-well plate.
     
     Attributes:
-        row_number (int): Number of rows in the dish.
-        
-        col_number (int): Number of columns in the dish.
-        
-        well_radius (float): Radius of the well (in microns).
-        
-        length (float): Length of the dish along the x-axis (in microns).
-        
-        width (float): Width of the dish along the y-axis (in microns).
+    - row_number (int): Number of rows in the dish.
+    - col_number (int): Number of columns in the dish.
+    - well_radius (float): Radius of the well (in microns).
+    - length (float): Length of the dish along the x-axis (in microns).
+    - width (float): Width of the dish along the y-axis (in microns).
     """
     
     row_number: int = field(default_factory=int)
@@ -41,7 +39,11 @@ class Dish96well(DishCalibManager, dish_name="96well"):
         self._unpack_settings(SETTINGS_96WELL)
 
     def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord]:
-        """Calibrates a 96-well plate by computing each well's center. If the top-left center is not provided, the user is prompted to move to the A1 well. Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle objects."""
+        """
+        Calibrates a 96-well plate by computing each well's center.
+        If the top-left center is not provided, the user is prompted to move to the A1 well.
+        Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle objects.
+        """
         
         x_tl, y_tl = prompt_for_center(nikon)
 
@@ -52,7 +54,10 @@ class Dish96well(DishCalibManager, dish_name="96well"):
                 well_number = j + 1
                 x_center = x_tl - (self.length / (self.col_number - 1)) * j
                 y_center = y_tl + (self.width / (self.row_number - 1)) * i
-                dish_measurements[f"{letter}{well_number}"] = WellCircleCoord(center=(x_center, y_center), radius=self.well_radius)
+                dish_measurements[f"{letter}{well_number}"] = WellCircleCoord(
+                    center=(x_center, y_center),
+                    radius=self.well_radius
+                    )
 
         print("Calibration successful for the 96-well plate.")
         return dish_measurements
