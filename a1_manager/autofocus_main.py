@@ -9,11 +9,15 @@ from autofocus.af_utils import load_file, save_file
 from utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 
 
-LARGE_FOCUS_RANGE = {'ZDrive':{'searchRange':1000, 'step':100},
-               'PFSOffset':{'searchRange':4000, 'step':300}}
+LARGE_FOCUS_RANGE = {
+    'ZDrive':{'searchRange':1000, 'step':100},
+    'PFSOffset':{'searchRange':4000, 'step':300}
+}
 
-SMALL_FOCUS_RANGE = {'ZDrive':{'searchRange':200, 'step':10},
-               'PFSOffset':{'searchRange':1000, 'step':100}}
+SMALL_FOCUS_RANGE = {
+    'ZDrive':{'searchRange':200, 'step':10},
+    'PFSOffset':{'searchRange':1000, 'step':100}
+}
 
 def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrite: bool, af_savedir: Path=None)-> dict[str, WellCircleCoord | WellSquareCoord] | None:
         """Run autofocus for the selected wells. Requires the calibration file with the dish measurements. Dish measurements are in the form of a dict with well names as keys and dict of {'radius':rad,'center':(x_center, y_center),'ZDrive':None,'PFSOffset':None} as values. If the autofocus has failed, the user can restart the process without exiting.
