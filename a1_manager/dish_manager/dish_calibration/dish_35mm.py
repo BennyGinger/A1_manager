@@ -12,14 +12,13 @@ SETTINGS_35MM = {'expected_radius': 10.5 * 1000} # in micron
 
 @dataclass
 class Dish35mm(DishCalibManager, dish_name='35mm'):
-    """Calibration handler for the 35mm dish.
+    """
+    Calibration handler for the 35mm dish.
     
     Attributes:
-        expected_radius (float): Expected radius of the dish (in microns).
-        
-        expected_radius_upper (float): Upper bound for the expected radius.
-        
-        expected_radius_lower (float): Lower bound for the expected radius.
+    - expected_radius (float): Expected radius of the dish (in microns).
+    - expected_radius_upper (float): Upper bound for the expected radius.
+    - expected_radius_lower (float): Lower bound for the expected radius.
     """
     
     expected_radius: float = field(default_factory=float)
@@ -35,7 +34,8 @@ class Dish35mm(DishCalibManager, dish_name='35mm'):
         self.expected_radius_lower = self.expected_radius - (self.expected_radius * correction_percentage)
     
     def _calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellCircleCoord]:
-        """Calibrates the 35mm dish by asking for three points along the edge of the circle.
+        """
+        Calibrates the 35mm dish by asking for three points along the edge of the circle.
         Returns a dictionary mapping a well identifier (e.g., 'A1') to a WellCircle.
         """
         # TODO: Instead of failing the calibration, ask if the user wants to use the measured radius, if yes continue, if no, start again
@@ -45,7 +45,7 @@ class Dish35mm(DishCalibManager, dish_name='35mm'):
             point1, point2, point3 = prompt_for_edge_points(nikon)
             # Center of circle
             center, measured_radius = find_circle(point1, point2, point3)
-
+            
             if not self.expected_radius_lower < measured_radius < self.expected_radius_upper:
                 print(f"\nCalibration failed, start again! Radius={measured_radius} vs expected radius={self.expected_radius}")
                 continue
