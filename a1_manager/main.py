@@ -60,7 +60,7 @@ class A1Manager:
 
     def set_dmd_exposure(self, dmd_exposure_sec: float=10)-> None:
         """Set the DMD exposure time."""
-        self.dmd.set_dmd_exposure_sec(dmd_exposure_sec)
+        self.dmd.set_dmd_exposure(dmd_exposure_sec)
         if self.core.get_property('Mosaic3','TriggerMode')=='InternalExpose':
             self.dmd.activate()
     
