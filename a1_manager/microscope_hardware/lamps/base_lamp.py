@@ -3,17 +3,17 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from pycromanager import Core
 
 
-LAMP_MAIN_BRANCH = {'pE-800': 0, 'pE-4000': 1, 'DiaLamp': None}
+LAPP_MAIN_BRANCH = {'pE-800': 0, 'pE-4000': 1, 'DiaLamp': None}
 
 class Lamp:
-    __slots__ = 'core', 'lamp_name', 'lamp_main_branch'
+    __slots__ = 'core', 'lamp_name', 'lapp_main_branch'
     
     def __init__(self, core: Core, lamp_name: str) -> None:
         self.core = core
         self.lamp_name = lamp_name  #'pE-800', 'pE-4000', 'DiaLamp'
         
         # Set the lappMainBranch
-        self.lamp_main_branch = LAMP_MAIN_BRANCH[lamp_name]
+        self.lapp_main_branch = LAPP_MAIN_BRANCH[lamp_name]
         
         # Set the core shutter
         self.core.set_property('Core', 'Shutter', lamp_name)

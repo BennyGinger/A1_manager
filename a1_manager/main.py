@@ -37,6 +37,7 @@ class A1Manager:
             self.dmd = DMD(self.core,dmd_trigger_mode)
     
     def oc_settings(self, optical_configuration: str, intensity: float | None = None, exposure_ms: float | None = None)-> None:
+        """Set the optical configuration for the microscope."""
         # Set the filters and led settings for the optical configuration
         oc = OPTICAL_CONFIGURATION[optical_configuration]
         
@@ -50,21 +51,25 @@ class A1Manager:
         
         # Set the lamp settings
         self.lamp.preset_channel(oc, intensity)
+        # TODO: Note from Raph: Do we really want this hardcoded?
         self.nikon.set_light_path(1) # Change Light path: 0=EYE, 1=R, 2=AUX and 3=L
         
         # Swith the lappMainBranch to the correct position
-        if self.lamp.lamp_main_branch is not None:
-            self.core.set_property('LappMainBranch1', 'State', self.lamp.lamp_main_branch)
+        if self.lamp.lapp_main_branch is not None:
+            self.core.set_property('LappMainBranch1', 'State', self.lamp.lapp_main_branch)
 
     def set_dmd_exposure(self, dmd_exposure_sec: float=10)-> None:
+        """Set the DMD exposure time."""
         self.dmd.set_dmd_exposure_sec(dmd_exposure_sec)
         if self.core.get_property('Mosaic3','TriggerMode')=='InternalExpose':
             self.dmd.activate()
     
     def load_dmd_mask(self, input_mask: str | Path | np.ndarray='fullON', transform_mask: bool=True) -> np.ndarray:
+        """Load a DMD mask from a string, file path, or numpy array, optionally transforming it, and project it to the DMD."""
         return self.dmd.load_dmd_mask(input_mask,transform_mask)
     
-    def snap_image(self, dmd_exposure_sec: float=10)-> np.ndarray: 
+    def snap_image(self, dmd_exposure_sec: float=10)-> np.ndarray:
+        """Snap an image with the camera and return it as a numpy array."""
         if self.dmd:
             self.set_dmd_exposure(dmd_exposure_sec)
             
@@ -79,6 +84,7 @@ class A1Manager:
         return img
         
     def light_stimulate(self, duration_sec: float=10)-> None:
+        """Turn on the lamp for a given duration."""
         # Illuminate, and keeps shutter open for exposure time
         if self.core.get_property('Core','Focus')=='PFSOffset':
             self._pfs_initialization()
@@ -94,6 +100,7 @@ class A1Manager:
         self.lamp.set_LED_shutter(0)
     
     def size_pixel2micron(self, size_in_pixel: int=None)-> float:
+        """Convert size from pixel to micron. Return the size in float."""
         pixel_calibration = {'10x':0.6461,'20x':0.3258}
         objective = self.nikon.objective
         binning = self.camera.binning
@@ -117,6 +124,7 @@ class A1Manager:
         return (self.size_pixel2micron(self.image_size[0]),self.size_pixel2micron(self.image_size[1]))
     
     def _pfs_initialization(self)-> None:
+        """Initialize the PFS system."""
         while True:  # Make sure that PFS is on, before snap
             if self.core.get_property('PFS','PFS Status') == '0000001100001010':
                 break
