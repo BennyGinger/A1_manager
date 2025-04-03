@@ -16,11 +16,14 @@ class AndorCamera:
         self.set_camera_binning(binning)
         self.set_camera_exposure(exposure_ms)
     
+    #TODO: Note form Raph: Is this method meant to be also called from outside the class? If not, we can make it private.
     def set_camera_binning(self, binning: int)-> None:
+        """Set the camera binning."""
         self.core.set_property('Andor sCMOS Camera','Binning',f"{binning}x{binning}")
         self.binning = binning
- 
+
     def set_camera_exposure(self, exposure_ms: float)-> None:
+        """Set the camera exposure time."""
         self.core.set_property('Andor sCMOS Camera', 'Exposure', exposure_ms)
         self.exposure_ms = exposure_ms
     
