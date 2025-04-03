@@ -22,7 +22,11 @@ class WellGridManager(ABC):
     window_center_offset_um: tuple[float, float] = field(init=False) 
     
     def __init_subclass__(cls, dish_name: str = None, **kwargs) -> None:
-        """Automatically registers subclasses with a given dish_name. Meaning that the subclasses of WellGrid will automatically filled the _dish_classes dictionary. All the subclasses must have the dish_name attribute and are stored in the 'well_grid/' folder."""
+        """
+        Automatically registers subclasses with a given dish_name.
+        Meaning that the subclasses of WellGrid will automatically filled the _dish_classes dictionary.
+        All the subclasses must have the dish_name attribute and are stored in the 'well_grid/' folder.
+        """
         
         super().__init_subclass__(**kwargs)
         if dish_name:
@@ -33,16 +37,18 @@ class WellGridManager(ABC):
     
     @classmethod
     def load_subclass_instance(cls, dish_name: str, dmd_window_only: bool, a1_manager: A1Manager) -> WellGridManager:
-        """Factory method to obtain a well grid instance for a given dish.
+        """
+        Factory method to obtain a well grid instance for a given dish.
         
         Args:
-            dish_name: Identifier of the dish (e.g., '35mm', '96well', 'ibidi-8well').
-            dmd_window_only: Whether to use or not the dmd window size to build the grid, Else, would use the full size window (which depends on the camera settings)
-            a1_manager: Class object that control the microscope.
+        - dish_name: Identifier of the dish (e.g., '35mm', '96well', 'ibidi-8well').
+        - dmd_window_only: Whether to use or not the dmd window size to build the grid, Else, would use the full size window (which depends on the camera settings)
+        - a1_manager: Class object that control the microscope.
         
         Returns:
-            An instance of a WellGrid subclass corresponding to the dish."""
-            
+            An instance of a WellGrid subclass corresponding to the dish.
+        """
+        
         # Get the class based on dish_name
         well_class = cls._well_classes.get(dish_name)
         if well_class is None:
@@ -52,7 +58,7 @@ class WellGridManager(ABC):
         grid_instance = well_class()
         grid_instance._configure_grid_instance(a1_manager, dmd_window_only)
         return grid_instance
-        
+    
     def _configure_grid_instance(self, a1_manager: A1Manager, dmd_window_only: bool) -> None:
         """Extract the size of the window and adjust the center offset."""
         
@@ -87,6 +93,7 @@ class WellGridManager(ABC):
         
         # Adjust the correction values to the binning in use
         binned = tuple([int(corr//a1_manager.camera.binning) for corr in window_center_offset_pix])
+        
         # Convert correction values to um
         self.window_center_offset_um = tuple([a1_manager.size_pixel2micron(corr) for corr in binned])
     
@@ -126,9 +133,16 @@ class WellGridManager(ABC):
     
     #################### Main method ####################
     def create_well_grid(self, well_measurements: WellBaseCoord, numb_field_view: int | None, overlap: float = None, n_corners_in: int=4) -> dict[int, StageCoord]:
-        """Main method called by the child class. Create a grid of rectangles that covers the well. The rectangles are centered along the dish axis. The grid is optimized to minimize the number of rectangles and the overlap between them. If numb_field_view is not None, the grid is randomized to select a subset of the rectangles. Path of those randomised rectangles is optimised using TSP.
+        """
+        Main method called by the child class.
+        Create a grid of rectangles that covers the well.
+        The rectangles are centered along the dish axis.
+        The grid is optimized to minimize the number of rectangles and the overlap between them.
+        If numb_field_view is not None, the grid is randomized to select a subset of the rectangles.
+        Path of those randomised rectangles is optimised using TSP.
         
-        Note: n_corners_in is only used for the 35mm and 96well dish. It will be ignored by the ibidi-8well dish."""
+        Note: n_corners_in is only used for the 35mm and 96well dish. It will be ignored by the ibidi-8well dish.
+        """
         
         # Extract dish and imaging properties
         self._unpack_well_properties(well_measurements, n_corners_in=n_corners_in)
@@ -150,12 +164,3 @@ class WellGridManager(ABC):
         if numb_field_view is None:
             return well_grid
         return randomise_fov(well_grid, numb_field_view)
-    
-    
-
-    
-
-
-    
-    
-    
