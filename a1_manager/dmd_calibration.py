@@ -11,12 +11,12 @@ PRESET_ARGS = {'optical_configuration':'GFP','intensity':5}
 LIST_TURRETS = ['5-Duo','4-Quad']
 
 def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> None:
+    """Run the DMD calibration for the given run_dir."""
     # Initialize calibration
     aquisition = A1Manager(**CAM_SETTINGS)
     aquisition.oc_settings(**PRESET_ARGS)
     save_dir = create_date_savedir(run_dir,'Calibration')
     dmd_fTurret_list = [CalibrateFTurret(save_dir, fTurret) for fTurret in LIST_TURRETS]
-    
     
     # Load dmd_profile and transfo matrix if exist or create empty dicts
     dmd_profile = load_config_file('dmd_profile')
@@ -56,4 +56,5 @@ def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> 
     # Update dmd profile and transformation matrix to Aquisition object
     save_config_file('dmd_profile', dmd_profile)
     save_config_file('transfo_matrix', transfo_matrix)
+    # TODO: Note from Raph: This 'reload_transfo_matrix' method is not defined in the DMD class.
     aquisition.dmd.dmd_mask.reload_transfo_matrix()

@@ -21,5 +21,3 @@ def launch_dish_workflow(dish_name: str, run_dir: Path, a1_manager: A1Manager, w
     # Get the grids, n_corners_in is optional and can be passed as a keyword argument
     dish_grids = dish_manager.create_well_grids(dmd_window_only, numb_field_view, overlap_percent, **kwargs)
     return dish_calibration, dish_grids
-    
-    
