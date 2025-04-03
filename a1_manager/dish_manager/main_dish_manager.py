@@ -12,20 +12,17 @@ from dish_manager.dish_calib_manager import DishCalibManager
 
 @dataclass
 class DishManager:
-    """Main class to manage the calibration and grid creation of a dish.
+    """
+    Main class to manage the calibration and grid creation of a dish.
     
     Attributes:
-        dish_name (str): Identifier for the dish type (e.g., '35mm', '96well', 'ibidi-8well').
-        
-        run_dir (Path): Path to the directory where the calibration files will be stored.
-        
-        a1_manager (A1Manager): Instance of the A1Manager class.
-        
-        config_path (Path): Path to the configuration directory.
-        
-        calib_path (Path): Path to the calibration file.
-        
-        dish_calibration (dict[str, WellCircleCoord | WellSquareCoord]): Dictionary mapping well names to their corresponding calibration coordinates."""
+    - dish_name (str): Identifier for the dish type (e.g., '35mm', '96well', 'ibidi-8well').
+    - run_dir (Path): Path to the directory where the calibration files will be stored.
+    - a1_manager (A1Manager): Instance of the A1Manager class.
+    - config_path (Path): Path to the configuration directory.
+    - calib_path (Path): Path to the calibration file.
+    - dish_calibration (dict[str, WellCircleCoord | WellSquareCoord]): Dictionary mapping well names to their corresponding calibration coordinates.
+    """
     
     dish_name: str
     run_dir: Path
@@ -53,7 +50,10 @@ class DishManager:
             save_file(self.calib_path, calib_96well)
 
     def calibrate_dish(self, well_selection: list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
-        """Calibrate the dish with the specified dish name. The calibration measurements are saved in a json file in the run directory, except for the 96well dish where the calibration measurements are pre-defined."""
+        """
+        Calibrate the dish with the specified dish name.
+        The calibration measurements are saved in a json file in the run directory, except for the 96well dish where the calibration measurements are pre-defined.
+        """
         
         # Initialize the dish calibration manager
         dish = DishCalibManager.dish_calib_factory(self.dish_name, self.calib_path)
@@ -64,7 +64,10 @@ class DishManager:
         return self.dish_calibration
     
     def autofocus_dish(self, method: str, overwrite: bool, **kwargs) -> dict[str, WellCircleCoord | WellSquareCoord] | None:
-        """Run autofocus for the dish_calibration in each well. The autofocus measurements are saved in the same calibration file."""
+        """
+        Run autofocus for the dish_calibration in each well.
+        The autofocus measurements are saved in the same calibration file.
+        """
         
         af_savedir = kwargs.get('af_savedir', None)
         return run_autofocus(method, self.a1_manager, self.calib_path, overwrite, af_savedir)
@@ -74,8 +77,8 @@ class DishManager:
         
         # Update overlap
         if numb_field_view is not None:
-                overlap_percent = None # Then the grid will be maximised, i.e. with the optimum overlap
-            
+            overlap_percent = None # Then the grid will be maximised, i.e. with the optimum overlap
+        
         if overlap_percent is not None:
             overlap_deci = overlap_percent / 100 # Convert from % to decimal
         
