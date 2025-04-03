@@ -19,29 +19,25 @@ class DMD:
         # Initialize DMD with a fullON mask by default
         self.load_dmd_mask('fullON')
         self.set_trigger_mode(trigger_mode)
-           
+
     def set_dmd_exposure(self, exposure_sec: int) -> None:
-        """
-        Set the DMD exposure time.
-        """
+        """Set the DMD exposure time."""
         self.core.set_property(self.slm_name, 'ExposureTime', exposure_sec)
     
     def activate(self) -> None:
-        """
-        Activate the DMD by displaying the current mask.
-        """
+        """Activate the DMD by displaying the current mask."""
         self.core.display_slm_image(self.slm_name)
         
     def project_mask(self, mask: np.ndarray)-> None:
-        """
-        Project the given mask on the DMD and activate it.
-        """
+        """Project the given mask on the DMD and activate it."""
         self.core.set_slm_image(self.slm_name, mask)
         self.activate()
 
     def set_trigger_mode(self, trigger_mode: str)-> None:
-        """Set the trigger mode of the DMD.
-        Valid options include 'InternalExposure' (Manual) and 'ExternalBulb' (TTL)."""
+        """
+        Set the trigger mode of the DMD.
+        Valid options include 'InternalExposure' (Manual) and 'ExternalBulb' (TTL).
+        """
         self.core.set_property(self.slm_name,'TriggerMode',trigger_mode)
 
     def load_dmd_mask(self, input_mask: str | Path | np.ndarray='fullON', transform_mask: bool=True) -> np.ndarray:
@@ -55,9 +51,7 @@ class DMD:
         return dmd_mask
     
     def get_dmd_mask(self, input_mask: str | Path | np.ndarray, transform_mask: bool=True)-> np.ndarray:
-        """
-        Create a DMD mask array from various input types.
-        """
+        """Create a DMD mask array from various input types."""
         if isinstance(input_mask, str):
             return self.dmd_mask.get_predefined_mask(input_mask)
         
@@ -66,4 +60,3 @@ class DMD:
             return self.dmd_mask.custom_mask(mask_array, transform_mask)
         
         return self.dmd_mask.custom_mask(input_mask, transform_mask)
-
