@@ -16,7 +16,10 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
     n_corners_in: int = field(init=False)
     
     def _unpack_well_properties(self, well_measurments: WellCircleCoord, **kwargs)-> None:
-        """Unpack the well properties from the measurements. Kawrgs is used to pass the number of corners that need to be inside the circle."""
+        """
+        Unpack the well properties from the measurements.
+        Kawrgs is used to pass the number of corners that need to be inside the circle.
+        """
         
         n_corners_in = kwargs.get('n_corners_in')
         self.radius = well_measurments['radius']
@@ -24,7 +27,10 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
         self.n_corners_in = 4 if n_corners_in is None else n_corners_in
     
     def _generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float])-> tuple[list[float], list[float]]:
-        """Compute the x and y coordinates for rectangle centers within the circular well. The x-coordinates span from the left boundary to the right boundary and the y-coordinates from the top boundary to the bottom boundary."""
+        """
+        Compute the x and y coordinates for rectangle centers within the circular well.
+        The x-coordinates span from the left boundary to the right boundary and the y-coordinates from the top boundary to the bottom boundary.
+        """
         
         # Calculate the center position of the first and last rectangle
         x_start = self.center[0] - self.radius + align_correction[0] + self.window_size[0] / 2
@@ -39,7 +45,10 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
         return x_coords, y_coords
     
     def _update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:
-        """Update the well grid with a new rectangle center if it meets the criteria. The rectangle is only added if at least `n_corners_in` of its corners are within the circle."""
+        """
+        Update the well grid with a new rectangle center if it meets the criteria.
+        The rectangle is only added if at least `n_corners_in` of its corners are within the circle.
+        """
         
         if self._is_rectangle_within_circle((x, y), self.n_corners_in):
             offset_x, offset_y = self.window_center_offset_um
@@ -52,7 +61,10 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
         return count
     
     def _is_rectangle_within_circle(self, rect_coord: tuple[float, float], n_corner_in: int) -> bool:
-        """Check if a rectangle (centered at rect_coord) is sufficiently inside the circle. The rectangle is considered acceptable if at least `n_corner_in` of its four corners are inside the circle."""
+        """
+        Check if a rectangle (centered at rect_coord) is sufficiently inside the circle.
+        The rectangle is considered acceptable if at least `n_corner_in` of its four corners are inside the circle.
+        """
         
         x_center, y_center = rect_coord
         rect_width, rect_height = self.window_size
@@ -65,9 +77,8 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
         # Count how many corners are inside the circle.
         inside_count = sum(1 for corner in corners if self._is_point_inside_circle(*corner))
         return inside_count >= n_corner_in
-
+    
     def _is_point_inside_circle(self, point_x: float, point_y: float) -> bool:
         center_x, center_y = self.center
         distance_squared = (point_x - center_x) ** 2 + (point_y - center_y) ** 2
         return distance_squared < self.radius ** 2
- 

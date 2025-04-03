@@ -15,9 +15,12 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
     x_br: float = field(init=False)
     well_width: float = field(init=False)
     well_length: float = field(init=False)
-
+    
     def _unpack_well_properties(self, well_measurments: WellSquareCoord, **kwargs)-> None: 
-        """Unpack the well properties from the well measurements. Kwarg is not used in this subclass and can be ignored."""
+        """
+        Unpack the well properties from the well measurements.
+        Kwarg is not used in this subclass and can be ignored.
+        """
         
         topleft = well_measurments.top_left
         bottomright = well_measurments.bottom_right
@@ -49,4 +52,3 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
         point['xy'] = (adjusted_x, adjusted_y)
         well_grid[count] = point
         return count + 1
-    
