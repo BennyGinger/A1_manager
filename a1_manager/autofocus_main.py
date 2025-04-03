@@ -70,6 +70,7 @@ def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrit
                 
                 # If first well, show the image
                 if idx == 0:
+                    # TODO: Note from Raph: 'display' argument in snap_image is not implemented yet
                     img = a1_manager.snap_image(display=True)
                     plt.imshow(img)
                     plt.show()
