@@ -20,7 +20,10 @@ SMALL_FOCUS_RANGE = {
 }
 
 def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrite: bool, af_savedir: Path=None)-> dict[str, WellCircleCoord | WellSquareCoord] | None:
-        """Run autofocus for the selected wells. Requires the calibration file with the dish measurements. Dish measurements are in the form of a dict with well names as keys and dict of {'radius':rad,'center':(x_center, y_center),'ZDrive':None,'PFSOffset':None} as values. If the autofocus has failed, the user can restart the process without exiting.
+        """
+        Run autofocus for the selected wells. Requires the calibration file with the dish measurements.
+        Dish measurements are in the form of a dict with well names as keys and dict of {'radius':rad,'center':(x_center, y_center),'ZDrive':None,'PFSOffset':None} as values.
+        If the autofocus has failed, the user can restart the process without exiting.
         
         Args:
             method (str): Autofocus method to use. Choose from 'sq_grad', 'OughtaFocus', 'Manual'.
@@ -30,7 +33,8 @@ def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrit
             af_savedir (Path): Path to save the images for the square gradient method.
         
         Returns:
-            The updated dish measurements with the focus values. If the user quits the process, None is returned."""
+            The updated dish measurements with the focus values. If the user quits the process, None is returned.
+        """
         
         # Initialize focus device
         focus_device = a1_manager.core.get_property('Core', 'Focus')
