@@ -34,7 +34,7 @@ class MMAutoFocus:
         afm_method = autofocus_manager.get_autofocus_method()
         # Load method settings
         return self.oughtaFocus(afm_method, searchRange, self.normalisation)
-   
+    
     def find_focus(self, searchRange: int=500)-> float:
         """searchRange and step in micron if Zdrive and arbitrary unit (0-12000) if PFS"""
         # Load method
@@ -59,7 +59,7 @@ class MMAutoFocus:
         afm_method.set_property_value('Maximize', normalisation) #determines what property of the autofocusing image series will be used to evaluate the quality of focus. You can choose Mean, Standard Deviation, or Edges (a function that looks at the variance of the first derivative). Experiment with different methods to find the best one for your sample.
         # 'NormalizedVariance' for bf and 'FFTBandpass' for fluorescence
         return afm_method
-    
+
 class SqGradAutoFocus:
     """Class the control the autofocus through the squared gradient method."""
     
@@ -67,7 +67,7 @@ class SqGradAutoFocus:
     
     def __init__(self, a1_manager: A1Manager) -> None: 
         self.a1_manager = a1_manager
-        
+    
     def determine_range_step(self, searchRange: int, step: int)-> list[float]:
         """searchRange and step in micron if Zdrive and arbitrary unit (0-12000) if PFS"""
         
