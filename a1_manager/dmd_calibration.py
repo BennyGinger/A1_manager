@@ -45,7 +45,7 @@ def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> 
         
         # Else create transformation matrix
         print(f"Creating transformation matrix for {dmd_fTurret.fTurret} turret")
-
+        
         # Get turret matrix (convert it to list to be able to save it as json)
         transfo_matrix[dmd_fTurret.fTurret] = dmd_fTurret.get_transformation_matrix(aquisition).tolist()
         
