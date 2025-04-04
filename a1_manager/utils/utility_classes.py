@@ -38,11 +38,13 @@ class StageCoord:
     
 @dataclass
 class WellBaseCoord:
-    """Base class to store the coordinates of a well. Support dict-like access.
+    """
+    Base class to store the coordinates of a well. Support dict-like access.
     
     Attributes:
-        ZDrive: float: The ZDrive position.
-        PFSOffset: float: The PFS offset."""
+        - ZDrive: float: The ZDrive position.
+        - PFSOffset: float: The PFS offset.
+    """
     
     ZDrive: float | None = None
     PFSOffset: float | None = None
@@ -63,26 +65,31 @@ class WellBaseCoord:
 
 @dataclass
 class WellSquareCoord(WellBaseCoord):
-    """Class that encapsulates the coordinates of a squared well.
+    """
+    Class that encapsulates the coordinates of a squared well.
     
     Attributes:
-        ZDrive: float: The ZDrive position.
-        PFSOffset: float: The PFS offset.
-        top_left: Tuple[float, float]: The coordinates of the top left corner.
-        bottom_right: Tuple[float, float]: The coordinates of the bottom right corner."""
+        - ZDrive: float: The ZDrive position.
+        - PFSOffset: float: The PFS offset.
+        - top_left: Tuple[float, float]: The coordinates of the top left corner.
+        - bottom_right: Tuple[float, float]: The coordinates of the bottom right corner.
+    """
     
     top_left: tuple[float, float] = None
     bottom_right: tuple[float, float] = None
 
 @dataclass
 class WellCircleCoord(WellBaseCoord):
-    """Class that encapsulates the coordinates of a circular well.
+    """
+    Class that encapsulates the coordinates of a circular well.
     
     Attributes:
-        ZDrive: float: The ZDrive position.
-        PFSOffset: float: The PFS offset.
-        center: Tuple[float, float]: The coordinates of the center of the circle.
-        radius: float: The radius of the circle."""
+        - ZDrive: float: The ZDrive position.
+        - PFSOffset: float: The PFS offset.
+        - center: Tuple[float, float]: The coordinates of the center of the circle.
+        - radius: float: The radius of the circle.
+    """
     
     center: tuple[float, float] = None
     radius: float = None
+    

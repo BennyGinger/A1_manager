@@ -7,10 +7,12 @@ from microscope_hardware.lamps.base_lamp import Lamp
 
 class pE4000(Lamp):
     # Default LED label
-    LEDdefault = {'365':'A','385':'A','405':'A','435':'A',
-                  '460':'B','470':'B','490':'B','500':'B',
-                  '525':'C','550':'C','580':'C','595':'C',
-                  '635':'D','660':'D','740':'D','770':'D',}
+    LEDdefault = {
+        '365':'A','385':'A','405':'A','435':'A',
+        '460':'B','470':'B','490':'B','500':'B',
+        '525':'C','550':'C','580':'C','595':'C',
+        '635':'D','660':'D','740':'D','770':'D',
+        }
     
     def __init__(self, core: Core, lamp_name: str) -> None:
         super().__init__(core, lamp_name)
