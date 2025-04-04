@@ -57,10 +57,12 @@ class CalibrateFTurret:
         x_corr = center_offset - width_dmd * a1_manager.camera.binning
         
         # Create dmd_position dict
-        self.fTurret_profile = {'window_size': boxed_mask.shape,
-                                'y_slice':[int(box_coord[0].start), int(box_coord[0].stop)],
-                                'x_slice':[int(box_coord[1].start), int(box_coord[1].stop)],
-                                'center_xy_corr_pix':[x_corr, y_corr]} # save as x,y coord for nikon
+        self.fTurret_profile = {
+            'window_size': boxed_mask.shape,
+            'y_slice':[int(box_coord[0].start), int(box_coord[0].stop)],
+            'x_slice':[int(box_coord[1].start), int(box_coord[1].stop)],
+            'center_xy_corr_pix':[x_corr, y_corr] # save as x,y coord for nikon
+            }
         return self.fTurret_profile
     
     def create_dmd_point_list(self, a1_manager: A1Manager, numb_points: int)-> None:
@@ -71,8 +73,10 @@ class CalibrateFTurret:
         window_size = self.fTurret_profile['window_size']
         window_start = (self.fTurret_profile['x_slice'][0], self.fTurret_profile['y_slice'][0])
         input_centroids = self.generate_random_points(window_size, window_start, numb_points)
-        self.dmd_points_list = [DMD_Point(point, idx, a1_manager.image_size, self.img_savedir) 
-                                for idx, point in enumerate(input_centroids)]
+        self.dmd_points_list = [
+            DMD_Point(point, idx, a1_manager.image_size, self.img_savedir) 
+            for idx, point in enumerate(input_centroids)
+            ]
         
     def get_transformation_matrix(self, a1_manager: A1Manager)-> np.ndarray:
         """
@@ -202,9 +206,7 @@ class DMD_Point:
         self.mask_path = self.save_point_image(mask, "mask")
     
     def save_point_image(self, img: np.ndarray, img_name: str)-> Path:
-        """
-        Saves the provided image to disk and returns the file path.
-        """
+        """Saves the provided image to disk and returns the file path."""
         return save_img(img,self.savedir, f'{img_name}_{self.instance}')
     
     def get_img_of_mask(self, a1_manager: A1Manager)-> np.ndarray:
@@ -218,22 +220,12 @@ class DMD_Point:
         return mask_img
     
     def threshold_img_point(self, img: np.ndarray)-> np.ndarray:
-        """
-        Thresholds the given image, saves the thresholded image, and returns it.
-        """
+        """Thresholds the given image, saves the thresholded image, and returns it."""
         mask = threshold_img(img)
         self.mask_img_mask_path = self.save_point_image(mask,'mask_img_mask')
         return mask
     
     def get_centroid_point(self, mask: np.ndarray)-> tuple[int, int]:
-        """
-        Calculates the centroid of the provided mask, stores it, and returns the value.
-        """
+        """Calculates the centroid of the provided mask, stores it, and returns the value."""
         self.mask_centroid = get_centroid(mask)
         return self.mask_centroid
-   
-
-
-
-
-    
