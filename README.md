@@ -44,3 +44,12 @@ This repository provides comprehensive tools for controlling a microscope system
 
 - **Directory Management:**  
   Functions to locate the project root, create timestamped directories, and manage configuration files facilitate organized workflows.
+
+## Authors
+
+- Benoit Roux - [benoit.roux@gmail.com](mailto:benoit.roux@gmail.com)
+- Raphael Feurstein - [raphael.feurstein@gmail.com](mailto:raphael.feurstein@gmail.com)
+
+## License
+
+This project is licensed under the MIT License.
