@@ -52,13 +52,13 @@ class WellBaseCoord:
     def __getitem__(self, key: str):
         return getattr(self, key)
     
-    def items(self):
+    def _items(self):
         return self.__dict__.items()
     
     def get_template_point_coord(self) -> StageCoord:
         """Return a template StageCoord object (i.e. without any xy coord) with the focus values of the well."""
         temp_point = StageCoord()
-        for k,v in self.items():
+        for k,v in self._items():
             if hasattr(temp_point, k):
                 setattr(temp_point, k, v)
         return temp_point

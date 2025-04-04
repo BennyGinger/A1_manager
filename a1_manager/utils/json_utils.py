@@ -3,7 +3,6 @@ from dataclasses import asdict
 
 from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def encode_dataclass(obj: any) -> dict:
     """Encode a dataclass object into a dictionary with the __class__ attribute to be able to decode it later.
     
@@ -19,7 +18,6 @@ def encode_dataclass(obj: any) -> dict:
         return data
     raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 # Custom decoder function
 def decode_dataclass(data: dict)-> WellCircleCoord | WellSquareCoord:
     """Decode a dictionary into a dataclass object."""

@@ -44,7 +44,6 @@ from utils.json_utils import decode_dataclass, encode_dataclass
 #         total: int, total number of iterations, used in multiprocessing"""
 #     return tqdm(*args,**kwargs)
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def save_img(img: np.ndarray, savedir: Path, img_name: str)-> Path:
     img_path = savedir.joinpath(f"{img_name}.tif")
     tiff.imwrite(img_path, data=img.astype('uint16'))
@@ -60,7 +59,6 @@ def save_img(img: np.ndarray, savedir: Path, img_name: str)-> Path:
 #         rm_all_files_from_dir(dir_path)
 #     return dir_path
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def create_date_savedir(parent_path: Path, folder_name: str=None)-> Path:
     """Create a folder with the actual date in the parent_path. If a folder_name is given, it will be added to the date."""
     # Create folder with actual date
@@ -71,7 +69,6 @@ def create_date_savedir(parent_path: Path, folder_name: str=None)-> Path:
     savedir.mkdir(exist_ok=True)
     return savedir
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def find_project_root(current_path: Path) -> Path:
     """
     Recursively search for the project root directory by looking for the .git directory.
@@ -81,7 +78,6 @@ def find_project_root(current_path: Path) -> Path:
             return parent
     raise FileNotFoundError("Project root with .git directory not found.")
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def load_config_file(file_name_key: str)-> dict | None:
     """Load a json file from the config folder. Use the decode_dataclass function to decode the dataclass if needed."""
     
@@ -98,7 +94,6 @@ def load_config_file(file_name_key: str)-> dict | None:
     
     return load_file(found_file)
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def load_file(file_path: Path)-> dict | None:
     """Load a json file. Use the decode_dataclass function to decode the dataclass if needed."""
     
@@ -110,7 +105,6 @@ def load_file(file_path: Path)-> dict | None:
         loaded_file: dict = json.load(json_file, object_hook=decode_dataclass)
     return loaded_file
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def save_config_file(file_name_key: str, data: dict)-> None:
     """Save a dictionary to a json file in the config folder."""
     
@@ -120,7 +114,6 @@ def save_config_file(file_name_key: str, data: dict)-> None:
     save_path = config_path.joinpath(save_name)
     save_file(save_path, data)
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def save_file(file_path: Path, data: dict)-> None:
     """Save a dictionary to a json file."""
     with open(file_path, "w") as outfile:
@@ -154,7 +147,6 @@ def save_file(file_path: Path, data: dict)-> None:
 #     for file in path.iterdir():
 #         os.remove(file)
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def bounding_box_nDim(mask: np.ndarray)-> tuple[np.ndarray, tuple[slice]]:
     """This function take a np.array (any dimension) and create a bounding box around the nonzero shape.
     Also return a slice object to be able to reconstruct to the originnal shape"""
@@ -174,7 +166,6 @@ def bounding_box_nDim(mask: np.ndarray)-> tuple[np.ndarray, tuple[slice]]:
     
     return (mask[s], s)
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def draw_square_from_circle(point: tuple, radius: int, mask_size: tuple)-> tuple:
     """Draw a square around a circle with a given radius and center point."""
     
@@ -183,7 +174,6 @@ def draw_square_from_circle(point: tuple, radius: int, mask_size: tuple)-> tuple
     mask[rr,cc] = 1
     return bounding_box_nDim(mask)
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def get_centroid(image: np.ndarray) -> list:
     """Get the centroid of a binary image."""
     
@@ -199,7 +189,6 @@ def get_centroid(image: np.ndarray) -> list:
 #     bgimg[bgimg<0] = 0
 #     return bgimg
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def threshold_img(img: np.ndarray)-> np.ndarray:
     """Threshold an image using Otsu's method."""
     
@@ -245,7 +234,6 @@ def threshold_img(img: np.ndarray)-> np.ndarray:
 #                 outputs.append(future.result())
 #     return outputs  
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def image_to_rgb(img0: np.ndarray, channels: list[int]=[0,0])-> np.ndarray:
     """ Copied from cellpose. image is 2 x Ly x Lx or Ly x Lx x 2 - change to RGB Ly x Lx x 3 """
     
