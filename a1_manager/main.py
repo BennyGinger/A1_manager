@@ -11,7 +11,6 @@ from microscope_hardware.dmd_manager import DMD
 from microscope_hardware.lamps_factory import get_lamp
 from utils.utils import load_config_file
 
-# TODO: Correct the Turret filter for all channels
 
 OPTICAL_CONFIGURATION = load_config_file('optical_configuration')
 
@@ -51,7 +50,7 @@ class A1Manager:
         
         # Set the lamp settings
         self.lamp.preset_channel(oc, intensity)
-        # TODO: Note from Raph: Do we really want this hardcoded?
+        # TODO: Note from Raph: Do we really want this hardcoded? -> into config file
         self.nikon.set_light_path(1) # Change Light path: 0=EYE, 1=R, 2=AUX and 3=L
         
         # Swith the lappMainBranch to the correct position
