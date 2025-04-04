@@ -95,7 +95,7 @@ class WellGridManager(ABC):
         binned = tuple([int(corr//a1_manager.camera.binning) for corr in window_center_offset_pix])
         
         # Convert correction values to um
-        self.window_center_offset_um = tuple([a1_manager.size_pixel2micron(corr) for corr in binned])
+        self.window_center_offset_um = tuple([a1_manager._size_pixel2micron(corr) for corr in binned])
     
     @property
     def axis_length(self)-> tuple[float,float]:

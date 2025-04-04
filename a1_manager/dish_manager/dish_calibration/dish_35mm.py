@@ -5,7 +5,7 @@ from utils.utility_classes import WellCircleCoord
 from dish_manager.dish_utils.prompt_utils import prompt_for_edge_points
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
-from dish_manager.dish_utils.geometry_utils import _find_circle
+from dish_manager.dish_utils.geometry_utils import find_circle
 
 
 SETTINGS_35MM = {'expected_radius': 10.5 * 1000} # in micron
@@ -26,14 +26,14 @@ class Dish35mm(DishCalibManager, dish_name='35mm'):
     expected_radius_lower: float = field(init=False)
     
     def __post_init__(self)-> None:
-        self._unpack_settings(SETTINGS_35MM)
+        self.unpack_settings(SETTINGS_35MM)
         
         # Determine upper and lower bounds for the expected radius
         correction_percentage: float = 0.05 # decimal percentage
         self.expected_radius_upper = self.expected_radius + (self.expected_radius * correction_percentage)
         self.expected_radius_lower = self.expected_radius - (self.expected_radius * correction_percentage)
     
-    def _calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellCircleCoord]:
+    def calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellCircleCoord]:
         """
         Calibrates the 35mm dish by asking for three points along the edge of the circle.
         Returns a dictionary mapping a well identifier (e.g., 'A1') to a WellCircle.
@@ -44,7 +44,7 @@ class Dish35mm(DishCalibManager, dish_name='35mm'):
             # Define 3 points on the middle ring. The middle of the objective must be on the inner part of the ring
             point1, point2, point3 = prompt_for_edge_points(nikon)
             # Center of circle
-            center, measured_radius = _find_circle(point1, point2, point3)
+            center, measured_radius = find_circle(point1, point2, point3)
             
             if not self.expected_radius_lower < measured_radius < self.expected_radius_upper:
                 print(f"\nCalibration failed, start again! Radius={measured_radius} vs expected radius={self.expected_radius}")

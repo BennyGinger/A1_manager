@@ -8,7 +8,7 @@ from python_tsp.distances import euclidean_distance_matrix
 from a1_manager.utils.utility_classes import StageCoord
 
 
-def _find_circle(point1: tuple[float, float], point2: tuple[float, float], point3: tuple[float, float]) -> tuple[tuple[float, float], float]:
+def find_circle(point1: tuple[float, float], point2: tuple[float, float], point3: tuple[float, float]) -> tuple[tuple[float, float], float]:
     """
     Compute the center and radius of a circle passing through three points.
     

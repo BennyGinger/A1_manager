@@ -49,7 +49,7 @@ class DishCalibManager(ABC):
 
         return dish_class(calib_path)
     
-    def _unpack_settings(self, settings: dict) -> None:
+    def unpack_settings(self, settings: dict) -> None:
         """Update instance attributes based on the provided settings dictionary."""
         
         for key, value in settings.items():
@@ -65,12 +65,12 @@ class DishCalibManager(ABC):
             # Filter the wells based on the provided well selection
             return self._filter_wells(well_selection, dish_calibration)
         
-        dish_calibration = self._calibrate_dish(nikon)
+        dish_calibration = self.calibrate_dish(nikon)
         filtered_dish_calibration = self._filter_wells(well_selection, dish_calibration)
         return filtered_dish_calibration
     
     @abstractmethod
-    def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord | WellSquareCoord]:
+    def calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord | WellSquareCoord]:
         """Abstract method to calibrate a dish. The calibration process is specific to each dish. It returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle or WellSquare objects coordinates."""
         pass
     

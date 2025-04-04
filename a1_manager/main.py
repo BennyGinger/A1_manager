@@ -99,7 +99,8 @@ class A1Manager:
         sleep(duration_sec) # Time in seconds
         self.lamp.set_LED_shutter(0)
     
-    def size_pixel2micron(self, size_in_pixel: int=None)-> float:
+    # TODO: Convert to a static method
+    def _size_pixel2micron(self, size_in_pixel: int=None)-> float:
         """Convert size from pixel to micron. Return the size in float."""
         pixel_calibration = {'10x':0.6461,'20x':0.3258}
         objective = self.nikon.objective
@@ -120,8 +121,8 @@ class A1Manager:
         
         if self.is_dmd_attached and dmd_window_only:
             dmd_size = self.dmd.dmd_mask.dmd_size
-            return (self.size_pixel2micron(dmd_size[0]),self.size_pixel2micron(dmd_size[1]))
-        return (self.size_pixel2micron(self.image_size[0]),self.size_pixel2micron(self.image_size[1]))
+            return (self._size_pixel2micron(dmd_size[0]),self._size_pixel2micron(dmd_size[1]))
+        return (self._size_pixel2micron(self.image_size[0]),self._size_pixel2micron(self.image_size[1]))
     
     def _pfs_initialization(self)-> None:
         """Initialize the PFS system."""
