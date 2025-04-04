@@ -7,7 +7,7 @@ from pycromanager import Core
 
 from microscope_hardware.nikon import NikonTi2
 from microscope_hardware.cameras import AndorCamera
-from microscope_hardware.dmd_manager import DMD 
+from microscope_hardware.dmd_manager import Dmd
 from microscope_hardware.lamps_factory import get_lamp
 from utils.utils import load_config_file
 
@@ -33,7 +33,7 @@ class A1Manager:
         self.activate_dmd = False
         self.is_dmd_attached = IS_DMD_ATTACHED[lamp_name]
         if self.is_dmd_attached:
-            self.dmd = DMD(self.core,dmd_trigger_mode)
+            self.dmd = Dmd(self.core,dmd_trigger_mode)
     
     def oc_settings(self, optical_configuration: str, intensity: float | None = None, exposure_ms: float | None = None)-> None:
         """Set the optical configuration for the microscope."""

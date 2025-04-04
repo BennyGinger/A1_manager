@@ -8,7 +8,7 @@ import tifffile as tiff
 from microscope_hardware.dmd.dmd_mask_factory import DEFAULT_SLM_NAME, DMDMask
 
 
-class DMD:
+class Dmd:
     """Class to control the DMD through pycromanager."""
     __slots__ = ('core', 'dmd_mask', 'slm_name')
     
