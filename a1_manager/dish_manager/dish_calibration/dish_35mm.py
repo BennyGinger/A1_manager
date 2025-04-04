@@ -5,7 +5,7 @@ from utils.utility_classes import WellCircleCoord
 from dish_manager.dish_utils.prompt_utils import prompt_for_edge_points
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
-from dish_manager.dish_utils.geometry_utils import find_circle
+from dish_manager.dish_utils.geometry_utils import _find_circle
 
 
 SETTINGS_35MM = {'expected_radius': 10.5 * 1000} # in micron
@@ -44,7 +44,7 @@ class Dish35mm(DishCalibManager, dish_name='35mm'):
             # Define 3 points on the middle ring. The middle of the objective must be on the inner part of the ring
             point1, point2, point3 = prompt_for_edge_points(nikon)
             # Center of circle
-            center, measured_radius = find_circle(point1, point2, point3)
+            center, measured_radius = _find_circle(point1, point2, point3)
             
             if not self.expected_radius_lower < measured_radius < self.expected_radius_upper:
                 print(f"\nCalibration failed, start again! Radius={measured_radius} vs expected radius={self.expected_radius}")

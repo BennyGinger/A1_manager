@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import Iterable, ClassVar
 
-from dish_manager.dish_utils.geometry_utils import randomise_fov
+from dish_manager.dish_utils.geometry_utils import _randomise_fov
 from utils.utils import load_config_file
 from dish_manager.well_grid.grid_generator import GridBuilder
 from utils.utility_classes import StageCoord, WellBaseCoord
@@ -163,4 +163,4 @@ class WellGridManager(ABC):
         # Randomize the field of view if necessary
         if numb_field_view is None:
             return well_grid
-        return randomise_fov(well_grid, numb_field_view)
+        return _randomise_fov(well_grid, numb_field_view)

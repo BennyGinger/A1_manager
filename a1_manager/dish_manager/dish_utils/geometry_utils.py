@@ -8,8 +8,7 @@ from python_tsp.distances import euclidean_distance_matrix
 from a1_manager.utils.utility_classes import StageCoord
 
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-def find_circle(point1: tuple[float, float], point2: tuple[float, float], point3: tuple[float, float]) -> tuple[tuple[float, float], float]:
+def _find_circle(point1: tuple[float, float], point2: tuple[float, float], point3: tuple[float, float]) -> tuple[tuple[float, float], float]:
     """
     Compute the center and radius of a circle passing through three points.
     
@@ -52,8 +51,7 @@ def find_circle(point1: tuple[float, float], point2: tuple[float, float], point3
     
     return (center_x, center_y), radius
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-def compute_optimal_overlap(window_size: tuple[float, float], well_width: float, well_length: float) -> tuple[float, float]:
+def _compute_optimal_overlap(window_size: tuple[float, float], well_width: float, well_length: float) -> tuple[float, float]:
     """
     Computes the optimal overlap based on the rectangle size and a given width and length of the dish.
     """
@@ -67,8 +65,7 @@ def compute_optimal_overlap(window_size: tuple[float, float], well_width: float,
     overlap_x = (ceiled_rectS_in_x - rectS_in_x) / ceiled_rectS_in_x
     return (overlap_x, overlap_y)
 
-#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-def randomise_fov(well_grid: dict[int, StageCoord], numb_field_view: int) -> dict [int, StageCoord]:
+def _randomise_fov(well_grid: dict[int, StageCoord], numb_field_view: int) -> dict [int, StageCoord]:
     """
     Returns a random subset of points from the input dict of coordinates.
     The number of points is defined by the fov_amount.
