@@ -26,8 +26,8 @@ class DMDMask:
         """
         Return a predefined mask.
         Supported types:
-          - 'fullON': a mask with all elements set to one.
-          - 'fullOFF': a mask with all elements set to zero.
+            - 'fullON': a mask with all elements set to one.
+            - 'fullOFF': a mask with all elements set to zero.
         """
         if mask_type == 'fullON':
             return np.ones(self.dmd_size, dtype='uint8')
@@ -65,9 +65,7 @@ class DMDMask:
         return transformed.astype('uint16')
     
     def reload_transformation_matrix(self) -> None:
-        """
-        Reload the transformation matrix from file.
-        """
+        """Reload the transformation matrix from file."""
         self.transfo_matrix = load_config_file('transfo_matrix')
 
     @staticmethod
