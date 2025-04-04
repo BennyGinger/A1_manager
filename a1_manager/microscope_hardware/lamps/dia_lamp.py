@@ -17,13 +17,13 @@ class DiaLamp(Lamp):
         
         self.core.set_property('DiaLamp', 'State', 1)
     
-    #TODO: Note form Raph: Is this method meant to be also called from outside the class? If not, we can make it private.
+    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
     # No real need to reset the LED for DiaLamp, just for consistency with the base class.  
     def reset_LED(self) -> None:
         # No LED selection to reset beyond setting state to 0.
         self.core.set_property('DiaLamp', 'State', 0)
     
-    #TODO: Note form Raph: Is this method meant to be also called from outside the class? If not, we can make it private.
+    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
     def validate_led_selection(self, led: str | list[str]) -> list[str]:
         if led != 'bf':
             raise ValueError("Invalid LED label for DiaLamp. Must be 'bf'.")

@@ -46,7 +46,7 @@ class NikonTi2:
         if stage_position[self.focus_device] is not None:
             self.core.set_position(self.focus_device, stage_position[self.focus_device])
     
-    # TODO: Note from Raph: Is this method also ment to be called from outside this class? If not, we can make it private.
+    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
     def select_objective(self, objective: str)-> None:
         """Select the objective to use. Expected objective string: '[number]x' e.g. 10x, 20x."""
         Objectifdefault = {'10x':1, '20x':2}
