@@ -3,12 +3,14 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from microscope_hardware.nikon import NikonTi2
 
 
+#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def prompt_for_center(nikon: 'NikonTi2') -> tuple[float, float]:
     """Prompt the user to move the stage to the center of the dish."""
     
     input("Move the center of the objective to the center of the well A1 and press 'Enter'")
     return nikon.get_stage_position()['xy']
 
+#TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
 def prompt_for_edge_points(nikon: 'NikonTi2') -> list[tuple[float, float]]:
     """Prompt the user to move the stage to the edge of the dish."""
     

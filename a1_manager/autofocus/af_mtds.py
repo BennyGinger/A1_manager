@@ -26,27 +26,25 @@ class MMAutoFocus:
         if a1_manager.lamp_name=='DiaLamp':
             self.normalisation = 'NormalizedVariance' 
     
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-    def load_method(self, searchRange: int)-> Studio:
+    def _load_method(self, searchRange: int)-> Studio:
         # Create Autofocus manager
         autofocus_manager = Studio().get_autofocus_manager()
         # Get autofocus method
         autofocus_manager.set_autofocus_method_by_name(self.method)
         afm_method = autofocus_manager.get_autofocus_method()
         # Load method settings
-        return self.oughtaFocus(afm_method, searchRange, self.normalisation)
+        return self._oughtaFocus(afm_method, searchRange, self.normalisation)
     
     def find_focus(self, searchRange: int=500)-> float:
         """searchRange and step in micron if Zdrive and arbitrary unit (0-12000) if PFS"""
         # Load method
-        afm_method = self.load_method(searchRange)
+        afm_method = self._load_method(searchRange)
         # Start autofocus
         afm_method.full_focus()
         return self.core.get_position()
     
     @staticmethod
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-    def oughtaFocus(afm_method: Studio, searchRange: int=100, normalisation: str='FFTBandpass')-> Studio: 
+    def _oughtaFocus(afm_method: Studio, searchRange: int=100, normalisation: str='FFTBandpass')-> Studio: 
         # Set properties
         ## Fixed prop.
         afm_method.set_property_value('ShowImages', 'No') #determines whether images will be displayed in the Live Window during the autofocus routine.
@@ -70,8 +68,7 @@ class SqGradAutoFocus:
     def __init__(self, a1_manager: A1Manager) -> None: 
         self.a1_manager = a1_manager
     
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-    def determine_range_step(self, searchRange: int, step: int)-> list[float]:
+    def _determine_range_step(self, searchRange: int, step: int)-> list[float]:
         """searchRange and step in micron if Zdrive and arbitrary unit (0-12000) if PFS"""
         
         current_position = self.a1_manager.nikon.get_stage_position()
@@ -82,8 +79,7 @@ class SqGradAutoFocus:
         end = current_z + searchRange_offset + step
         return np.arange(start, end, step) 
     
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-    def capture_images_at_z(self, z_positions: list[float])-> list[np.ndarray]:
+    def _capture_images_at_z(self, z_positions: list[float])-> list[np.ndarray]:
         """Create a list of images at different z positions."""
         
         img_list = []
@@ -96,13 +92,13 @@ class SqGradAutoFocus:
     def find_focus(self, searchRange: int, step: int, savedir: Path | None)-> float:
         """searchRange and step in micron if Zdrive and arbitrary unit (0-12000) if PFS"""
         # Determine the z positions to image
-        z_positions = self.determine_range_step(searchRange,step)
+        z_positions = self._determine_range_step(searchRange,step)
         # Image the z positions
-        img_list = self.capture_images_at_z(z_positions)
+        img_list = self._capture_images_at_z(z_positions)
         # Find the best focus
         focus_value_list = []
         for idx, img in enumerate(img_list):
-            focus_val = self.sq_grad(img)
+            focus_val = self._sq_grad(img)
             focus_value_list.append(focus_val)
             if savedir is not None:
                 imwrite(savedir.joinpath(f"af_im{idx+1}_{focus_val}.tiff"), img)
@@ -111,8 +107,7 @@ class SqGradAutoFocus:
         return focus_point
 
     @staticmethod
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-    def sq_grad(img: np.ndarray) -> int:
+    def _sq_grad(img: np.ndarray) -> int:
         """Calculate the squared gradient of the image. The higher the value, the better the focus. Found in algorithm for finding the best focus taken from https://doi.org/10.1002/jemt.24035"""
         
         threshold = 51
