@@ -50,6 +50,7 @@ class DMD:
         self.project_mask(dmd_mask)
         return dmd_mask
     
+    #TODO: Note form Raph: Is this method meant to be also called from outside the class? If not, we can make it private. Currently only called from load_dmd_mask method.
     def get_dmd_mask(self, input_mask: str | Path | np.ndarray, transform_mask: bool=True)-> np.ndarray:
         """Create a DMD mask array from various input types."""
         if isinstance(input_mask, str):

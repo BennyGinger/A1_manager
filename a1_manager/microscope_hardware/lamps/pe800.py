@@ -12,11 +12,13 @@ class pE800(Lamp):
     def __init__(self, core: Core, lamp_name: str) -> None:
         super().__init__(core, lamp_name)
     
+    #TODO: Note form Raph: Is this method meant to be also called from outside the class? If not, we can make it private. Currently only called from select_LED method.
     def reset_LED(self)-> None:
         for channel in self.LEDdefault.values():
             self.core.set_property('pE-800', f'Selection{channel}', 0)
         self.core.set_property('DiaLamp', 'State', 0)
     
+    #TODO: Note form Raph: Is this method meant to be also called from outside the class? If not, we can make it private. Currently only called from select_LED method.
     def validate_led_selection(self, led: str | list[str]) -> list[str]:
         if not isinstance(led, (str, list)):
             raise TypeError("LED channel must be a string or list of strings.")
