@@ -60,11 +60,3 @@ class NikonTi2:
     def set_light_path(self, light_path: int)-> None:
         """Change Light path: 0=EYE, 1=R, 2=AUX and 3=L"""
         self.core.set_property('LightPath','State',light_path)
-    
-
-
-
-
-
-
-
