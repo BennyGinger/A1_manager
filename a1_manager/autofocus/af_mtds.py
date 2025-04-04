@@ -26,6 +26,7 @@ class MMAutoFocus:
         if a1_manager.lamp_name=='DiaLamp':
             self.normalisation = 'NormalizedVariance' 
     
+    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
     def load_method(self, searchRange: int)-> Studio:
         # Create Autofocus manager
         autofocus_manager = Studio().get_autofocus_manager()
@@ -44,6 +45,7 @@ class MMAutoFocus:
         return self.core.get_position()
     
     @staticmethod
+    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
     def oughtaFocus(afm_method: Studio, searchRange: int=100, normalisation: str='FFTBandpass')-> Studio: 
         # Set properties
         ## Fixed prop.
@@ -68,6 +70,7 @@ class SqGradAutoFocus:
     def __init__(self, a1_manager: A1Manager) -> None: 
         self.a1_manager = a1_manager
     
+    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
     def determine_range_step(self, searchRange: int, step: int)-> list[float]:
         """searchRange and step in micron if Zdrive and arbitrary unit (0-12000) if PFS"""
         
@@ -79,6 +82,7 @@ class SqGradAutoFocus:
         end = current_z + searchRange_offset + step
         return np.arange(start, end, step) 
     
+    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
     def capture_images_at_z(self, z_positions: list[float])-> list[np.ndarray]:
         """Create a list of images at different z positions."""
         
@@ -107,6 +111,7 @@ class SqGradAutoFocus:
         return focus_point
 
     @staticmethod
+    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
     def sq_grad(img: np.ndarray) -> int:
         """Calculate the squared gradient of the image. The higher the value, the better the focus. Found in algorithm for finding the best focus taken from https://doi.org/10.1002/jemt.24035"""
         
