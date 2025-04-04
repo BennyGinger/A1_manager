@@ -56,5 +56,5 @@ def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> 
     # Update dmd profile and transformation matrix to Aquisition object
     save_config_file('dmd_profile', dmd_profile)
     save_config_file('transfo_matrix', transfo_matrix)
-    # TODO: Note from Raph: This 'reload_transfo_matrix' method is not defined in the DMD class.
+    # TODO: method not recognized in A1Manager in DMD class
     aquisition.dmd.dmd_mask.reload_transfo_matrix()

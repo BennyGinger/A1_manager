@@ -3,7 +3,7 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from microscope_hardware.nikon import NikonTi2
 
 
-def _prompt_for_center(nikon: 'NikonTi2') -> tuple[float, float]:
+def prompt_for_center(nikon: 'NikonTi2') -> tuple[float, float]:
     """Prompt the user to move the stage to the center of the dish."""
     
     input("Move the center of the objective to the center of the well A1 and press 'Enter'")

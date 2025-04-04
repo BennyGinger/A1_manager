@@ -16,7 +16,7 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
     well_width: float = field(init=False)
     well_length: float = field(init=False)
     
-    def _unpack_well_properties(self, well_measurments: WellSquareCoord, **kwargs)-> None: 
+    def unpack_well_properties(self, well_measurments: WellSquareCoord, **kwargs)-> None: 
         """
         Unpack the well properties from the well measurements.
         Kwarg is not used in this subclass and can be ignored.
@@ -29,7 +29,7 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
         self.well_width = abs(self.y_br - self.y_tl)
         self.well_length = abs(self.x_br - self.x_tl)
     
-    def _generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float])-> tuple[list,list]:
+    def generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float])-> tuple[list,list]:
         """Get the list of center coordinates for each axis."""
         # Calculate the center position of the first and last rectangle
         y_start = self.y_tl + self.window_size[0] / 2 + align_correction[0]
@@ -43,7 +43,7 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
         x_coords = np.linspace(x_start, x_end, int(num_rects[1])).tolist()
         return y_coords, x_coords
     
-    def _update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:
+    def update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:
         """Update the well grid with the new rectangle center."""
         offset_x, offset_y = self.window_center_offset_um
         adjusted_x = x + offset_x

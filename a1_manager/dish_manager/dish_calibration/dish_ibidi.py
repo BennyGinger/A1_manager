@@ -4,7 +4,7 @@ from string import ascii_uppercase
 
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
-from dish_manager.dish_utils.prompt_utils import _prompt_for_center
+from dish_manager.dish_utils.prompt_utils import prompt_for_center
 from utils.utility_classes import WellSquareCoord
 
 
@@ -55,7 +55,7 @@ class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
         """
         
         # Prompt the user to move the stage to the center of the A1 well
-        x_center, y_center = _prompt_for_center(nikon)
+        x_center, y_center = prompt_for_center(nikon)
         
         # Calculate the top-left and bottom-right corners for well A1.
         x_tl = x_center + self.well_length / 2

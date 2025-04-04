@@ -13,11 +13,10 @@ class AndorCamera:
         self.core.set_property('LightPath','State',1)
         
         # Set the camera properties
-        self.set_camera_binning(binning)
+        self._set_camera_binning(binning)
         self.set_camera_exposure(exposure_ms)
     
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-    def set_camera_binning(self, binning: int)-> None:
+    def _set_camera_binning(self, binning: int)-> None:
         """Set the camera binning."""
         self.core.set_property('Andor sCMOS Camera','Binning',f"{binning}x{binning}")
         self.binning = binning
@@ -26,4 +25,3 @@ class AndorCamera:
         """Set the camera exposure time."""
         self.core.set_property('Andor sCMOS Camera', 'Exposure', exposure_ms)
         self.exposure_ms = exposure_ms
-    

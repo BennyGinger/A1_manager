@@ -15,7 +15,7 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
     well_length: float = field(init=False)
     n_corners_in: int = field(init=False)
     
-    def _unpack_well_properties(self, well_measurments: WellCircleCoord, **kwargs)-> None:
+    def unpack_well_properties(self, well_measurments: WellCircleCoord, **kwargs)-> None:
         """
         Unpack the well properties from the measurements.
         Kawrgs is used to pass the number of corners that need to be inside the circle.
@@ -26,7 +26,7 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
         self.center = well_measurments['center']
         self.n_corners_in = 4 if n_corners_in is None else n_corners_in
     
-    def _generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float])-> tuple[list[float], list[float]]:
+    def generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float])-> tuple[list[float], list[float]]:
         """
         Compute the x and y coordinates for rectangle centers within the circular well.
         The x-coordinates span from the left boundary to the right boundary and the y-coordinates from the top boundary to the bottom boundary.
@@ -44,7 +44,7 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
         x_coords = np.linspace(x_start, x_end, int(num_rects[0])).tolist()
         return x_coords, y_coords
     
-    def _update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:
+    def update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:
         """
         Update the well grid with a new rectangle center if it meets the criteria.
         The rectangle is only added if at least `n_corners_in` of its corners are within the circle.

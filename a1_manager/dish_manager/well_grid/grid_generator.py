@@ -1,7 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 
-from dish_manager.dish_utils.geometry_utils import _compute_optimal_overlap
+from dish_manager.dish_utils.geometry_utils import compute_optimal_overlap
 
 
 @dataclass
@@ -22,7 +22,7 @@ class GridBuilder:
         if overlap is not None:
             self.overlaps = (overlap, overlap)
         else:
-            self.overlaps = _compute_optimal_overlap(self.window_size, *self.axis_length)
+            self.overlaps = compute_optimal_overlap(self.window_size, *self.axis_length)
     
     def _define_number_of_rectangles(self) -> None:
         """Determines the maximum number of rectangles that can fit along each axis."""

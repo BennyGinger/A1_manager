@@ -87,5 +87,3 @@ class DishCalibManager(ABC):
             well_selection = [well_selection]
         
         return {well: coord for well, coord in dish_measurements.items() if well in well_selection}
-
-  

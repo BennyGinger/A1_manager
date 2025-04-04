@@ -22,8 +22,7 @@ class Lamp:
         turret_state = 0 if lamp_name == 'DiaLamp' else 1
         self.core.set_property('Turret1Shutter', 'State', turret_state)
     
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private. Currently, it is only used in the preset_channel method.
-    def select_filters(self, fTurret: int, fWheel: int)-> None:
+    def _select_filters(self, fTurret: int, fWheel: int)-> None:
         """Select filter turret and filter wheel."""
         if fTurret not in range(6):
             raise ValueError(
@@ -38,10 +37,9 @@ class Lamp:
         self.core.set_property('FilterTurret1', 'State', fTurret)
         self.core.set_property('FilterWheel1', 'State', fWheel)
     
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private. Currently, it is only used in the preset_channel method.
-    def select_intensity(self, led: str, intensity: float)-> None:
+    def _select_intensity(self, led: str, intensity: float)-> None:
         """"Set the intensity of the LED lamp."""
-        self.reset_intensity()
+        self._reset_intensity()
         
         # For pE-800, convert 405 to 400 since it does not support 405.
         if self.lamp_name=='pE-800':
@@ -55,8 +53,7 @@ class Lamp:
         # Set the intensity of the given channel
         self.core.set_property(self.lamp_name, f'Intensity{channel}', str(intensity))
 
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private. Currently, it is only used in the select_intensity method.
-    def reset_intensity(self)-> None:
+    def _reset_intensity(self)-> None:
         """Reset the intensity of all channels to 0."""
         for channel in self.LEDdefault.values():
             self.core.set_property(self.lamp_name, f'Intensity{channel}', 0)
@@ -76,12 +73,11 @@ class Lamp:
             oc_dict['intensity'] = intensity
         
         # Apply the optical configuration
-        self.select_filters(oc_dict['fTurret'], oc_dict['fWheel'])
+        self._select_filters(oc_dict['fTurret'], oc_dict['fWheel'])
         self.select_LED(oc_dict['led'])
-        self.select_intensity(oc_dict['led'], oc_dict['intensity'])
+        self._select_intensity(oc_dict['led'], oc_dict['intensity'])
     
     @staticmethod
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private. Currently, it is only used in the select_intensity method.
     def convert_405_to_400(led: str | list[str]) -> str | list[str]:
         """Convert 405 to 400 for pE-800."""
         if isinstance(led, list):

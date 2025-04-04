@@ -18,7 +18,7 @@ class DMD:
         self.dmd_mask = DMDMask(self.core, slm_name)
         # Initialize DMD with a fullON mask by default
         self.load_dmd_mask('fullON')
-        self.set_trigger_mode(trigger_mode)
+        self._set_trigger_mode(trigger_mode)
 
     def set_dmd_exposure(self, exposure_sec: int) -> None:
         """Set the DMD exposure time."""
@@ -28,12 +28,12 @@ class DMD:
         """Activate the DMD by displaying the current mask."""
         self.core.display_slm_image(self.slm_name)
         
-    def project_mask(self, mask: np.ndarray)-> None:
+    def _project_mask(self, mask: np.ndarray)-> None:
         """Project the given mask on the DMD and activate it."""
         self.core.set_slm_image(self.slm_name, mask)
         self.activate()
 
-    def set_trigger_mode(self, trigger_mode: str)-> None:
+    def _set_trigger_mode(self, trigger_mode: str)-> None:
         """
         Set the trigger mode of the DMD.
         Valid options include 'InternalExposure' (Manual) and 'ExternalBulb' (TTL).
@@ -45,13 +45,12 @@ class DMD:
         Load a DMD mask from a string, file path, or numpy array, optionally transforming it,
         and project it to the DMD.
         """
-        dmd_mask = self.get_dmd_mask(input_mask, transform_mask)
+        dmd_mask = self._get_dmd_mask(input_mask, transform_mask)
         # Project mask into DMD
-        self.project_mask(dmd_mask)
+        self._project_mask(dmd_mask)
         return dmd_mask
     
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private. Currently only called from load_dmd_mask method.
-    def get_dmd_mask(self, input_mask: str | Path | np.ndarray, transform_mask: bool=True)-> np.ndarray:
+    def _get_dmd_mask(self, input_mask: str | Path | np.ndarray, transform_mask: bool=True)-> np.ndarray:
         """Create a DMD mask array from various input types."""
         if isinstance(input_mask, str):
             return self.dmd_mask.get_predefined_mask(input_mask)

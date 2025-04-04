@@ -2,7 +2,7 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from dataclasses import dataclass, field
 from string import ascii_uppercase
 
-from dish_manager.dish_utils.prompt_utils import _prompt_for_center
+from dish_manager.dish_utils.prompt_utils import prompt_for_center
 from utils.utility_classes import WellCircleCoord
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
@@ -45,7 +45,7 @@ class Dish96well(DishCalibManager, dish_name="96well"):
         Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle objects.
         """
         
-        x_tl, y_tl = _prompt_for_center(nikon)
+        x_tl, y_tl = prompt_for_center(nikon)
 
         # Create wells
         dish_measurements: dict[str, WellCircleCoord] = {}

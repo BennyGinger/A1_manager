@@ -11,7 +11,7 @@ class NikonTi2:
     
     def __init__(self, core: Core, objective: str, focus_device: str='ZDrive') -> None:
         self.core = core
-        self.select_objective(objective)
+        self._select_objective(objective)
         self.focus_device = focus_device
         # Set focus device
         self.select_focus_device(focus_device)
@@ -46,8 +46,7 @@ class NikonTi2:
         if stage_position[self.focus_device] is not None:
             self.core.set_position(self.focus_device, stage_position[self.focus_device])
     
-    #TODO: Note form Raph: Is this method meant to be also called from the user? If not, we can make it private.
-    def select_objective(self, objective: str)-> None:
+    def _select_objective(self, objective: str)-> None:
         """Select the objective to use. Expected objective string: '[number]x' e.g. 10x, 20x."""
         Objectifdefault = {'10x':1, '20x':2}
         self.objective = objective

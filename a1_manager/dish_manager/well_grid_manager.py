@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import Iterable, ClassVar
 
-from dish_manager.dish_utils.geometry_utils import _randomise_fov
+from dish_manager.dish_utils.geometry_utils import randomise_fov
 from utils.utils import load_config_file
 from dish_manager.well_grid.grid_generator import GridBuilder
 from utils.utility_classes import StageCoord, WellBaseCoord
@@ -105,12 +105,12 @@ class WellGridManager(ABC):
         return (self.well_width, self.well_length)
     
     @abstractmethod
-    def _unpack_well_properties(self, well_measurements: dict, **kwargs) -> None:
+    def unpack_well_properties(self, well_measurements: dict, **kwargs) -> None:
         """Subclasses must implement this method to unpack well-specific properties."""
         pass
     
     @abstractmethod
-    def _generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float]) -> tuple[list,list]:
+    def generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float]) -> tuple[list,list]:
         """Subclasses must implement this method to compute the coordinates of the rectangles along each axis."""
         pass
     
@@ -123,11 +123,11 @@ class WellGridManager(ABC):
             # To optimise the movement of the stage, while taking images
             y_iterable: Iterable[float] = y_coords if i % 2 == 0 else list(reversed(y_coords))
             for y in y_iterable:
-                count = self._update_well_grid(well_grid, temp_point, count, x, y)
+                count = self.update_well_grid(well_grid, temp_point, count, x, y)
         return well_grid
     
     @abstractmethod
-    def _update_well_grid(self, well_grid: dict, temp_point: dict, count: int, x: float, y: float) -> int:
+    def update_well_grid(self, well_grid: dict, temp_point: dict, count: int, x: float, y: float) -> int:
         """Subclasses must implement this method to update the well grid with the coordinates of the rectangles."""
         pass
     
@@ -145,14 +145,14 @@ class WellGridManager(ABC):
         """
         
         # Extract dish and imaging properties
-        self._unpack_well_properties(well_measurements, n_corners_in=n_corners_in)
+        self.unpack_well_properties(well_measurements, n_corners_in=n_corners_in)
         
         # Calculate the layout parameters for the grid
         grid_builder = GridBuilder()
         num_rects, align_correction = grid_builder.calculate_layout_parameters(self.window_size, self.axis_length, overlap)
         
         # Get list of all coords of rectangle centers on each axis
-        x_coord, y_coord = self._generate_coordinates_per_axis(num_rects, align_correction)
+        x_coord, y_coord = self.generate_coordinates_per_axis(num_rects, align_correction)
         
         # Create an "empty" template point that contains the focus plane of the current well
         temp_point = well_measurements.get_template_point_coord()
@@ -163,4 +163,4 @@ class WellGridManager(ABC):
         # Randomize the field of view if necessary
         if numb_field_view is None:
             return well_grid
-        return _randomise_fov(well_grid, numb_field_view)
+        return randomise_fov(well_grid, numb_field_view)
