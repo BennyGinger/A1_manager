@@ -1,6 +1,8 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 
+import logging
+
 from utils.utility_classes import WellCircleCoord
 from dish_manager.dish_utils.prompt_utils import prompt_for_edge_points
 from microscope_hardware.nikon import NikonTi2
@@ -47,9 +49,9 @@ class Dish35mm(DishCalibManager, dish_name='35mm'):
             center, measured_radius = find_circle(point1, point2, point3)
             
             if not self.expected_radius_lower < measured_radius < self.expected_radius_upper:
-                print(f"\nCalibration failed, start again! Radius={measured_radius} vs expected radius={self.expected_radius}")
+                logging.error(f"\nCalibration failed, start again! Radius={measured_radius} vs expected radius={self.expected_radius}")
                 continue
             
-            print(f"\nCalibration successful! Radius={measured_radius} vs expected radius={self.expected_radius}")
+            logging.info(f"\nCalibration successful! Radius={measured_radius} vs expected radius={self.expected_radius}")
             success_calibration = True
         return {'A1': WellCircleCoord(center=center, radius=measured_radius)}

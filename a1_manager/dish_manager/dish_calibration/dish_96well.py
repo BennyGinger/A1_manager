@@ -1,6 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 from string import ascii_uppercase
+import logging
 
 from dish_manager.dish_utils.prompt_utils import prompt_for_center
 from utils.utility_classes import WellCircleCoord
@@ -59,5 +60,5 @@ class Dish96well(DishCalibManager, dish_name="96well"):
                     radius=self.well_radius
                     )
 
-        print("Calibration successful for the 96-well plate.")
+        logging.info("Calibration successful for the 96-well plate.")
         return dish_measurements

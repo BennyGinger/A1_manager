@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import ClassVar
+import logging
 
 from utils.utility_classes import WellCircleCoord, WellSquareCoord
 from utils.utils import load_file
@@ -60,7 +61,7 @@ class DishCalibManager(ABC):
         """Calibrate the dish by computing the coordinates for each well. If the calibration file already exists, it will be loaded instead of recalibrating. Only the wells that will be measured (i.e., in well_selection) will be returned."""
         
         if self.calib_path.exists() and not overwrite:
-            print(f"Calibration file already exists at {self.calib_path}.")
+            logging.info(f"Calibration file already exists at {self.calib_path}.")
             dish_calibration = load_file(self.calib_path)
             # Filter the wells based on the provided well selection
             return self._filter_wells(well_selection, dish_calibration)

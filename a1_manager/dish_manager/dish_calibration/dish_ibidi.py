@@ -1,6 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 from string import ascii_uppercase
+import logging
 
 from microscope_hardware.nikon import NikonTi2
 from dish_manager.dish_calib_manager import DishCalibManager
@@ -80,5 +81,5 @@ class DishIbidi(DishCalibManager, dish_name='ibidi-8well'):
                     top_left=(well_x_tl, well_y_tl), 
                     bottom_right=(well_x_br, well_y_br)
                     )
-        print("Calibration successful for Ibidi dish!")
+        logging.info("Calibration successful for Ibidi dish!")
         return dish_measurements

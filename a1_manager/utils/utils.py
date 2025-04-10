@@ -3,6 +3,7 @@ from pathlib import Path
 from datetime import datetime
 import json
 from itertools import combinations
+import logging
 
 import numpy as np
 import tifffile as tiff
@@ -89,7 +90,7 @@ def load_config_file(file_name_key: str)-> dict | None:
             found_file = file
     
     if found_file is None:
-        print(f"No {file_name_key} found.")
+        logging.warning(f"No {file_name_key} found.")
         return None
     
     return load_file(found_file)
@@ -98,7 +99,7 @@ def load_file(file_path: Path)-> dict | None:
     """Load a json file. Use the decode_dataclass function to decode the dataclass if needed."""
     
     if not file_path.exists():
-        print(f"No file found at {file_path}")
+        logging.error(f"No file found at {file_path}")
         return None
     
     with open(file_path) as json_file:
@@ -133,7 +134,7 @@ def save_file(file_path: Path, data: dict)-> None:
 #         return None
 #     threshold_date = datetime.now() - timedelta(days=numb_days)
 #     if file_date < threshold_date:
-#         print(log_message)
+#         logging.info(log_message)
 
 # def rm_specific_file(file_type: str, key_file_name: str='')-> None:
 #     parent_path = getcwd()
@@ -141,7 +142,7 @@ def save_file(file_path: Path, data: dict)-> None:
 #     for file in listdir(parent_path):
 #         if file.__contains__(pattern):
 #             remove(join(parent_path,file))
-#             print(f"Removed old {key_file_name} {file}")
+#             logging.info(f"Removed old {key_file_name} {file}")
 
 # def rm_all_files_from_dir(path: Path)-> None:
 #     for file in path.iterdir():
@@ -215,7 +216,7 @@ def threshold_img(img: np.ndarray)-> np.ndarray:
 #         value = func(*args, **kwargs)  # Call the decorated function
 #         end_time = time()  # End time
 #         run_time = end_time - start_time  # Calculate execution time
-#         print(f"Finished {func.__name__!r} in {run_time:.4f} secs")
+#         logging.info(f"Finished {func.__name__!r} in {run_time:.4f} secs")
 #         return value
 #     return wrapper_timer
 

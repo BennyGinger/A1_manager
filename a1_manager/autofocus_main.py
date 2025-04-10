@@ -2,6 +2,7 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from pathlib import Path
 
 from matplotlib import pyplot as plt
+import logging
 
 from main import A1Manager
 from a1_manager.autofocus.af_manager import AutoFocusManager
@@ -18,6 +19,15 @@ SMALL_FOCUS_RANGE = {
     'ZDrive':{'searchRange':200, 'step':10},
     'PFSOffset':{'searchRange':1000, 'step':100}
 }
+
+logging.basicConfig(
+    level=logging.INFO, # Set the logging level to INFO, other options: DEBUG, WARNING, ERROR, CRITICAL
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler("microscope_control_autofocus.log")
+    ]
+)
 
 def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrite: bool, af_savedir: Path=None)-> dict[str, WellCircleCoord | WellSquareCoord] | None:
         """
@@ -38,7 +48,7 @@ def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrit
         
         # Initialize focus device
         focus_device = a1_manager.core.get_property('Core', 'Focus')
-        print(f'\nAutofocus with {focus_device} using {method} method')
+        logging.info(f'\nAutofocus with {focus_device} using {method} method')
         a1_manager.nikon.select_focus_device(focus_device)
         
         # Load dish measurements
@@ -48,10 +58,10 @@ def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrit
         while True:    
             # Run autofocus
             for idx, (well, measurement) in enumerate(dish_measurements.items()):
-                print(f'\nAutofocus for well {well}')
+                logging.info(f'\nAutofocus for well {well}')
                 
                 if measurement[focus_device] is not None and not overwrite:
-                    print(f"Autofocus already done for {well} with {focus_device} at {measurement[focus_device]}")
+                    logging.info(f"Autofocus already done for {well} with {focus_device} at {measurement[focus_device]}")
                     continue
                     
                 # Move to center of well
@@ -60,13 +70,13 @@ def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrit
 
                 # If first well, apply large focus range only for square gradient method
                 if idx == 0 and method != 'Manual':
-                    print(f'Apply large focus range for {focus_device} in the center of well')
+                    logging.info(f'Apply large focus range for {focus_device} in the center of well')
                     autofocus.find_focus(**LARGE_FOCUS_RANGE[focus_device])
                 
                 # Apply fine focus range
-                print(f'Fine tuned autofocus with {focus_device} in the center of well')
+                logging.info(f'Fine tuned autofocus with {focus_device} in the center of well')
                 focus = autofocus.find_focus(**SMALL_FOCUS_RANGE[focus_device])
-                print(f'Focus value: {focus}')
+                logging.info(f'Focus value: {focus}')
                 
                 # If first well, show the image
                 if idx == 0:
@@ -76,11 +86,11 @@ def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrit
                     resp = input("If focus is good press enter, else type 'r' to restart or 'q' to quit: ")
                     if resp.lower() == 'q':
                         # Exit autofocus process
-                        print("Exiting autofocus process...\n")
+                        logging.warning("Exiting autofocus process...\n")
                         return None
                     elif resp.lower() == 'r':
                         # Will restart from the for loop
-                        print("Restarting autofocus process...\n")
+                        logging.info("Restarting autofocus process...\n")
                         break
                 
                 # Update dish measurements  

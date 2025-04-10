@@ -4,6 +4,7 @@ from time import sleep
 
 import numpy as np
 from pycromanager import Core
+import logging
 
 from microscope_hardware.nikon import NikonTi2
 from microscope_hardware.cameras import AndorCamera
@@ -15,6 +16,15 @@ from utils.utils import load_config_file
 OPTICAL_CONFIGURATION = load_config_file('optical_configuration')
 
 IS_DMD_ATTACHED = {'pE-800': True, 'pE-4000': False, 'DiaLamp': False}
+
+logging.basicConfig(
+    level=logging.INFO, # Set the logging level to INFO, other options: DEBUG, WARNING, ERROR, CRITICAL
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler("microscope_control.log")
+    ]
+)
 
 class A1Manager:
     """ Class that allows any kind of aquisition with the A1_dmd."""
