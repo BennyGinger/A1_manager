@@ -100,14 +100,14 @@ def dummy_core():
 @pytest.fixture
 def dummy_a1_manager(monkeypatch, dummy_core):
     # Replace in the dependencies of A1Manager:
-    from microscope_hardware import nikon, cameras, dmd_manager, lamps_factory
+    from a1_manager.microscope_hardware import nikon, cameras, dmd_manager, lamps_factory
     monkeypatch.setattr(nikon, "NikonTi2", DummyNikon)
     monkeypatch.setattr(cameras, "AndorCamera", DummyCamera)
     monkeypatch.setattr(lamps_factory, "get_lamp", dummy_get_lamp)
     monkeypatch.setattr(dmd_manager, "DMD", dummy_DMD)
     
     # Override the load_config_file function in utils so that it returns a dummy configuration dict.
-    from utils import utils
+    from a1_manager.utils import utils
     monkeypatch.setattr(utils, "load_config_file", lambda key: {"exposure_ms": 150, "led": "dummy_led"})
     
     # Create the A1Manager
