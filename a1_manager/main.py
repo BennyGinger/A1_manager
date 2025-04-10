@@ -45,7 +45,7 @@ class A1Manager:
         if self.is_dmd_attached:
             self.dmd = Dmd(self.core,dmd_trigger_mode)
     
-    def oc_settings(self, optical_configuration: str, intensity: float | None = None, exposure_ms: float | None = None)-> None:
+    def oc_settings(self, optical_configuration: str, intensity: float | None = None, exposure_ms: float | None = None, light_path: int | int = None)-> None:
         """Set the optical configuration for the microscope."""
         # Set the filters and led settings for the optical configuration
         oc = OPTICAL_CONFIGURATION[optical_configuration]
@@ -60,8 +60,16 @@ class A1Manager:
         
         # Set the lamp settings
         self.lamp.preset_channel(oc, intensity)
-        # TODO: Note from Raph: Do we really want this hardcoded? -> into config file
-        self.nikon.set_light_path(1) # Change Light path: 0=EYE, 1=R, 2=AUX and 3=L
+        
+        if light_path is None:
+            light_path = oc['light_path']
+        oc = {k:v for k, v in oc.items() if k != 'light_path'}
+        
+        # Set the light path
+        if light_path not in [0,1,2,3]:
+            logging.error(f"Invalid light path: {light_path}. Must be 0, 1, 2 or 3.")
+            raise ValueError(f"Invalid light path: {light_path}. Must be 0, 1, 2 or 3.")
+        self.nikon.set_light_path(light_path) # Change Light path: 0=EYE, 1=R, 2=AUX and 3=L
         
         # Swith the lappMainBranch to the correct position
         if self.lamp.lapp_main_branch is not None:
