@@ -84,6 +84,7 @@ def run_autofocus(method: str, a1_manager: A1Manager, calib_path: Path, overwrit
                     plt.imshow(img)
                     plt.show()
                     resp = input("If focus is good press enter, else type 'r' to restart or 'q' to quit: ")
+                    logging.info(f"User input for autofocus confirmation: '{resp}'")
                     if resp.lower() == 'q':
                         # Exit autofocus process
                         logging.warning("Exiting autofocus process...\n")

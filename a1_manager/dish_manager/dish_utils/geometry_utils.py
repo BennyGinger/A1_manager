@@ -4,6 +4,7 @@ import math
 import numpy as np
 from python_tsp.heuristics import solve_tsp_simulated_annealing
 from python_tsp.distances import euclidean_distance_matrix
+import logging
 
 from a1_manager.utils.utility_classes import StageCoord
 
@@ -31,6 +32,7 @@ def find_circle(point1: tuple[float, float], point2: tuple[float, float], point3
     # Calculate the denominator, which is 2 times the determinant of the matrix
     denominator = 2 * (x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))
     if denominator == 0:
+        logging.error("The given points are collinear; a unique circle cannot be determined.")
         raise ValueError("The given points are collinear; a unique circle cannot be determined.")
 
     # Calculate the circle's center using the circumcenter formula
