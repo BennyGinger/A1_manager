@@ -22,7 +22,7 @@ logging.basicConfig(
     format="%(asctime)s [%(levelname)s] %(message)s",
     handlers=[
         logging.StreamHandler(),
-        logging.FileHandler("microscope_control.log")
+        logging.FileHandler("logs/microscope_control.log")
     ]
 )
 
