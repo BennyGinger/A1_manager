@@ -11,7 +11,7 @@ from utils.utils import load_config_file
 DEFAULT_SLM_NAME = 'Mosaic3'
 DEFAULT_FILTER_TURRET_NAME = 'FilterTurret1'
 
-class DMDMask:
+class DmdMask:
     """Class for generating and transforming masks for the DMD."""
     __slots__ = ('core', 'slm_name', 'dmd_size', 'transfo_matrix', 'filter_turret_name')
     def __init__(self, core: Core, slm_name: str = DEFAULT_SLM_NAME, filter_turret_name: str = DEFAULT_FILTER_TURRET_NAME) -> None:

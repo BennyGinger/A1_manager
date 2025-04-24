@@ -20,6 +20,9 @@ SMALL_FOCUS_RANGE = {
     'PFSOffset':{'searchRange':1000, 'step':100}
 }
 
+log_dir = Path(__file__).resolve().parent.parent / "logs"
+log_dir.mkdir(exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO, # Set the logging level to INFO, other options: DEBUG, WARNING, ERROR, CRITICAL
     format="%(asctime)s [%(levelname)s] %(message)s",

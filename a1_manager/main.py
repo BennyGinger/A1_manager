@@ -17,6 +17,9 @@ OPTICAL_CONFIGURATION = load_config_file('optical_configuration')
 
 IS_DMD_ATTACHED = {'pE-800': True, 'pE-4000': False, 'DiaLamp': False}
 
+log_dir = Path(__file__).resolve().parent.parent / "logs"
+log_dir.mkdir(exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO, # Set the logging level to INFO, other options: DEBUG, WARNING, ERROR, CRITICAL
     format="%(asctime)s [%(levelname)s] %(message)s",
@@ -46,14 +49,33 @@ class A1Manager:
             self.dmd = Dmd(self.core,dmd_trigger_mode)
     
     def oc_settings(self, optical_configuration: str, intensity: float | None = None, exposure_ms: float | None = None, light_path: int | int = None)-> None:
-        """Set the optical configuration for the microscope."""
+        """Set the optical configuration for the microscope.
+        
+        Args:
+        - optical_configuration (str): The optical configuration to set. Must be one of the keys in the OPTICAL_CONFIGURATION dictionary. e.g. 'GFP', 'RFP', etc.
+        - intensity (float): optional, the intensity of the lamp. If None, it will use the default value from the optical configuration.
+        - exposure_ms (float): optional, the exposure time in milliseconds. If None, it will use the default value from the optical configuration.
+        - light_path (int): optional, the light path to use. If None, it will use the default value from the optical configuration.
+        """
+              
         # Set the filters and led settings for the optical configuration
-        oc = OPTICAL_CONFIGURATION[optical_configuration]
+        # oc = OPTICAL_CONFIGURATION[optical_configuration]
+        cfg = OPTICAL_CONFIGURATION
+        
+        default_lp = cfg.get('light_path')
+        if default_lp is None:
+            logging.warning("No global 'light_path' defined in optical_configuration; using 1 as fallback.")
+            default_lp = 1
+        
+        channel_cfg = cfg.get(optical_configuration)
+        if channel_cfg is None:
+            logging.error(f"Optical configuration '{optical_configuration}' not found.")
+            raise KeyError(f"Optical configuration '{optical_configuration}' not found.")
         
         # Extract exposure time from oc
         if exposure_ms is None:
-            exposure_ms = oc['exposure_ms']
-        oc = {k:v for k, v in oc.items() if k != 'exposure_ms'}
+            exposure_ms = channel_cfg.get('exposure_ms')
+        oc = {k: v for k, v in channel_cfg.items() if k not in ('exposure_ms', 'light_path')}
         
         # Set the camera exposure
         self.camera.set_camera_exposure(exposure_ms)
@@ -61,16 +83,17 @@ class A1Manager:
         # Set the lamp settings
         self.lamp.preset_channel(oc, intensity)
         
-        if light_path is None:
-            light_path = oc['light_path']
-        oc = {k:v for k, v in oc.items() if k != 'light_path'}
+        light_path = light_path if light_path is not None else default_lp
         
         # Set the light path
         if light_path not in [0,1,2,3]:
             logging.error(f"Invalid light path: {light_path}. Must be 0, 1, 2 or 3.")
             raise ValueError(f"Invalid light path: {light_path}. Must be 0, 1, 2 or 3.")
-        self.nikon.set_light_path(light_path) # Change Light path: 0=EYE, 1=R, 2=AUX and 3=L
         
+        self.nikon.set_light_path(light_path)  # Change Light path: 0=EYE, 1=R, 2=AUX and 3=L       
+        logging.debug(f"Set light path to {light_path} for configuration '{optical_configuration}'.")
+    
+    
         # Swith the lappMainBranch to the correct position
         if self.lamp.lapp_main_branch is not None:
             self.core.set_property('LappMainBranch1', 'State', self.lamp.lapp_main_branch)
@@ -146,3 +169,12 @@ class A1Manager:
         while True:  # Make sure that PFS is on, before snap
             if self.core.get_property('PFS','PFS Status') == '0000001100001010':
                 break
+
+if __name__ == "__main__":
+    # Example usage
+    run_dir = Path('D:\\Raph\\test_lib')
+    a1_manager = A1Manager(objective='20x', exposure_ms=150, binning=2, lamp_name='pE-800')
+    a1_manager.oc_settings(optical_configuration='GFP', intensity=10)
+    a1_manager.light_stimulate(duration_sec=10)
+    image = a1_manager.snap_image(dmd_exposure_sec=10)
+    print(image.shape)

@@ -5,7 +5,7 @@ from pycromanager import Core
 import numpy as np
 import tifffile as tiff
 
-from microscope_hardware.dmd.dmd_mask_factory import DEFAULT_SLM_NAME, DMDMask
+from microscope_hardware.dmd.dmd_mask_factory import DEFAULT_SLM_NAME, DmdMask
 
 
 class Dmd:
@@ -15,7 +15,7 @@ class Dmd:
     def __init__(self, core: Core, trigger_mode: str='ExternalBulb', slm_name: str = DEFAULT_SLM_NAME) -> None:
         self.core = core
         self.slm_name = slm_name
-        self.dmd_mask = DMDMask(self.core, slm_name)
+        self.dmd_mask = DmdMask(self.core, slm_name)
         # Initialize DMD with a fullON mask by default
         self.load_dmd_mask('fullON')
         self._set_trigger_mode(trigger_mode)

@@ -11,7 +11,7 @@ from skimage.draw import disk
 import cv2
 from skimage.measure import regionprops
 
-from utils.json_utils import decode_dataclass, encode_dataclass
+from .json_utils import decode_dataclass, encode_dataclass
 # from skimage.transform import resize
 # TODO: Remove bg_sub
 # from smo import SMO

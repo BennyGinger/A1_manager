@@ -1,7 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import asdict
 
-from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
+from .utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 
 def encode_dataclass(obj: any) -> dict:
     """Encode a dataclass object into a dictionary with the __class__ attribute to be able to decode it later.

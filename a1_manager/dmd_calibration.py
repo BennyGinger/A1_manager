@@ -12,6 +12,9 @@ CAM_SETTINGS = {'objective':'20x','exposure_ms':150,'binning':2,'lamp_name':'pE-
 PRESET_ARGS = {'optical_configuration':'GFP','intensity':5}
 LIST_TURRETS = ['5-Duo','4-Quad']
 
+log_dir = Path(__file__).resolve().parent.parent / "logs"
+log_dir.mkdir(exist_ok=True)
+
 logging.basicConfig(
     level=logging.INFO, # Set the logging level to INFO, other options: DEBUG, WARNING, ERROR, CRITICAL
     format="%(asctime)s [%(levelname)s] %(message)s",
