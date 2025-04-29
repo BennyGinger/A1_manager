@@ -11,6 +11,7 @@ from skimage.draw import disk
 import cv2
 from skimage.measure import regionprops
 
+from a1_manager import CONFIG_DIR
 from .json_utils import decode_dataclass, encode_dataclass
 # from skimage.transform import resize
 # TODO: Remove bg_sub
@@ -70,20 +71,10 @@ def create_date_savedir(parent_path: Path, folder_name: str=None)-> Path:
     savedir.mkdir(exist_ok=True)
     return savedir
 
-def find_project_root(current_path: Path) -> Path:
-    """
-    Recursively search for the project root directory by looking for the .git directory.
-    """
-    for parent in current_path.parents:
-        if parent.joinpath(".git").exists():
-            return parent
-    raise FileNotFoundError("Project root with .git directory not found.")
-
 def load_config_file(file_name_key: str)-> dict | None:
     """Load a json file from the config folder. Use the decode_dataclass function to decode the dataclass if needed."""
     
-    project_path = find_project_root(Path(__file__).resolve())
-    config_path = project_path.joinpath('config')
+    config_path = CONFIG_DIR
     found_file = None
     for file in config_path.iterdir():
         if file.match(f"*{file_name_key}*"):
@@ -109,8 +100,7 @@ def load_file(file_path: Path)-> dict | None:
 def save_config_file(file_name_key: str, data: dict)-> None:
     """Save a dictionary to a json file in the config folder."""
     
-    project_path = find_project_root(Path(__file__).resolve())
-    config_path = project_path.joinpath('config')
+    config_path = CONFIG_DIR
     save_name = f"{file_name_key}.json"
     save_path = config_path.joinpath(save_name)
     save_file(save_path, data)

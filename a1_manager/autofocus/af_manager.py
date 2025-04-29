@@ -2,7 +2,7 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from pathlib import Path
 
 from autofocus.af_mtds import MMAutoFocus, SqGradAutoFocus, ManualFocus
-from main import A1Manager
+from a1_manager.a1manager import A1Manager
 
 
 class AutoFocusManager:

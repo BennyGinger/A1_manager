@@ -1,9 +1,8 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from pathlib import Path
-
 import logging
 
-from main import A1Manager
+from a1_manager.a1manager import A1Manager
 from utils.utils import create_date_savedir, load_config_file, save_config_file
 from microscope_hardware.dmd.dmd_calibration_module import CalibrateFTurret
 
@@ -12,17 +11,7 @@ CAM_SETTINGS = {'objective':'20x','exposure_ms':150,'binning':2,'lamp_name':'pE-
 PRESET_ARGS = {'optical_configuration':'GFP','intensity':5}
 LIST_TURRETS = ['5-Duo','4-Quad']
 
-log_dir = Path(__file__).resolve().parent.parent / "logs"
-log_dir.mkdir(exist_ok=True)
-
-logging.basicConfig(
-    level=logging.INFO, # Set the logging level to INFO, other options: DEBUG, WARNING, ERROR, CRITICAL
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler("logs/microscope_control_dmdcalib.log")
-    ]
-)
+logger = logging.getLogger(__name__)
 
 def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> None:
     """Run the DMD calibration for the given run_dir."""
@@ -52,13 +41,13 @@ def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> 
         
         # If transformation matrix already exists, test it
         if dmd_fTurret.fTurret in transfo_matrix and not overwrite:
-            logging.info(f"Loading transformation matrix and testing for {dmd_fTurret.fTurret} turret")
+            logger.info(f"Loading transformation matrix and testing for {dmd_fTurret.fTurret} turret")
             # Test transformation matrix
             dmd_fTurret.test_transformation_matrix(aquisition)
             continue
         
         # Else create transformation matrix
-        logging.info(f"Creating transformation matrix for {dmd_fTurret.fTurret} turret")
+        logger.info(f"Creating transformation matrix for {dmd_fTurret.fTurret} turret")
         
         # Get turret matrix (convert it to list to be able to save it as json)
         transfo_matrix[dmd_fTurret.fTurret] = dmd_fTurret.get_transformation_matrix(aquisition).tolist()

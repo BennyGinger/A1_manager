@@ -3,9 +3,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from autofocus_main import run_autofocus
-from utils.utils import find_project_root, save_file, load_file
+from a1_manager import CONFIG_DIR
+from utils.utils import save_file, load_file
 from dish_manager.well_grid_manager import WellGridManager
-from main import A1Manager
+from a1_manager.a1manager import A1Manager
 from utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 from dish_manager.dish_calib_manager import DishCalibManager
 
@@ -44,8 +45,7 @@ class DishManager:
         
         # Copy the 96well calibration template file into the run directory
         if self.dish_name == "96well":
-            root_path = find_project_root(Path(__file__).resolve()) 
-            calib_temp_path = root_path.joinpath("config", calib_name)
+            calib_temp_path = CONFIG_DIR.joinpath(calib_name)
             calib_96well: dict[str, WellCircleCoord | WellSquareCoord] = load_file(calib_temp_path)
             save_file(self.calib_path, calib_96well)
 

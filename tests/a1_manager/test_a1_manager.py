@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 # Import the class to be tested from main.py
-from a1_manager.main import A1Manager
+from a1_manager.a1manager import A1Manager
 
 # BUG: The test file is not importing the A1Manager class correctly. Some problems with resolving the project root path.
 

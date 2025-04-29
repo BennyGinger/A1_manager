@@ -17,17 +17,8 @@ OPTICAL_CONFIGURATION = load_config_file('optical_configuration')
 
 IS_DMD_ATTACHED = {'pE-800': True, 'pE-4000': False, 'DiaLamp': False}
 
-log_dir = Path(__file__).resolve().parent.parent / "logs"
-log_dir.mkdir(exist_ok=True)
+logger = logging.getLogger(__name__)
 
-logging.basicConfig(
-    level=logging.INFO, # Set the logging level to INFO, other options: DEBUG, WARNING, ERROR, CRITICAL
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        logging.FileHandler("logs/microscope_control.log")
-    ]
-)
 
 class A1Manager:
     """ Class that allows any kind of aquisition with the A1_dmd."""
@@ -64,12 +55,12 @@ class A1Manager:
         
         default_lp = cfg.get('light_path')
         if default_lp is None:
-            logging.warning("No global 'light_path' defined in optical_configuration; using 1 as fallback.")
+            logger.warning("No global 'light_path' defined in optical_configuration; using 1 as fallback.")
             default_lp = 1
         
         channel_cfg = cfg.get(optical_configuration)
         if channel_cfg is None:
-            logging.error(f"Optical configuration '{optical_configuration}' not found.")
+            logger.error(f"Optical configuration '{optical_configuration}' not found.")
             raise KeyError(f"Optical configuration '{optical_configuration}' not found.")
         
         # Extract exposure time from oc
@@ -87,11 +78,11 @@ class A1Manager:
         
         # Set the light path
         if light_path not in [0,1,2,3]:
-            logging.error(f"Invalid light path: {light_path}. Must be 0, 1, 2 or 3.")
+            logger.error(f"Invalid light path: {light_path}. Must be 0, 1, 2 or 3.")
             raise ValueError(f"Invalid light path: {light_path}. Must be 0, 1, 2 or 3.")
         
         self.nikon.set_light_path(light_path)  # Change Light path: 0=EYE, 1=R, 2=AUX and 3=L       
-        logging.debug(f"Set light path to {light_path} for configuration '{optical_configuration}'.")
+        logger.debug(f"Set light path to {light_path} for configuration '{optical_configuration}'.")
     
     
         # Swith the lappMainBranch to the correct position
@@ -139,7 +130,6 @@ class A1Manager:
         sleep(duration_sec) # Time in seconds
         self.lamp.set_LED_shutter(0)
     
-    # TODO: Convert to a static method
     def _size_pixel2micron(self, size_in_pixel: int=None)-> float:
         """Convert size from pixel to micron. Return the size in float."""
         pixel_calibration = {'10x':0.6461,'20x':0.3258}
@@ -169,6 +159,7 @@ class A1Manager:
         while True:  # Make sure that PFS is on, before snap
             if self.core.get_property('PFS','PFS Status') == '0000001100001010':
                 break
+
 
 if __name__ == "__main__":
     # Example usage

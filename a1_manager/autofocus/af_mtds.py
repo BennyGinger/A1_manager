@@ -5,7 +5,7 @@ from pycromanager import Studio
 from tifffile import imwrite
 import numpy as np
 
-from main import A1Manager
+from a1_manager.a1manager import A1Manager
 
 
 class MMAutoFocus:

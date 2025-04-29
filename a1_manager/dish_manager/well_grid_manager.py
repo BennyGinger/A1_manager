@@ -7,7 +7,7 @@ from dish_manager.dish_utils.geometry_utils import randomise_fov
 from utils.utils import load_config_file
 from dish_manager.well_grid.grid_generator import GridBuilder
 from utils.utility_classes import StageCoord, WellBaseCoord
-from main import A1Manager
+from a1_manager.a1manager import A1Manager
 
 
 @dataclass
