@@ -2,7 +2,7 @@ import importlib
 import importlib.metadata
 from pathlib import Path
 
-from a1_manager.logging_setup import configure_logging
+from a1_manager.utils.logging_setup import configure_logging
 
 
 # Get the project root directory

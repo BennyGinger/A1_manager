@@ -12,7 +12,7 @@ from cv2 import getAffineTransform
 from skimage.draw import disk
 
 from a1_manager.a1manager import A1Manager
-from utils.utils import image_to_rgb, save_img, load_config_file, draw_square_from_circle, bounding_box_nDim, get_centroid, threshold_img
+from utils.utils import image_to_rgb, save_tif, load_config_file, draw_square_from_circle, bounding_box_nDim, get_centroid, threshold_img
 
 
 @dataclass
@@ -41,11 +41,11 @@ class CalibrateFTurret:
         # Take a snap image of the full dmd
         a1_manager.load_dmd_mask('fullON', transform_mask=False)
         dmd_fullON_img = a1_manager.snap_image()
-        save_img(dmd_fullON_img, self.img_savedir, 'dmd_fullON_img')
+        save_tif(dmd_fullON_img, self.img_savedir, 'dmd_fullON_img')
         
         # Threshold the image
         mask = threshold_img(dmd_fullON_img)
-        save_img(mask, self.img_savedir, 'dmd_fullON_mask')
+        save_tif(mask, self.img_savedir, 'dmd_fullON_mask')
         
         # Get boxed mask and its position. The slice corrdinate is (sliceY(start,end),sliceX(start,end))
         boxed_mask, box_coord = bounding_box_nDim(mask) 
@@ -107,16 +107,16 @@ class CalibrateFTurret:
         """
         points_list = [dmd_point.point_centroid for dmd_point in self.dmd_points_list]
         full_mask = self.create_full_input_mask(a1_manager, points_list)
-        save_img(full_mask, self.img_savedir, 'full_mask.tif')
+        save_tif(full_mask, self.img_savedir, 'full_mask.tif')
         
         # Affine transform the mask
         transformed_mask = a1_manager.dmd.dmd_mask.apply_affine_transform(full_mask, transfo_matrix)
-        save_img(transformed_mask, self.img_savedir, 'full_mask_transformed.tif')
+        save_tif(transformed_mask, self.img_savedir, 'full_mask_transformed.tif')
         
         # Project mask on the dmd with transformation matrix
         a1_manager.load_dmd_mask(transformed_mask, transform_mask=False)
         transformed_mask_img = a1_manager.snap_image()
-        save_img(transformed_mask_img, self.img_savedir, 'full_mask_img')
+        save_tif(transformed_mask_img, self.img_savedir, 'full_mask_img')
 
         # Display the original and transformed masks
         stack = np.stack([full_mask, transformed_mask_img]).astype('uint16')
@@ -207,7 +207,7 @@ class DMD_Point:
     
     def save_point_image(self, img: np.ndarray, img_name: str)-> Path:
         """Saves the provided image to disk and returns the file path."""
-        return save_img(img,self.savedir, f'{img_name}_{self.instance}')
+        return save_tif(img,self.savedir, f'{img_name}_{self.instance}')
     
     def get_img_of_mask(self, a1_manager: A1Manager)-> np.ndarray:
         """

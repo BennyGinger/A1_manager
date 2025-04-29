@@ -4,7 +4,7 @@ from pathlib import Path
 
 from autofocus_main import run_autofocus
 from a1_manager import CONFIG_DIR
-from utils.utils import save_file, load_file
+from utils.utils import save_json, load_json
 from dish_manager.well_grid_manager import WellGridManager
 from a1_manager.a1manager import A1Manager
 from utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
@@ -46,8 +46,8 @@ class DishManager:
         # Copy the 96well calibration template file into the run directory
         if self.dish_name == "96well":
             calib_temp_path = CONFIG_DIR.joinpath(calib_name)
-            calib_96well: dict[str, WellCircleCoord | WellSquareCoord] = load_file(calib_temp_path)
-            save_file(self.calib_path, calib_96well)
+            calib_96well: dict[str, WellCircleCoord | WellSquareCoord] = load_json(calib_temp_path)
+            save_json(self.calib_path, calib_96well)
 
     def calibrate_dish(self, well_selection: list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
         """
@@ -60,7 +60,7 @@ class DishManager:
         
         # Get the calibration measurements or calibrate the dish
         self.dish_calibration = dish.calibrate_dish(self.a1_manager.nikon, well_selection, overwrite)
-        save_file(self.calib_path, self.dish_calibration)
+        save_json(self.calib_path, self.dish_calibration)
         return self.dish_calibration
     
     def autofocus_dish(self, method: str, overwrite: bool, **kwargs) -> dict[str, WellCircleCoord | WellSquareCoord] | None:
@@ -96,5 +96,5 @@ class DishManager:
         # Save the dish grids
         dish_grids_name = f"grid_{self.dish_name}.json"
         grids_path = self.config_path.joinpath(dish_grids_name)
-        save_file(grids_path, dish_grids)
+        save_json(grids_path, dish_grids)
         return dish_grids

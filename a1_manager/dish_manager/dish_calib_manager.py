@@ -6,7 +6,7 @@ from typing import ClassVar
 import logging
 
 from utils.utility_classes import WellCircleCoord, WellSquareCoord
-from utils.utils import load_file
+from utils.utils import load_json
 from microscope_hardware.nikon import NikonTi2
 
 
@@ -62,7 +62,7 @@ class DishCalibManager(ABC):
         
         if self.calib_path.exists() and not overwrite:
             logging.info(f"Calibration file already exists at {self.calib_path}.")
-            dish_calibration = load_file(self.calib_path)
+            dish_calibration = load_json(self.calib_path)
             # Filter the wells based on the provided well selection
             return self._filter_wells(well_selection, dish_calibration)
         
