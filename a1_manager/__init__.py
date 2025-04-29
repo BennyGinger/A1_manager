@@ -1,8 +1,8 @@
 import importlib
 import importlib.metadata
-import logging
-from logging.handlers import RotatingFileHandler
 from pathlib import Path
+
+from a1_manager.logging_setup import configure_logging
 
 
 # Get the project root directory
@@ -11,18 +11,7 @@ _PROJECT_ROOT = Path(dist.locate_file(""))
 CONFIG_DIR = _PROJECT_ROOT.joinpath("config")
 
 # Set up logging
-log_dir = _PROJECT_ROOT.joinpath('logs')
-log_dir.mkdir(exist_ok=True)
-log_file = log_dir.joinpath("a1_manager.log")
-
-logging.basicConfig(
-    level=logging.INFO, # Set the logging level to INFO, other options: DEBUG, WARNING, ERROR, CRITICAL
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-        RotatingFileHandler(log_file, 
-                            maxBytes=10_000_000,   # rotate after ~10 MB
-                            backupCount=5)])       # keep 5 old files
+configure_logging()
     
 
 # Limits the import to the following classes and functions
