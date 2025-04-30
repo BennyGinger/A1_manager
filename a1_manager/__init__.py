@@ -17,6 +17,14 @@ configure_logging()
 # Limits the import to the following classes and functions
 __all__ = ['A1Manager', 'run_autofocus', 'dmd_calibration', 'launch_dish_workflow']
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    # these lines are invisible at runtime, but IDEs index them
+    from .a1manager       import A1Manager
+    from .autofocus_main  import run_autofocus
+    from .dmd_calibration import dmd_calibration
+    from .dish_main       import launch_dish_workflow
+
 # lazy importing of the modules
 def __getattr__(name: str) -> object:
     """Lazy import of the module."""

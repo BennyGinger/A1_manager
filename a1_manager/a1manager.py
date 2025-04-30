@@ -21,7 +21,16 @@ logger = logging.getLogger(__name__)
 
 
 class A1Manager:
-    """ Class that allows any kind of aquisition with the A1_dmd."""
+    """Class that allows any kind of aquisition with the A1_dmd. It is a wrapper around the Core, NikonTi2, AndorCamera and Dmd classes.
+    It allows to set the optical configuration, snap images, and control the DMD and lamp.
+    Args:
+        objective (str): The objective to use. Must be one of '10x', '20x'.
+        exposure_ms (float): The exposure time in milliseconds. Default is 100.
+        binning (int): The binning factor. Default is 2.
+        lamp_name (str): The name of the lamp to use. Must be one of 'pE-800', 'pE-4000', 'DiaLamp'. Default is 'pE-4000'.
+        focus_device (str): The focus device to use. Must be one of 'ZDrive', 'PFSOffset'. Default is 'ZDrive'.
+        dmd_trigger_mode (str): The trigger mode for the DMD. Must be one of 'InternalExpose', 'ExternalTrigger'. Default is 'InternalExpose'.
+        """
     __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'is_dmd_attached'
     
     def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-4000', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose') -> None:
