@@ -2,7 +2,7 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 
 import logging
 
-from microscope_hardware.nikon import NikonTi2
+from a1_manager.microscope_hardware.nikon import NikonTi2
 
 
 def prompt_for_center(nikon: 'NikonTi2') -> tuple[float, float]:

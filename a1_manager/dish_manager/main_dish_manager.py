@@ -4,11 +4,11 @@ from pathlib import Path
 
 from autofocus_main import run_autofocus
 from a1_manager import CONFIG_DIR
-from utils.utils import save_json, load_json
-from dish_manager.well_grid_manager import WellGridManager
+from a1_manager.utils.utils import save_json, load_json
+from a1_manager.dish_manager.well_grid_manager import WellGridManager
 from a1_manager.a1manager import A1Manager
-from utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
-from dish_manager.dish_calib_manager import DishCalibManager
+from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
+from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
 
 
 @dataclass

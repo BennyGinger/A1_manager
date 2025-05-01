@@ -3,10 +3,10 @@ from dataclasses import dataclass, field
 from string import ascii_uppercase
 import logging
 
-from microscope_hardware.nikon import NikonTi2
-from dish_manager.dish_calib_manager import DishCalibManager
-from dish_manager.dish_utils.prompt_utils import prompt_for_center
-from utils.utility_classes import WellSquareCoord
+from a1_manager.microscope_hardware.nikon import NikonTi2
+from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
+from a1_manager.dish_manager.dish_utils.prompt_utils import prompt_for_center
+from a1_manager.utils.utility_classes import WellSquareCoord
 
 
 SETTINGS_IBIDI = {

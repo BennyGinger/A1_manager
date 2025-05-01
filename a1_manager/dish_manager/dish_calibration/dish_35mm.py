@@ -3,11 +3,11 @@ from dataclasses import dataclass, field
 
 import logging
 
-from utils.utility_classes import WellCircleCoord
-from dish_manager.dish_utils.prompt_utils import prompt_for_edge_points
-from microscope_hardware.nikon import NikonTi2
-from dish_manager.dish_calib_manager import DishCalibManager
-from dish_manager.dish_utils.geometry_utils import find_circle
+from a1_manager.utils.utility_classes import WellCircleCoord
+from a1_manager.dish_manager.dish_utils.prompt_utils import prompt_for_edge_points
+from a1_manager.microscope_hardware.nikon import NikonTi2
+from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
+from a1_manager.dish_manager.dish_utils.geometry_utils import find_circle
 
 
 SETTINGS_35MM = {'expected_radius': 10.5 * 1000} # in micron

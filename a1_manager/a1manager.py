@@ -6,11 +6,11 @@ import numpy as np
 from pycromanager import Core
 import logging
 
-from microscope_hardware.nikon import NikonTi2
-from microscope_hardware.cameras import AndorCamera
-from microscope_hardware.dmd_manager import Dmd
-from microscope_hardware.lamps_factory import get_lamp
-from utils.utils import load_config_file
+from a1_manager.microscope_hardware.nikon import NikonTi2
+from a1_manager.microscope_hardware.cameras import AndorCamera
+from a1_manager.microscope_hardware.dmd_manager import Dmd
+from a1_manager.microscope_hardware.lamps_factory import get_lamp
+from a1_manager.utils.utils import load_config_file
 
 
 OPTICAL_CONFIGURATION = load_config_file('optical_configuration')

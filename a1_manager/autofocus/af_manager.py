@@ -1,7 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from pathlib import Path
 
-from autofocus.af_mtds import MMAutoFocus, SqGradAutoFocus, ManualFocus
+from a1_manager.autofocus.af_mtds import MMAutoFocus, SqGradAutoFocus, ManualFocus
 from a1_manager.a1manager import A1Manager
 
 

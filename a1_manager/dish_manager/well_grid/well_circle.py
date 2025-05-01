@@ -3,8 +3,8 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from utils.utility_classes import StageCoord, WellCircleCoord
-from dish_manager.well_grid_manager import WellGridManager
+from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord
+from a1_manager.dish_manager.well_grid_manager import WellGridManager
 
 
 @dataclass

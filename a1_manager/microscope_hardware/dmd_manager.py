@@ -5,7 +5,7 @@ from pycromanager import Core
 import numpy as np
 import tifffile as tiff
 
-from microscope_hardware.dmd.dmd_mask_factory import DEFAULT_SLM_NAME, DmdMask
+from a1_manager.microscope_hardware.dmd.dmd_mask_factory import DEFAULT_SLM_NAME, DmdMask
 
 
 class Dmd:

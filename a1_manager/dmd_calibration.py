@@ -3,8 +3,8 @@ from pathlib import Path
 import logging
 
 from a1_manager.a1manager import A1Manager
-from utils.utils import create_date_savedir, load_config_file, save_config_file
-from microscope_hardware.dmd.dmd_calibration_module import CalibrateFTurret
+from a1_manager.utils.utils import create_date_savedir, load_config_file, save_config_file
+from a1_manager.microscope_hardware.dmd.dmd_calibration_module import CalibrateFTurret
 
 
 CAM_SETTINGS = {'objective':'20x','exposure_ms':150,'binning':2,'lamp_name':'pE-800','dmd_trigger_mode':'InternalExpose'}

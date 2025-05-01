@@ -2,7 +2,7 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 
 from pycromanager import Core
 
-from microscope_hardware.lamps.base_lamp import Lamp
+from a1_manager.microscope_hardware.lamps.base_lamp import Lamp
 
 
 def get_lamp(core: Core, lamp_name: str) -> Lamp:

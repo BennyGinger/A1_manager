@@ -5,9 +5,9 @@ from pathlib import Path
 from typing import ClassVar
 import logging
 
-from utils.utility_classes import WellCircleCoord, WellSquareCoord
-from utils.utils import load_json
-from microscope_hardware.nikon import NikonTi2
+from a1_manager.utils.utility_classes import WellCircleCoord, WellSquareCoord
+from a1_manager.utils.utils import load_json
+from a1_manager.microscope_hardware.nikon import NikonTi2
 
 
 @dataclass

@@ -3,10 +3,10 @@ from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import Iterable, ClassVar
 
-from dish_manager.dish_utils.geometry_utils import randomise_fov
-from utils.utils import load_config_file
-from dish_manager.well_grid.grid_generator import GridBuilder
-from utils.utility_classes import StageCoord, WellBaseCoord
+from a1_manager.dish_manager.dish_utils.geometry_utils import randomise_fov
+from a1_manager.utils.utils import load_config_file
+from a1_manager.dish_manager.well_grid.grid_generator import GridBuilder
+from a1_manager.utils.utility_classes import StageCoord, WellBaseCoord
 from a1_manager.a1manager import A1Manager
 
 

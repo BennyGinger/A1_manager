@@ -2,7 +2,7 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 
 from pycromanager import Core
 
-from utils.utility_classes import StageCoord
+from a1_manager.utils.utility_classes import StageCoord
 
 
 class NikonTi2:
