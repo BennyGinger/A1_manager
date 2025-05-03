@@ -15,7 +15,7 @@ configure_logging()
     
 
 # Limits the import to the following classes and functions
-__all__ = ['A1Manager', 'run_autofocus', 'dmd_calibration', 'launch_dish_workflow']
+__all__ = ['A1Manager', 'run_autofocus', 'dmd_calibration', 'launch_dish_workflow', 'StageCoord']
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -24,6 +24,7 @@ if TYPE_CHECKING:
     from .autofocus_main  import run_autofocus
     from .dmd_calibration import dmd_calibration
     from .dish_main       import launch_dish_workflow
+    from .utils.utility_classes import StageCoord
 
 # lazy importing of the modules
 def __getattr__(name: str) -> object:
@@ -36,6 +37,8 @@ def __getattr__(name: str) -> object:
         return importlib.import_module(".dmd_calibration", __name__).dmd_calibration
     if name == "launch_dish_workflow":
         return importlib.import_module(".dish_main", __name__).launch_dish_workflow
+    if name == "StageCoord":
+        return importlib.import_module(".utils.utility_classes", __name__).StageCoord
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 def __dir__() -> list[str]:
