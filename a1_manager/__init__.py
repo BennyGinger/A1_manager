@@ -2,17 +2,11 @@ import importlib
 import importlib.metadata
 from pathlib import Path
 
-from a1_manager.utils.logging_setup import configure_logging
-
 
 # Get the project root directory
 dist = importlib.metadata.distribution("a1_manager")
 _PROJECT_ROOT = Path(dist.locate_file(""))
 CONFIG_DIR = _PROJECT_ROOT.joinpath("config")
-
-# Set up logging
-configure_logging()
-    
 
 # Limits the import to the following classes and functions
 __all__ = ['A1Manager', 'run_autofocus', 'dmd_calibration', 'launch_dish_workflow', 'StageCoord']

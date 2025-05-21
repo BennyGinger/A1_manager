@@ -2,7 +2,7 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from autofocus_main import run_autofocus
+from a1_manager.autofocus_main import run_autofocus
 from a1_manager import CONFIG_DIR
 from a1_manager.utils.utils import save_json, load_json
 from a1_manager.dish_manager.well_grid_manager import WellGridManager
@@ -63,7 +63,7 @@ class DishManager:
         save_json(self.calib_path, self.dish_calibration)
         return self.dish_calibration
     
-    def autofocus_dish(self, method: str, overwrite: bool, **kwargs) -> dict[str, WellCircleCoord | WellSquareCoord] | None:
+    def autofocus_dish(self, method: str, overwrite: bool, **kwargs) -> None:
         """
         Run autofocus for the dish_calibration in each well.
         The autofocus measurements are saved in the same calibration file.
@@ -73,8 +73,9 @@ class DishManager:
         return run_autofocus(method, self.a1_manager, self.calib_path, overwrite, af_savedir)
     
     def create_well_grids(self, dmd_window_only: bool, numb_field_view: int=None, overlap_percent: int=None, **kwargs) -> dict[str, dict[int, StageCoord]]:
-        """Create a well grid for a dish."""
-        
+        """
+        Create a well grid for a dish, where each well is a dictionary containing the coordinates of all the field of views.
+        """
         # Update overlap
         if numb_field_view is not None:
             overlap_percent = None # Then the grid will be maximised, i.e. with the optimum overlap
