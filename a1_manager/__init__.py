@@ -1,11 +1,12 @@
-# 1) auto-wire logging
-from gem_logging import configure
-configure()
-
 import importlib
 import importlib.metadata
 from pathlib import Path
 
+from gem_logging import configure_logging
+
+
+# Configure logging for the a1_manager package
+configure_logging()
 
 # Get the project root directory
 dist = importlib.metadata.distribution("a1_manager")
