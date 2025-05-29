@@ -1,3 +1,7 @@
+# 1) auto-wire logging
+from gem_logging import configure
+configure()
+
 import importlib
 import importlib.metadata
 from pathlib import Path
