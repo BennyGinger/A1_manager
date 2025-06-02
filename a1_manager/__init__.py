@@ -1,5 +1,4 @@
 import importlib
-import importlib.metadata
 from pathlib import Path
 
 from gem_logging import configure_logging
@@ -9,8 +8,7 @@ from gem_logging import configure_logging
 configure_logging()
 
 # Get the project root directory
-dist = importlib.metadata.distribution("a1_manager")
-_PROJECT_ROOT = Path(dist.locate_file(""))
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
 CONFIG_DIR = _PROJECT_ROOT.joinpath("config")
 
 # Limits the import to the following classes and functions
