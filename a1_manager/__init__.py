@@ -1,11 +1,6 @@
 import importlib
 from pathlib import Path
 
-from gem_logging import configure_logging
-
-
-# Configure logging for the a1_manager package
-configure_logging()
 
 # Get the project root directory
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent

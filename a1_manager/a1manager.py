@@ -1,10 +1,10 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from pathlib import Path
 from time import sleep
+import logging
 
 import numpy as np
 from pycromanager import Core
-import logging
 
 from a1_manager.microscope_hardware.nikon import NikonTi2
 from a1_manager.microscope_hardware.cameras import AndorCamera
