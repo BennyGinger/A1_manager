@@ -6,7 +6,7 @@ from a1_manager.a1manager import A1Manager
 from a1_manager.utils.utils import create_date_savedir, load_config_file, save_config_file
 from a1_manager.microscope_hardware.dmd.dmd_calibration_module import CalibrateFTurret
 
-
+# TODO: Refactor the calibration module to use the new A1Manager class
 CAM_SETTINGS = {'objective':'20x','exposure_ms':150,'binning':2,'lamp_name':'pE-800','dmd_trigger_mode':'InternalExpose'}
 PRESET_ARGS = {'optical_configuration':'GFP','intensity':5}
 LIST_TURRETS = ['5-Duo','4-Quad']
