@@ -72,7 +72,7 @@ class WellGridManager(ABC):
             return None
         
         # Get the fTurret to load the correct dmd_profile
-        f_turret = a1_manager.core.get_property('FilterTurret1','Label')
+        f_turret = a1_manager.core.get_property('FilterTurret1','Label') # type: ignore
         
         # Load the dmd profile
         dmd_profile = load_config_file('dmd_profile')
@@ -86,17 +86,19 @@ class WellGridManager(ABC):
         binned = tuple([int(corr//a1_manager.camera.binning) for corr in window_center_offset_pix])
         
         # Convert correction values to um
-        self.window_center_offset_um = tuple([a1_manager._size_pixel2micron(corr) for corr in binned])
+        offset_um = tuple([a1_manager._size_pixel2micron(corr) for corr in binned])
+        if len(offset_um) != 2:
+            raise ValueError(f"Expected 2 offset values, got {len(offset_um)}")
+        self.window_center_offset_um = (offset_um[0], offset_um[1])
     
     @property
+    @abstractmethod
     def axis_length(self)-> tuple[float,float]:
         """Return the length of the x and y axis of the well, respectively"""
-        if hasattr(self, 'radius'):
-            return (2 * self.radius, 2 * self.radius)
-        return (self.well_width, self.well_length)
+        pass
     
     @abstractmethod
-    def unpack_well_properties(self, well_measurements: dict, n_corners_in: int) -> None:
+    def unpack_well_properties(self, well_measurements: WellBaseCoord, n_corners_in: int) -> None:
         """
         Subclasses must implement this method to unpack well-specific properties.
         
@@ -123,12 +125,12 @@ class WellGridManager(ABC):
         return well_grid
     
     @abstractmethod
-    def update_well_grid(self, well_grid: dict, temp_point: dict, count: int, x: float, y: float) -> int:
+    def update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:
         """Subclasses must implement this method to update the well grid with the coordinates of the rectangles."""
         pass
     
     #################### Main method ####################
-    def create_well_grid(self, well_measurements: WellBaseCoord, numb_field_view: int | None, overlap: float = None, n_corners_in: int=4) -> dict[int, StageCoord]:
+    def create_well_grid(self, well_measurements: WellBaseCoord, numb_field_view: int | None, overlap: float | None = None, n_corners_in: int=4) -> dict[int, StageCoord]:
         """
         Main method called by the child class.
         Create a grid of rectangles that covers the well.

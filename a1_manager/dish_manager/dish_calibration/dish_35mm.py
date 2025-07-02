@@ -3,8 +3,8 @@ from dataclasses import dataclass, field
 
 import logging
 
-from a1_manager.utils.utility_classes import WellCircleCoord
-from a1_manager.dish_manager.dish_utils.prompt_utils import prompt_for_edge_points
+from a1_manager.utils.utility_classes import WellCircleCoord, WellSquareCoord
+from a1_manager.dish_manager.dish_utils.prompt_utils import prompt_for_edge_points, prompt_for_calibration_approval
 from a1_manager.microscope_hardware.nikon import NikonTi2
 from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
 from a1_manager.dish_manager.dish_utils.geometry_utils import find_circle
@@ -35,12 +35,16 @@ class Dish35mm(DishCalibManager):
         self.expected_radius_upper = self.expected_radius + (self.expected_radius * correction_percentage)
         self.expected_radius_lower = self.expected_radius - (self.expected_radius * correction_percentage)
     
-    def _calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellCircleCoord]:
+    def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord]:  # type: ignore[override]
         """
         Calibrates the 35mm dish by asking for three points along the edge of the circle.
         Returns a dictionary mapping a well identifier (e.g., 'A1') to a WellCircle.
+        
+        If the measured radius is outside the expected range, the user is prompted to either
+        proceed with the measured radius or restart the calibration process.
         """
-        # TODO: Instead of failing the calibration, ask if the user wants to use the measured radius, if yes continue, if no, start again
+        center = None
+        measured_radius = None
         success_calibration = False    
         while not success_calibration:
             # Define 3 points on the middle ring. The middle of the objective must be on the inner part of the ring
@@ -49,9 +53,18 @@ class Dish35mm(DishCalibManager):
             center, measured_radius = find_circle(point1, point2, point3)
             
             if not self.expected_radius_lower < measured_radius < self.expected_radius_upper:
-                logging.error(f"\nCalibration failed, start again! Radius={measured_radius} vs expected radius={self.expected_radius}")
-                continue
-            
-            logging.info(f"\nCalibration successful! Radius={measured_radius} vs expected radius={self.expected_radius}")
-            success_calibration = True
+                logging.error(f"\nCalibration failed! Radius={measured_radius} vs expected radius={self.expected_radius}")
+                
+                # Ask user if they want to proceed with the measured radius or restart
+                if prompt_for_calibration_approval(measured_radius, self.expected_radius, 
+                                                 self.expected_radius_lower, self.expected_radius_upper):
+                    success_calibration = True
+                else:
+                    continue
+            else:
+                logging.info(f"\nCalibration successful! Radius={measured_radius} vs expected radius={self.expected_radius}")
+                success_calibration = True
+        
+        assert center is not None, "Center should not be None after successful calibration"
+        assert measured_radius is not None, "Measured radius should not be None after successful calibration"
         return {'A1': WellCircleCoord(center=center, radius=measured_radius)}

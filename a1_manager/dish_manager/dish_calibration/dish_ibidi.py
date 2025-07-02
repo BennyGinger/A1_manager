@@ -48,7 +48,7 @@ class DishIbidi(DishCalibManager):
     def __post_init__(self)-> None:
         self.unpack_settings(SETTINGS_IBIDI)
     
-    def _calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellSquareCoord]:
+    def _calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellSquareCoord]: # type: ignore[override]
         """
         Calibrates the Ibidi 8-well dish by computing each well's top-left and bottom-right corners.
         If the top-left center is not provided, the user is prompted to move to the A1 well.

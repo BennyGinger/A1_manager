@@ -19,7 +19,7 @@ class DmdMask:
         self.slm_name = slm_name
         self.filter_turret_name = filter_turret_name
         # Get DMD size == (x,y)
-        self.dmd_size = (self.core.get_slm_width(self.slm_name), self.core.get_slm_height(self.slm_name))
+        self.dmd_size = (self.core.get_slm_width(self.slm_name), self.core.get_slm_height(self.slm_name)) # type: ignore
         self.transfo_matrix = load_config_file('transfo_matrix')
     
     def get_predefined_mask(self, mask_type: str) -> np.ndarray:
@@ -49,15 +49,17 @@ class DmdMask:
         # Resize array to dmd size
         return self._scale_down_array(mask_array,(self.dmd_size))
     
-    def apply_affine_transform(self, mask: np.ndarray, custom_matrix: dict = None)-> np.ndarray:
+    def apply_affine_transform(self, mask: np.ndarray, custom_matrix: dict | None = None)-> np.ndarray:
         """
         Apply an affine transformation to the mask.
         If a custom matrix is provided, it is used; otherwise, the preloaded transformation matrix is applied.
         """
-        turret_label = self.core.get_property(self.filter_turret_name, 'Label')
+        turret_label = self.core.get_property(self.filter_turret_name, 'Label')  # type: ignore
         if custom_matrix is not None:
             tmat = np.array(custom_matrix.get(turret_label))
         else:
+            if self.transfo_matrix is None:
+                raise ValueError("Transformation matrix not loaded")
             tmat = np.array(self.transfo_matrix.get(turret_label))
         if tmat is None:
             raise ValueError(f"No transformation matrix found for turret label: {turret_label}")

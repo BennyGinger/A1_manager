@@ -1,11 +1,12 @@
 from __future__ import annotations # Enable type annotation to be stored as string
+from abc import ABC, abstractmethod
 
 from pycromanager import Core
 
 
 LAPP_MAIN_BRANCH = {'pE-800': 0, 'pE-4000': 1, 'DiaLamp': None}
 
-class Lamp:
+class Lamp(ABC):
     __slots__ = 'core', 'lamp_name', 'lapp_main_branch'
     
     def __init__(self, core: Core, lamp_name: str) -> None:
@@ -16,11 +17,17 @@ class Lamp:
         self.lapp_main_branch = LAPP_MAIN_BRANCH[lamp_name]
         
         # Set the core shutter
-        self.core.set_property('Core', 'Shutter', lamp_name)
+        self.core.set_property('Core', 'Shutter', lamp_name) # type: ignore[call-arg]
         
         # Set Turret1 shutter
         turret_state = 0 if lamp_name == 'DiaLamp' else 1
-        self.core.set_property('Turret1Shutter', 'State', turret_state)
+        self.core.set_property('Turret1Shutter', 'State', turret_state) # type: ignore[call-arg]
+    
+    @property
+    @abstractmethod
+    def LEDdefault(self) -> dict[str, str]:
+        """Return the LED configuration mapping for this lamp type."""
+        pass
     
     def _select_filters(self, fTurret: int, fWheel: int)-> None:
         """Select filter turret and filter wheel."""
@@ -34,8 +41,8 @@ class Lamp:
                 f"fWheel {fWheel} is out of range."
                 "Valid options: 0=432/515/595/730, 1=447/60, 2=474/27, 3=544/23, 4=641/75, 5=520/28, 6=524/628"
             )
-        self.core.set_property('FilterTurret1', 'State', fTurret)
-        self.core.set_property('FilterWheel1', 'State', fWheel)
+        self.core.set_property('FilterTurret1', 'State', fTurret) # type: ignore[call-arg]
+        self.core.set_property('FilterWheel1', 'State', fWheel) # type: ignore[call-arg]
     
     def _select_intensity(self, led: str, intensity: float)-> None:
         """"Set the intensity of the LED lamp."""
@@ -43,7 +50,8 @@ class Lamp:
         
         # For pE-800, convert 405 to 400 since it does not support 405.
         if self.lamp_name=='pE-800':
-            led = self.convert_405_to_400(led)
+            converted_led = self.convert_405_to_400(led)
+            led = converted_led if isinstance(converted_led, str) else converted_led[0]
         
         # Get the channel
         channel = self.LEDdefault.get(led)
@@ -51,16 +59,16 @@ class Lamp:
             raise ValueError(f"Invalid LED label '{led}'. Valid options: {list(self.LEDdefault.keys())}")
         
         # Set the intensity of the given channel
-        self.core.set_property(self.lamp_name, f'Intensity{channel}', str(intensity))
+        self.core.set_property(self.lamp_name, f'Intensity{channel}', str(intensity)) # type: ignore[call-arg]
 
     def _reset_intensity(self)-> None:
         """Reset the intensity of all channels to 0."""
         for channel in self.LEDdefault.values():
-            self.core.set_property(self.lamp_name, f'Intensity{channel}', 0)
+            self.core.set_property(self.lamp_name, f'Intensity{channel}', 0) # type: ignore[call-arg]
     
     def set_LED_shutter(self, state: int)-> None:
         """0=close, 1=open"""
-        self.core.set_property(self.lamp_name, 'Global State', state)
+        self.core.set_property(self.lamp_name, 'Global State', state) # type: ignore[call-arg]
                 
     def preset_channel(self, oc_dict: dict, intensity: float | None)-> None:
         """

@@ -65,6 +65,8 @@ class DishCalibManager(ABC):
         if self.calib_path.exists() and not overwrite:
             logger.info(f"Calibration file already exists at {self.calib_path}.")
             dish_calibration = load_json(self.calib_path)
+            if dish_calibration is None:
+                raise ValueError(f"Failed to load calibration file at {self.calib_path}.")
             # Filter the wells based on the provided well selection
             return self._filter_wells(well_selection, dish_calibration)
         

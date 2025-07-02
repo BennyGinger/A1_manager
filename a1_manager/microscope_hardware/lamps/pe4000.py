@@ -7,12 +7,17 @@ from a1_manager.microscope_hardware.lamps.base_lamp import Lamp
 
 class pE4000(Lamp):
     # Default LED label
-    LEDdefault = {
+    _led_default = {
         '365':'A','385':'A','405':'A','435':'A',
         '460':'B','470':'B','490':'B','500':'B',
         '525':'C','550':'C','580':'C','595':'C',
         '635':'D','660':'D','740':'D','770':'D',
         }
+    
+    @property
+    def LEDdefault(self) -> dict[str, str]:
+        """Return the LED configuration mapping for pE4000."""
+        return self._led_default
     
     def __init__(self, core: Core, lamp_name: str) -> None:
         super().__init__(core, lamp_name)
@@ -20,8 +25,8 @@ class pE4000(Lamp):
     def reset_LED(self)-> None:
         channel_lst = set([val for val in self.LEDdefault.values()])
         for channel in channel_lst:
-            self.core.set_property('pE-4000', f'Selection{channel}', 0)
-        self.core.set_property('DiaLamp', 'State', 0)
+            self.core.set_property('pE-4000', f'Selection{channel}', 0) # type: ignore[call-arg]
+        self.core.set_property('DiaLamp', 'State', 0) # type: ignore[call-arg]
     
     def validate_led_selection(self, led: str | list[str]) -> list[str]:
         if not isinstance(led, (str, list)):
@@ -57,5 +62,5 @@ class pE4000(Lamp):
         for label in led_list:
             channel = self.LEDdefault[label]
             # Set both channel assignment and selection.
-            self.core.set_property('pE-4000', f'Channel{channel}', label)
-            self.core.set_property('pE-4000', f'Selection{channel}', 1)
+            self.core.set_property('pE-4000', f'Channel{channel}', label) # type: ignore[call-arg]
+            self.core.set_property('pE-4000', f'Selection{channel}', 1) # type: ignore[call-arg]

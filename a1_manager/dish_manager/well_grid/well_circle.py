@@ -15,14 +15,22 @@ class WellCircleGrid(WellGridManager):
     well_length: float = field(init=False)
     n_corners_in: int = field(init=False)
     
-    def unpack_well_properties(self, well_measurments: WellCircleCoord, n_corners_in: int)-> None:
+    @property
+    def axis_length(self) -> tuple[float, float]:
+        """Return the diameter of the circle for both x and y axis."""
+        if not hasattr(self, 'radius'):
+            raise ValueError("radius not set. Call unpack_well_properties() first.")
+        diameter = 2 * self.radius
+        return (diameter, diameter)
+    
+    def unpack_well_properties(self, well_measurements: WellCircleCoord, n_corners_in: int)-> None:  # type: ignore[override]
         """
         Unpack the well properties from the measurements.
         Kawrgs is used to pass the number of corners that need to be inside the circle.
         """
         
-        self.radius = well_measurments['radius']
-        self.center = well_measurments['center']
+        self.radius = well_measurements['radius']
+        self.center = well_measurements['center']
         self.n_corners_in = 4 if n_corners_in is None else n_corners_in
     
     def generate_coordinates_per_axis(self, num_rects: tuple[int,int], align_correction: tuple[float,float])-> tuple[list[float], list[float]]:

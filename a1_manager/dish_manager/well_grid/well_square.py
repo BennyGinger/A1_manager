@@ -16,14 +16,20 @@ class WellSquareGrid(WellGridManager):
     well_width: float = field(init=False)
     well_length: float = field(init=False)
     
-    def unpack_well_properties(self, well_measurments: WellSquareCoord, n_corners_in: int)-> None: 
+    @property
+    def axis_length(self) -> tuple[float, float]:
+        """Return the width and length of the square well."""
+        if not hasattr(self, 'well_width') or not hasattr(self, 'well_length'):
+            raise ValueError("well dimensions not set. Call unpack_well_properties() first.")
+        return (self.well_width, self.well_length)
+      def unpack_well_properties(self, well_measurements: WellSquareCoord, n_corners_in: int)-> None:  # type: ignore[override]
         """
         Unpack the well properties from the well measurements.
         n_corners_in: int is not used in this subclass and can be ignored.
         """
         
-        topleft = well_measurments.top_left
-        bottomright = well_measurments.bottom_right
+        topleft = well_measurements.top_left
+        bottomright = well_measurements.bottom_right
         self.y_tl, self.x_tl = topleft
         self.y_br, self.x_br = bottomright
         self.well_width = abs(self.y_br - self.y_tl)
