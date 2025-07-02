@@ -15,6 +15,10 @@ from a1_manager import CONFIG_DIR
 from .json_utils import decode_dataclass, encode_dataclass
 
 
+# Setup logging
+logger = logging.getLogger(__name__)
+
+
 def save_tif(img: np.ndarray, savedir: Path, img_name: str)-> Path:
     """
     Save a numpy array as a tiff file. The savedir is the folder where the file will be saved.
@@ -47,7 +51,7 @@ def load_config_file(file_name_key: str)-> dict | None:
             found_file = file
     
     if found_file is None:
-        logging.warning(f"No {file_name_key} found.")
+        logger.warning(f"No {file_name_key} found. Ignoring it for now, but this will cause issues later. Should run dmd_calibration() to create it.")
         return None
     
     return load_json(found_file)
@@ -58,7 +62,7 @@ def load_json(file_path: Path)-> dict | None:
     """
     
     if not file_path.exists():
-        logging.error(f"No file found at {file_path}")
+        logger.error(f"No file found at {file_path}")
         return None
     
     with open(file_path) as json_file:

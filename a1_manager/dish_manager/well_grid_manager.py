@@ -1,7 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
-from typing import Iterable, ClassVar
+from typing import Iterable
 
 from a1_manager.dish_manager.dish_utils.geometry_utils import randomise_fov
 from a1_manager.utils.utils import load_config_file
@@ -14,32 +14,16 @@ from a1_manager.a1manager import A1Manager
 class WellGridManager(ABC):
     """Abstract-based class for managing the creating of well grid, consisting of rectangles that cover a well."""
     
-    # Class variable. Dictionary mapping dish names to their corresponding classes
-    _well_classes: ClassVar[dict[str, type[WellGridManager]]] = {}
-    
     # Instance variables. All tuples are in xy axis respectively
     window_size: tuple[float, float] = field(init=False)
     window_center_offset_um: tuple[float, float] = field(init=False) 
-    
-    def __init_subclass__(cls, dish_name: str = None, **kwargs) -> None:
-        """
-        Automatically registers subclasses with a given dish_name.
-        Meaning that the subclasses of WellGrid will automatically filled the _dish_classes dictionary.
-        All the subclasses must have the dish_name attribute and are stored in the 'well_grid/' folder.
-        """
-        
-        super().__init_subclass__(**kwargs)
-        if dish_name:
-            if isinstance(dish_name, str):
-                dish_names = (dish_name,)
-            for name in dish_names:
-                WellGridManager._well_classes[name] = cls
     
     @classmethod
     def load_subclass_instance(cls, dish_name: str, dmd_window_only: bool, a1_manager: A1Manager) -> WellGridManager:
         """
         Factory method to obtain a well grid instance for a given dish.
-        
+        Note: This method creates an instance and then configures it with the provided parameters.
+        The instance is fully initialized before being returned.
         Args:
         - dish_name: Identifier of the dish (e.g., '35mm', '96well', 'ibidi-8well').
         - dmd_window_only: Whether to use or not the dmd window size to build the grid, Else, would use the full size window (which depends on the camera settings)
@@ -47,15 +31,22 @@ class WellGridManager(ABC):
         
         Returns:
             An instance of a WellGrid subclass corresponding to the dish.
+        Raises:
+            ValueError: If the dish_name is not recognized.
         """
         
         # Get the class based on dish_name
-        well_class = cls._well_classes.get(dish_name)
-        if well_class is None:
-            raise ValueError(f"Unknown dish name: {dish_name}")
+        if dish_name == '35mm' or dish_name == '96well':
+            from a1_manager.dish_manager.well_grid.well_circle import WellCircleGrid
+            grid_instance = WellCircleGrid()
+        elif dish_name == 'ibidi-8well':
+            from a1_manager.dish_manager.well_grid.well_square import WellSquareGrid
+            grid_instance = WellSquareGrid()
+        else:
+            available_dishes = ['35mm', '96well', 'ibidi-8well']
+            raise ValueError(f"Unknown dish name: {dish_name}. Available dishes: {', '.join(available_dishes)}")
         
         # Instantiate and return the appropriate subclass
-        grid_instance = well_class()
         grid_instance._configure_grid_instance(a1_manager, dmd_window_only)
         return grid_instance
     
@@ -105,8 +96,13 @@ class WellGridManager(ABC):
         return (self.well_width, self.well_length)
     
     @abstractmethod
-    def unpack_well_properties(self, well_measurements: dict, **kwargs) -> None:
-        """Subclasses must implement this method to unpack well-specific properties."""
+    def unpack_well_properties(self, well_measurements: dict, n_corners_in: int) -> None:
+        """
+        Subclasses must implement this method to unpack well-specific properties.
+        
+        Notes:
+            - n_corners_in is only used for the well_circle dish.
+        """
         pass
     
     @abstractmethod

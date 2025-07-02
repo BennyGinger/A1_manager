@@ -1,6 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, field
 from pathlib import Path
+import logging
 
 from a1_manager.autofocus_main import run_autofocus
 from a1_manager import CONFIG_DIR
@@ -9,6 +10,9 @@ from a1_manager.dish_manager.well_grid_manager import WellGridManager
 from a1_manager.a1manager import A1Manager
 from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
+
+# Initialize logging
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -63,33 +67,29 @@ class DishManager:
         save_json(self.calib_path, self.dish_calibration)
         return self.dish_calibration
     
-    def autofocus_dish(self, method: str, overwrite: bool, **kwargs) -> None:
+    def autofocus_dish(self, method: str, overwrite: bool, af_savedir: Path=None) -> None:
         """
         Run autofocus for the dish_calibration in each well.
         The autofocus measurements are saved in the same calibration file.
         """
-        
-        af_savedir = kwargs.get('af_savedir', None)
         return run_autofocus(method, self.a1_manager, self.calib_path, overwrite, af_savedir)
     
-    def create_well_grids(self, dmd_window_only: bool, numb_field_view: int=None, overlap_percent: int=None, **kwargs) -> dict[str, dict[int, StageCoord]]:
+    def create_well_grids(self, dmd_window_only: bool, numb_field_view: int=None, overlap_percent: int=None, n_corners_in: int=4) -> dict[str, dict[int, StageCoord]]:
         """
         Create a well grid for a dish, where each well is a dictionary containing the coordinates of all the field of views.
         """
         # Update overlap
         if numb_field_view is not None:
-            overlap_percent = None # Then the grid will be maximised, i.e. with the optimum overlap
-        
+            overlap_percent = None 
+        overlap_deci = None
         if overlap_percent is not None:
             overlap_deci = overlap_percent / 100 # Convert from % to decimal
-        
-        # Number of corners in the grid
-        n_corners_in = kwargs.get('n_corners_in', 4)
         
         # Initialize the well grid manager
         well_grid_manager = WellGridManager.load_subclass_instance(self.dish_name, dmd_window_only, self.a1_manager)
         
         # Create the well grid
+        logger.info(f"{overlap_percent=} and {overlap_deci=}")
         dish_grids: dict[str, dict[int, StageCoord]] = {}
         for well, well_coord in self.dish_calibration.items():
             dish_grids[well] = well_grid_manager.create_well_grid(well_coord, numb_field_view, overlap_deci, n_corners_in)

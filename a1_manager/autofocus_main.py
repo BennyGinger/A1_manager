@@ -60,7 +60,12 @@ def run_autofocus(method: str,
         
             try:
                 # Process the well for autofocus
-                focus = _focus_one_well(method, a1_manager, focus_device, autofocus, idx, measurement)
+                focus = _focus_one_well(idx=idx,
+                                        measurement=measurement,
+                                        focus_device=focus_device,
+                                        autofocus=autofocus,
+                                        method=method
+                                        )
                     
             except QuitAutofocus:
                 # Quit the autofocus process
@@ -115,6 +120,7 @@ def _focus_one_well(*,
             logger.info(f'Focus value: {focus}')
                     
             # If first well, show the image
+            # TODO: insert a small gui that will take care of the prompt and response
             if idx == 0:
                 img = a1_manager.snap_image()
                 plt.imshow(img)

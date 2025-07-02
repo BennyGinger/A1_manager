@@ -13,7 +13,7 @@ from a1_manager.dish_manager.dish_utils.geometry_utils import find_circle
 SETTINGS_35MM = {'expected_radius': 10.5 * 1000} # in micron
 
 @dataclass
-class Dish35mm(DishCalibManager, dish_name='35mm'):
+class Dish35mm(DishCalibManager):
     """
     Calibration handler for the 35mm dish.
     
@@ -35,7 +35,7 @@ class Dish35mm(DishCalibManager, dish_name='35mm'):
         self.expected_radius_upper = self.expected_radius + (self.expected_radius * correction_percentage)
         self.expected_radius_lower = self.expected_radius - (self.expected_radius * correction_percentage)
     
-    def calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellCircleCoord]:
+    def _calibrate_dish(self, nikon: NikonTi2)-> dict[str, WellCircleCoord]:
         """
         Calibrates the 35mm dish by asking for three points along the edge of the circle.
         Returns a dictionary mapping a well identifier (e.g., 'A1') to a WellCircle.

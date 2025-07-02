@@ -8,20 +8,19 @@ from a1_manager.dish_manager.well_grid_manager import WellGridManager
 
 
 @dataclass
-class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
+class WellCircleGrid(WellGridManager):
     radius: float = field(init=False)
     center: tuple[float, float] = field(init=False) # xy respectively
     well_width: float = field(init=False)
     well_length: float = field(init=False)
     n_corners_in: int = field(init=False)
     
-    def unpack_well_properties(self, well_measurments: WellCircleCoord, **kwargs)-> None:
+    def unpack_well_properties(self, well_measurments: WellCircleCoord, n_corners_in: int)-> None:
         """
         Unpack the well properties from the measurements.
         Kawrgs is used to pass the number of corners that need to be inside the circle.
         """
         
-        n_corners_in = kwargs.get('n_corners_in')
         self.radius = well_measurments['radius']
         self.center = well_measurments['center']
         self.n_corners_in = 4 if n_corners_in is None else n_corners_in
@@ -55,7 +54,7 @@ class WellCircleGrid(WellGridManager, dish_name=('35mm', '96well')):
             adjusted_x = x + offset_x
             adjusted_y = y - offset_y
             point = temp_point.copy()
-            point['xy'] = (adjusted_x, adjusted_y)
+            point.xy = (adjusted_x, adjusted_y)
             well_grid[count] = point
             count += 1
         return count

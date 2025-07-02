@@ -18,7 +18,7 @@ SETTINGS_96WELL = {
     }
 
 @dataclass
-class Dish96well(DishCalibManager, dish_name="96well"):
+class Dish96well(DishCalibManager):
     """
     Calibration handler for the 96-well plate.
     
@@ -39,7 +39,7 @@ class Dish96well(DishCalibManager, dish_name="96well"):
     def __post_init__(self) -> None:
         self.unpack_settings(SETTINGS_96WELL)
 
-    def calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord]:
+    def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord]:
         """
         Calibrates a 96-well plate by computing each well's center.
         If the top-left center is not provided, the user is prompted to move to the A1 well.

@@ -8,7 +8,7 @@ from a1_manager.dish_manager.well_grid_manager import WellGridManager
 
 
 @dataclass
-class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
+class WellSquareGrid(WellGridManager):
     y_tl: float = field(init=False)
     x_tl: float = field(init=False)
     y_br: float = field(init=False)
@@ -16,10 +16,10 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
     well_width: float = field(init=False)
     well_length: float = field(init=False)
     
-    def unpack_well_properties(self, well_measurments: WellSquareCoord, **kwargs)-> None: 
+    def unpack_well_properties(self, well_measurments: WellSquareCoord, n_corners_in: int)-> None: 
         """
         Unpack the well properties from the well measurements.
-        Kwarg is not used in this subclass and can be ignored.
+        n_corners_in: int is not used in this subclass and can be ignored.
         """
         
         topleft = well_measurments.top_left
@@ -49,6 +49,6 @@ class WellSquareGrid(WellGridManager, dish_name=('ibidi-8well',)):
         adjusted_x = x + offset_x
         adjusted_y = y - offset_y
         point = temp_point.copy()
-        point['xy'] = (adjusted_x, adjusted_y)
+        point.xy = (adjusted_x, adjusted_y)
         well_grid[count] = point
         return count + 1

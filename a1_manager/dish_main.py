@@ -17,7 +17,8 @@ def launch_dish_workflow(a1_manager: A1Manager,
                          overlap_percent: int=None, 
                          overwrite_calib: bool = False, 
                          overwrite_autofocus: bool = False, 
-                         **kwargs
+                         af_savedir: Path | None = None,
+                         n_corners_in: int = 4
                          ) -> dict[str, dict[int, StageCoord]]:
     """
     Launch the dish workflow to calibrate the dish, perform autofocus, and create the well grids.
@@ -33,7 +34,8 @@ def launch_dish_workflow(a1_manager: A1Manager,
         overlap_percent (int | None): Overlap percentage for the field views. If None, optimal overlap will be used.
         overwrite_calibration (bool): If True, overwrite the calibration file.
         overwrite_autofocus (bool): If True, overwrite the autofocus values.
-        **kwargs: Additional keyword arguments for the dish manager.
+        af_savedir (Path | None): Directory to save the autofocus images. Only applicable for the square gradient method.
+        n_corners_in (int, optional): Number of corners of each fov that should be contained within a round well at the edges. Defaults to 4.
     
     Returns:
         dict[str, dict[int, StageCoord]]: Dictionary where each well is a dictionary containing the coordinates of all the field of views.
@@ -46,7 +48,7 @@ def launch_dish_workflow(a1_manager: A1Manager,
     dish_manager.calibrate_dish(well_selection, overwrite_calib)
     
     # Perform autofocus, 'savedir' for the square gradient method is optional and can be passed as a keyword argument
-    dish_manager.autofocus_dish(af_method, overwrite_autofocus, **kwargs)
+    dish_manager.autofocus_dish(af_method, overwrite_autofocus, af_savedir)
     
     # Get the grids, n_corners_in is optional and can be passed as a keyword argument
-    return dish_manager.create_well_grids(dmd_window_only, numb_field_view, overlap_percent, **kwargs)
+    return dish_manager.create_well_grids(dmd_window_only, numb_field_view, overlap_percent, n_corners_in)
