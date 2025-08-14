@@ -4,6 +4,7 @@ from pathlib import Path
 from a1_manager.utils.utility_classes import StageCoord
 from a1_manager.a1manager import A1Manager
 from a1_manager.dish_manager.main_dish_manager import DishManager
+from a1_manager.autofocus.af_utils import QuitAutofocus
 
 
 def launch_dish_workflow(a1_manager: A1Manager, 
@@ -47,8 +48,12 @@ def launch_dish_workflow(a1_manager: A1Manager,
     # Calibrate the dish
     dish_manager.calibrate_dish(well_selection, overwrite_calib)
     
-    # Perform autofocus, 'savedir' for the square gradient method is optional and can be passed as a keyword argument
-    dish_manager.autofocus_dish(af_method, overwrite_autofocus, af_savedir)
+    try:
+        # Perform autofocus, 'savedir' for the square gradient method is optional and can be passed as a keyword argument
+        dish_manager.autofocus_dish(af_method, overwrite_autofocus, af_savedir)
+    except QuitAutofocus:
+        # User quit during autofocus - propagate the exception to stop the entire pipeline
+        raise
     
     # Get the grids, n_corners_in is optional and can be passed as a keyword argument
     return dish_manager.create_well_grids(dmd_window_only, numb_field_view, overlap_percent, n_corners_in)
