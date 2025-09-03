@@ -53,7 +53,7 @@ class DishManager:
             calib_96well: dict[str, WellCircleCoord | WellSquareCoord] = load_json(calib_temp_path)
             save_json(self.calib_path, calib_96well)
 
-    def calibrate_dish(self, well_selection: list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
+    def calibrate_dish(self, well_selection: str | list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
         """
         Calibrate the dish with the specified dish name.
         The calibration measurements are saved in a json file in the run directory, except for the 96well dish where the calibration measurements are pre-defined.
