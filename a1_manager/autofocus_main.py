@@ -18,7 +18,7 @@ FOCUS_RANGES = {
                   'small': {'searchRange': 1000, 'step': 100},}}
 
 
-
+# FIXME: Make sure that before starting the autofocus run, all lights are off
 def run_autofocus(method: str, 
                   a1_manager: A1Manager, 
                   calib_path: Path, 
