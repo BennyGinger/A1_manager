@@ -12,10 +12,8 @@ from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSq
 logger = logging.getLogger(__name__)
 
 FOCUS_RANGES = {
-    'ZDrive': {'large': {'searchRange': 1000, 'step': 100},
-               'small': {'searchRange':  200, 'step':  10},},
-    'PFSOffset': {'large': {'searchRange': 4000, 'step': 300},
-                  'small': {'searchRange': 1000, 'step': 100},}}
+    'ZDrive': {'small': {'searchRange':  200, 'step':  10},},
+    'PFSOffset': {'small': {'searchRange': 1000, 'step': 100},}}
 
 
 # FIXME: Make sure that before starting the autofocus run, all lights are off
@@ -43,6 +41,9 @@ def run_autofocus(method: str,
         logger.info(f'Autofocus with {focus_device} using {method} method')
         a1_manager.nikon.select_focus_device(focus_device)
         
+        # Switch off DIA light if on
+        a1_manager.core.set_property('DiaLamp', 'State', 0)
+        
         # Load dish measurements
         dish_measurements: dict[str, WellCircleCoord | WellSquareCoord] = load_config_file(calib_path)
         autofocus = AutoFocusManager(a1_manager, method, af_savedir) 
@@ -59,10 +60,8 @@ def run_autofocus(method: str,
                 focus = _focus_one_well(idx=idx,
                                         measurement=measurement,
                                         focus_device=focus_device,
-                                        autofocus=autofocus,
-                                        method=method
-                                        )
-                    
+                                        autofocus=autofocus)
+
             except QuitAutofocus:
                 # Quit the autofocus process - re-raise to propagate to caller
                 logger.warning("User quit; propagating QuitAutofocus exception.")
@@ -82,8 +81,7 @@ def _focus_one_well(*,
                     idx: int, 
                     measurement: WellCircleCoord | WellSquareCoord,
                     focus_device: str, 
-                    autofocus: AutoFocusManager,
-                    method: str, 
+                    autofocus: AutoFocusManager, 
                     ) -> float:
     """
     Process a single well for autofocus.
@@ -92,7 +90,6 @@ def _focus_one_well(*,
         measurement (WellCircleCoord | WellSquareCoord): Measurement data for the well.
         focus_device (str): Focus device to use. Choose from 'ZDrive' or 'PFSOffset'.
         autofocus (AutoFocusManager): AutoFocusManager object.
-        method (str): Autofocus method to use. Choose from 'sq_grad', 'OughtaFocus', 'Manual'.
     Returns:
         float: Focus value for the well.
     """
@@ -105,12 +102,7 @@ def _focus_one_well(*,
             point_center = StageCoord(xy=measurement['center'])
             a1_manager.nikon.set_stage_position(point_center)
             
-            # If first well, apply large focus range only for square gradient method
-            if idx == 0 and method != 'Manual':
-                logger.info(f'Apply large focus range for {focus_device} in the center of well')
-                autofocus.find_focus(**FOCUS_RANGES[focus_device]['large'])
-                    
-            # Apply fine focus range
+             # Apply fine focus range
             logger.info(f'Fine tuned autofocus with {focus_device} in the center of well')
             focus = autofocus.find_focus(**FOCUS_RANGES[focus_device]['small'])
             logger.info(f'Focus value: {focus}')
