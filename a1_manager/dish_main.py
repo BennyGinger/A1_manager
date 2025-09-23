@@ -8,6 +8,8 @@ from a1_manager.autofocus.af_utils import QuitAutofocus
 
 
 PRE_STAGE_POS = {'35mm':{'ZDrive':3800,'PFSOffset':8200}}
+ZDRIVE = 'ZDrive'
+PFS = 'PFSOffset'
 
 def launch_dish_workflow(a1_manager: A1Manager, 
                          run_dir: Path, 
@@ -16,8 +18,8 @@ def launch_dish_workflow(a1_manager: A1Manager,
                          well_selection: str | list[str], 
                          af_method: str, 
                          dmd_window_only: bool, 
-                         numb_field_view: int=None, 
-                         overlap_percent: int=None, 
+                         numb_field_view: int | None = None, 
+                         overlap_percent: int | None = None, 
                          overwrite_calib: bool = False, 
                          overwrite_autofocus: bool = False, 
                          af_savedir: Path | None = None,
@@ -52,11 +54,14 @@ def launch_dish_workflow(a1_manager: A1Manager,
     
     try:
         # Move the stage to a predefined safe position before starting autofocus
-        focus_device = a1_manager.core.get_property('Core', 'Focus')
-        pos = PRE_STAGE_POS.get(dish_name, {}).get(focus_device, None)
-        if pos is not None:
-            a1_manager.core.set_position(focus_device, pos)
-        
+        focus_device = a1_manager.core.get_property('Core', 'Focus') # type: ignore
+        posZ = PRE_STAGE_POS.get(dish_name, {}).get(ZDRIVE, None)
+        if posZ is not None:
+            a1_manager.core.set_position(focus_device, posZ) # type: ignore
+        posPFS = PRE_STAGE_POS.get(dish_name, {}).get(PFS, None)
+        if posPFS is not None:
+            a1_manager.core.set_position('PFS', posPFS) # type: ignore
+
         # Perform autofocus, 'savedir' for the square gradient method is optional and can be passed as a keyword argument
         dish_manager.autofocus_dish(af_method, overwrite_autofocus, af_savedir)
     except QuitAutofocus:

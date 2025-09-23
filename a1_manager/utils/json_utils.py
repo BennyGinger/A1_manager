@@ -1,9 +1,10 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import asdict
+from typing import Any
 
 from .utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 
-def encode_dataclass(obj: any) -> dict:
+def encode_dataclass(obj: Any) -> Any:
     """Encode a dataclass object into a dictionary with the __class__ attribute to be able to decode it later.
     
     If the object is naturally JSON serializable (e.g. dict, list, str, int, float, bool, or None),
@@ -19,7 +20,7 @@ def encode_dataclass(obj: any) -> dict:
     raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 
 # Custom decoder function
-def decode_dataclass(data: dict)-> WellCircleCoord | WellSquareCoord:
+def decode_dataclass(data: dict) -> WellCircleCoord | WellSquareCoord | StageCoord | dict:
     """Decode a dictionary into a dataclass object."""
     
     if "__class__" in data:

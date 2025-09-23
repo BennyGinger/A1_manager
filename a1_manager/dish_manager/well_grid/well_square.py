@@ -30,8 +30,8 @@ class WellSquareGrid(WellGridManager):
         
         topleft = well_measurements.top_left
         bottomright = well_measurements.bottom_right
-        self.y_tl, self.x_tl = topleft
-        self.y_br, self.x_br = bottomright
+        self.y_tl, self.x_tl = topleft if topleft is not None else (0, 0)
+        self.y_br, self.x_br = bottomright if bottomright is not None else (0, 0)
         self.well_width = abs(self.y_br - self.y_tl)
         self.well_length = abs(self.x_br - self.x_tl)
     

@@ -21,7 +21,7 @@ def run_autofocus(method: str,
                   a1_manager: A1Manager, 
                   calib_path: Path, 
                   overwrite: bool, 
-                  af_savedir: Path=None
+                  af_savedir: Path | None = None
                   )-> None:
         """
         Run autofocus for the selected wells. Requires the calibration file with the dish measurements.

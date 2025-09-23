@@ -50,7 +50,9 @@ class DishManager:
         # Copy the 96well calibration template file into the run directory
         if self.dish_name == "96well":
             calib_temp_path = CONFIG_DIR.joinpath(calib_name)
-            calib_96well: dict[str, WellCircleCoord | WellSquareCoord] = load_json(calib_temp_path)
+            calib_96well = load_json(calib_temp_path)
+            if calib_96well is None:
+                raise ValueError(f"Failed to load calibration template from {calib_temp_path}")
             save_json(self.calib_path, calib_96well)
 
     def calibrate_dish(self, well_selection: str | list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
@@ -66,15 +68,15 @@ class DishManager:
         self.dish_calibration = dish.calibrate_dish(self.a1_manager.nikon, well_selection, overwrite)
         save_json(self.calib_path, self.dish_calibration)
         return self.dish_calibration
-    
-    def autofocus_dish(self, method: str, overwrite: bool, af_savedir: Path=None) -> None:
+
+    def autofocus_dish(self, method: str, overwrite: bool, af_savedir: Path | None = None) -> None:
         """
         Run autofocus for the dish_calibration in each well.
         The autofocus measurements are saved in the same calibration file.
         """
         return run_autofocus(method, self.a1_manager, self.calib_path, overwrite, af_savedir)
     
-    def create_well_grids(self, dmd_window_only: bool, numb_field_view: int=None, overlap_percent: int=None, n_corners_in: int=4) -> dict[str, dict[int, StageCoord]]:
+    def create_well_grids(self, dmd_window_only: bool, numb_field_view: int | None = None, overlap_percent: int | None = None, n_corners_in: int = 4) -> dict[str, dict[int, StageCoord]]:
         """
         Create a well grid for a dish, where each well is a dictionary containing the coordinates of all the field of views.
         """

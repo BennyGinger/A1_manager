@@ -24,13 +24,13 @@ def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> 
     # Load dmd_profile and transfo matrix if exist or create empty dicts
     dmd_profile = load_config_file('dmd_profile')
     dmd_profile = {} if dmd_profile is None else dmd_profile
-    transfo_matrix = aquisition.dmd.dmd_mask.transfo_matrix
+    transfo_matrix = aquisition.dmd.dmd_mask.transfo_matrix if aquisition.dmd and aquisition.dmd.dmd_mask else None
     transfo_matrix = {} if transfo_matrix is None else transfo_matrix
     
     # Run calibration
     for dmd_fTurret in dmd_fTurret_list:
         # Set the turret
-        aquisition.core.set_property('FilterTurret1','Label',dmd_fTurret.fTurret)
+        aquisition.core.set_property('FilterTurret1','Label',dmd_fTurret.fTurret) # type: ignore ;
         
         # Get the fTurret dmd profile, if doesn't exist or overwrite
         if dmd_fTurret.fTurret not in dmd_profile or overwrite:
@@ -59,4 +59,4 @@ def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> 
     # Update dmd profile and transformation matrix to Aquisition object
     save_config_file('dmd_profile', dmd_profile)
     save_config_file('transfo_matrix', transfo_matrix)
-    aquisition.dmd.dmd_mask.reload_transformation_matrix()
+    aquisition.dmd.dmd_mask.reload_transformation_matrix() if aquisition.dmd and aquisition.dmd.dmd_mask else None

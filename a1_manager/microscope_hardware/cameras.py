@@ -10,7 +10,7 @@ class AndorCamera:
         self.core = core
         
         # Set the light path to camera
-        self.core.set_property('LightPath','State',1)
+        self.core.set_property('LightPath','State',1) # type: ignore
         
         # Set the camera properties
         self._set_camera_binning(binning)
@@ -18,10 +18,10 @@ class AndorCamera:
     
     def _set_camera_binning(self, binning: int)-> None:
         """Set the camera binning."""
-        self.core.set_property('Andor sCMOS Camera','Binning',f"{binning}x{binning}")
+        self.core.set_property('Andor sCMOS Camera','Binning',f"{binning}x{binning}") # type: ignore
         self.binning = binning
 
     def set_camera_exposure(self, exposure_ms: float)-> None:
         """Set the camera exposure time."""
-        self.core.set_property('Andor sCMOS Camera', 'Exposure', exposure_ms)
+        self.core.set_property('Andor sCMOS Camera', 'Exposure', exposure_ms) # type: ignore
         self.exposure_ms = exposure_ms

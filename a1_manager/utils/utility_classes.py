@@ -11,9 +11,9 @@ class StageCoord:
         xy: Tuple[float, float]: The x and y coordinates of the stage.
         ZDrive: float: The ZDrive position.
         PFSOffset: float: The PFS offset."""
-    xy: tuple[float, float] = (None, None)
-    ZDrive: float = None
-    PFSOffset: float = None
+    xy: tuple[float | None, float | None] = (None, None)
+    ZDrive: float | None = None
+    PFSOffset: float | None = None
     
     
     # Support dict-like access, and return the corresponding attribute with dynamic type hint
@@ -31,6 +31,10 @@ class StageCoord:
     
     def __getitem__(self, key: str)-> tuple[float, float] | float:
         return getattr(self, key)
+
+    def get(self, key: str, default=None) -> tuple[float, float] | float | None:
+        """Mimic dict.get(): Return the value for key if key is in the object, else default."""
+        return getattr(self, key, default)
     
     def copy(self) -> "StageCoord":
         """Return a shallow copy of the object."""
@@ -75,8 +79,8 @@ class WellSquareCoord(WellBaseCoord):
         - bottom_right: Tuple[float, float]: The coordinates of the bottom right corner.
     """
     
-    top_left: tuple[float, float] = None
-    bottom_right: tuple[float, float] = None
+    top_left: tuple[float, float] | None = None
+    bottom_right: tuple[float, float] | None = None
 
 @dataclass
 class WellCircleCoord(WellBaseCoord):
@@ -90,6 +94,6 @@ class WellCircleCoord(WellBaseCoord):
         - radius: float: The radius of the circle.
     """
     
-    center: tuple[float, float] = None
-    radius: float = None
+    center: tuple[float, float] | None = None
+    radius: float | None = None
     

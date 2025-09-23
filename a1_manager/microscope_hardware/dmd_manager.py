@@ -20,17 +20,17 @@ class Dmd:
         self.load_dmd_mask('fullON')
         self._set_trigger_mode(trigger_mode)
 
-    def set_dmd_exposure(self, exposure_sec: int) -> None:
+    def set_dmd_exposure(self, exposure_sec: float) -> None:
         """Set the DMD exposure time."""
-        self.core.set_property(self.slm_name, 'ExposureTime', exposure_sec)
+        self.core.set_property(self.slm_name, 'ExposureTime', exposure_sec) # type: ignore
     
     def activate(self) -> None:
         """Activate the DMD by displaying the current mask."""
-        self.core.display_slm_image(self.slm_name)
+        self.core.display_slm_image(self.slm_name) # type: ignore
         
     def _project_mask(self, mask: np.ndarray)-> None:
         """Project the given mask on the DMD and activate it."""
-        self.core.set_slm_image(self.slm_name, mask)
+        self.core.set_slm_image(self.slm_name, mask) # type: ignore
         self.activate()
 
     def _set_trigger_mode(self, trigger_mode: str)-> None:
@@ -38,7 +38,7 @@ class Dmd:
         Set the trigger mode of the DMD.
         Valid options include 'InternalExposure' (Manual) and 'ExternalBulb' (TTL).
         """
-        self.core.set_property(self.slm_name,'TriggerMode',trigger_mode)
+        self.core.set_property(self.slm_name,'TriggerMode',trigger_mode) # type: ignore
 
     def load_dmd_mask(self, input_mask: str | Path | np.ndarray='fullON', transform_mask: bool=True) -> np.ndarray:
         """

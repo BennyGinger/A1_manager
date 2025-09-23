@@ -26,25 +26,25 @@ class NikonTi2:
         
         Default is ZDrive.
         """
-        self.core.set_property('Core','Focus',focus_device)
+        self.core.set_property('Core','Focus',focus_device) # type: ignore
         if focus_device == 'PFSOffset':
-            self.core.set_property('PFS','FocusMaintenance','On')
+            self.core.set_property('PFS','FocusMaintenance','On') # type: ignore
         else:
-            self.core.set_property('PFS','FocusMaintenance','Off')
+            self.core.set_property('PFS','FocusMaintenance','Off') # type: ignore
     
     def get_stage_position(self)-> StageCoord:
         """Get the current stage position in XY coordinates and the focus device position."""
         return StageCoord(
-            xy=(self.core.get_x_position(),self.core.get_y_position()),
-            ZDrive=self.core.get_position('ZDrive'),
-            PFSOffset=self.core.get_position('PFSOffset')
+            xy=(self.core.get_x_position(),self.core.get_y_position()), # type: ignore
+            ZDrive=self.core.get_position('ZDrive'), # type: ignore
+            PFSOffset=self.core.get_position('PFSOffset') # type: ignore
         )
     
     def set_stage_position(self, stage_position: StageCoord)-> None:
         """Set the stage position in XY coordinates and the focus device position."""
-        self.core.set_xy_position(*stage_position.xy)
-        if stage_position[self.focus_device] is not None:
-            self.core.set_position(self.focus_device, stage_position[self.focus_device])
+        self.core.set_xy_position(*stage_position.xy) # type: ignore
+        if stage_position.get(self.focus_device) is not None:
+            self.core.set_position(self.focus_device, stage_position.get(self.focus_device)) # type: ignore
     
     def _select_objective(self, objective: str)-> None:
         """Select the objective to use. Expected objective string: '[number]x' e.g. 10x, 20x."""
@@ -54,8 +54,8 @@ class NikonTi2:
             raise TypeError("Objective must be a string: 10x, 20x...")
         if objective not in Objectifdefault.keys():
             raise ValueError(f"{self.objective} is not yet calibrated. Please use 10x or 20x")
-        self.core.set_property('Nosepiece', 'State', Objectifdefault[self.objective])
+        self.core.set_property('Nosepiece', 'State', Objectifdefault[self.objective]) # type: ignore
 
     def set_light_path(self, light_path: int)-> None:
         """Change Light path: 0=EYE, 1=R, 2=AUX and 3=L"""
-        self.core.set_property('LightPath','State',light_path)
+        self.core.set_property('LightPath','State',light_path) # type: ignore
