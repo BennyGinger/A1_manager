@@ -1,0 +1,96 @@
+from __future__ import annotations # Enable type annotation to be stored as string
+
+from microscope_hardware.API_micropipette import API_MarZ
+from utils.utility_classes import StageCoord
+
+import requests
+BASE_URL = "http://localhost:5000"
+
+# Filling volume
+FILL_VOLUME = 500
+
+# Injection volume 
+INJECT_VOLUME = 70
+
+# Movement of the head
+MOVING_UP = -33000
+MOVING_DOWN = 33000
+
+class Head():
+    """Class that controls the API head.
+    """
+    __slots__ = 'arm'
+    
+    def __init__(self, arm: API_MarZ) -> None:
+        self.Arm = arm
+    
+    def set_volume(self, volume: float, time: float = 100) -> None:
+        """ A volume-time pair is sent to the controller. The piezo unit will start immediately 
+            to withdraw or inject the specified volume under the specified time. The volume values 
+            are absolute values. If the volume is less than the previously sent item, then fluid is 
+            withdrawn through the pipette. If the volume is greater than the previously sent one, fluid 
+            will be injected back."""        
+
+        #Endpoint and parameters
+        self.endpoint = f"{BASE_URL}/setVolume"
+        self.params = {
+            "volume": volume,   # example volume in nanoliters
+            "time": time    # example time in milliseconds
+        }
+        try:
+            self.response = requests.put(self.endpoint, params=self.params)
+    
+            if self.response.status_code == 200:
+                print("Success:", self.response.text)
+            else:
+                print(f"Error {self.response.status_code}:", self.response.text)
+        except requests.exceptions.RequestException as e:
+            print("Request failed:", e)
+    
+    
+    def set_LED(self, ID: int, brightness: int) -> None:
+        """Set brightness level of LED """
+        #Endpoint and parameters
+        self.endpoint = f"{BASE_URL}/setVolume"
+        self.params = {
+            "ID": ID,   # example volume in nanoliters
+            "brightness": brightness    # example time in milliseconds
+        }
+        try:
+            self.response = requests.put(self.endpoint, params=self.params)
+    
+            if self.response.status_code == 200:
+                print("Success:", self.response.text)
+            else:
+                print(f"Error {self.response.status_code}:", self.response.text)
+        except requests.exceptions.RequestException as e:
+            print("Request failed:", e)
+
+        
+    def filling(self):              
+        # Move down the head to reach the liquid
+        self.Arm.set_head_position(MOVING_DOWN)
+                
+        # Draw the liquid into the pipette        
+        self.set_volume(FILL_VOLUME)
+                
+        # Move up the head
+        self.Arm.set_head_position(MOVING_UP)     
+    
+    def injecting(self):                
+        # Move down the head to reach the liquid
+        self.Arm.set_head_position(MOVING_DOWN)
+                
+        # Draw the liquid into the pipette        
+        self.set_volume(INJECT_VOLUME)
+                
+        # Move up the head
+        self.Arm.set_head_position(MOVING_UP) 
+        
+    def update_volume(self, track_volume: float, state: str) -> float:
+        if state == "fill":
+            track_volume += FILL_VOLUME
+            
+        if state == "inject":
+            track_volume += INJECT_VOLUME
+        return track_volume
