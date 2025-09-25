@@ -1,0 +1,33 @@
+from __future__ import annotations # Enable type annotation to be stored as string
+from pycromanager import Core
+
+MAX_HEIGHT = 7000
+MIN_HEIGHT = -7000
+
+class MArZ:
+    """Class to control the movement of the arm (Märzhäuser controller)."""
+    __slots__ = 'core'
+    
+    def __init__(self, core: Core, destination: float) -> None:
+        self.core = core
+        self.destination = destination
+    
+    def get_arm_position(self)->float:
+        """Get the current altitude of the head."""
+        self.altitude=self.core.get_position('ZAxis')
+        return self.altitude
+    
+    def set_arm_position(self, destination: float)->None:
+        """ Move the head to the desired position. """
+        #self.altitude = self.get_arm_position()
+        if destination > MIN_HEIGHT and destination < MAX_HEIGHT:
+            self.core.set_position('ZAxis', destination)
+    
+    def safety_altitude_check(self) -> None:
+        """ Check the altitude of the head to avoid breaking the needle."""
+        if self.get_arm_position() < MIN_HEIGHT:
+            raise ValueError("The arm is dangerously low! You have to raise it up!")
+        if self.get_arm_position() > MAX_HEIGHT:
+            raise ValueError("The arm is dangerously high! You have to lower it!")
+    
+    
