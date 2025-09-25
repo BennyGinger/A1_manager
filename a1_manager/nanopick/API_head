@@ -6,7 +6,7 @@ from utils.utility_classes import StageCoord
 import requests
 BASE_URL = "http://localhost:5000"
 
-# Filling volume
+# Volumes
 FILL_VOLUME = 500
 INJECT_VOLUME = 70
 FLUSH_VOLUME = 100
