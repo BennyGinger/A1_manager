@@ -1,6 +1,6 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 
-from microscope_hardware.API_micropipette import API_MarZ
+from microscope_hardware.API_micropipette import MarZ
 from utils.utility_classes import StageCoord
 
 import requests
@@ -8,9 +8,11 @@ BASE_URL = "http://localhost:5000"
 
 # Filling volume
 FILL_VOLUME = 500
-
-# Injection volume 
 INJECT_VOLUME = 70
+FLUSH_VOLUME = 100
+MIXING_VOLUME_UP = 50
+MIXING_VOLUME_DOWN = -50
+MAX_VOLUME = 600
 
 # Movement of the head
 MOVING_UP = -33000
@@ -19,9 +21,9 @@ MOVING_DOWN = 33000
 class Head():
     """Class that controls the API head.
     """
-    __slots__ = 'arm'
+    __slots__ = 'arm' 
     
-    def __init__(self, arm: API_MarZ) -> None:
+    def __init__(self, arm: MarZ) -> None:
         self.Arm = arm
     
     def set_volume(self, volume: float, time: float = 100) -> None:
@@ -66,31 +68,79 @@ class Head():
         except requests.exceptions.RequestException as e:
             print("Request failed:", e)
 
-        
-    def filling(self):              
-        # Move down the head to reach the liquid
-        self.Arm.set_head_position(MOVING_DOWN)
-                
-        # Draw the liquid into the pipette        
-        self.set_volume(FILL_VOLUME)
-                
-        # Move up the head
-        self.Arm.set_head_position(MOVING_UP)     
-    
-    def injecting(self):                
-        # Move down the head to reach the liquid
-        self.Arm.set_head_position(MOVING_DOWN)
-                
-        # Draw the liquid into the pipette        
-        self.set_volume(INJECT_VOLUME)
-                
-        # Move up the head
-        self.Arm.set_head_position(MOVING_UP) 
-        
     def update_volume(self, track_volume: float, state: str) -> float:
-        if state == "fill":
-            track_volume += FILL_VOLUME
+            if state == "fill":
+                track_volume += FILL_VOLUME
             
-        if state == "inject":
-            track_volume += INJECT_VOLUME
+            if state == "inject":
+                track_volume += INJECT_VOLUME
+                
+            if state == "flush":
+                track_volume = 0
+            return track_volume
+        
+    def flushing(self) -> float: 
+        # Get all the fluid out of the pipette       
+        self.set_volume(FLUSH_VOLUME)
+        track_volume = self.update_volume("flush")
         return track_volume
+    
+    def filling(self, track_volume: float) -> float:              
+        # Check if the pipette is empty
+        if track_volume != 0:
+            track_volume = self.flushing(track_volume)
+        
+        if track_volume < MAX_VOLUME:
+            # Move down the head to reach the liquid
+            self.Arm.set_head_position(MOVING_DOWN)
+                    
+            # Draw the liquid into the pipette        
+            self.set_volume(FILL_VOLUME)
+            track_volume = self.update_volume("fill")
+                    
+            # Move up the head
+            self.Arm.set_head_position(MOVING_UP) 
+        else:
+            raise ValueError("There is no more room in the pipette!")
+        return track_volume    
+    
+    def injecting(self, track_volume: float) -> float: 
+        
+        if track_volume >= INJECT_VOLUME:               
+            # Move down the head to reach the liquid
+            self.Arm.set_head_position(MOVING_DOWN)
+                    
+            # Draw the liquid into the pipette        
+            self.set_volume(INJECT_VOLUME)
+            track_volume = self.update_volume("inject")
+                    
+            # Move up the head
+            self.Arm.set_head_position(MOVING_UP) 
+        else:
+            raise ValueError("There is not enugh liquid in the pipette!")
+        return track_volume
+    
+    def mixing(self, track_volume: float, n: int):
+        # Check if the pipette is empty
+        if track_volume != 0:
+            track_volume = self.flushing(track_volume)
+        else:
+            # Move down the head to reach the liquid
+            self.Arm.set_head_position(MOVING_DOWN)
+                    
+            # Draw the liquid into the pipette 
+            # 'n': number of mixing cycles
+            for i in range(n):       
+                self.set_volume(MIXING_VOLUME_UP)
+                self.set_volume(MIXING_VOLUME_DOWN)
+                    
+            # Move up the head
+            self.Arm.set_head_position(MOVING_UP) 
+
+            
+              
+        
+        
+# Do I need the center position since the stage movement is handled by the Nikon class?
+
+        
