@@ -1,10 +1,11 @@
+
 from __future__ import annotations # Enable type annotation to be stored as string
 import logging
 
 import requests
 
 from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
-from utils.utility_classes import StageCoord
+from utils.utility_classes import StageCoord # Do I need the center position since the stage movement is handled by the Nikon class?
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -14,9 +15,7 @@ BASE_URL = "http://localhost:5000"
 # Volumes
 FILL_VOLUME = 500
 INJECT_VOLUME = 70
-FLUSH_VOLUME = 100
-MIXING_VOLUME_UP = 50
-MIXING_VOLUME_DOWN = -50
+MIXING_VOLUME = 50
 MAX_VOLUME = 600
 
 # Movement of the head
@@ -31,6 +30,10 @@ class Head():
     def __init__(self, arm: MarZ) -> None:
         self.arm = arm
         self._track_volume = 0  # in nanoliters
+    
+    @property
+    def track_volume(self) -> float:
+        return self._track_volume
     
     # TODO: Check time default value
     def set_volume(self, volume: float, time: float = 100) -> None:
@@ -73,62 +76,62 @@ class Head():
         except requests.exceptions.RequestException as e:
             logger.error("Request failed:", e)
 
-    def _update_volume(self, track_volume: float, state: str) -> float:
+    def _update_volume(self, volume: float, state: str) -> float:
             if state == "fill":
-                track_volume += FILL_VOLUME
+                self._track_volume += volume
             
             if state == "inject":
-                track_volume += INJECT_VOLUME
+                self._track_volume += volume
                 
             if state == "flush":
-                track_volume = 0
-            return track_volume
+                self._track_volume -= volume
         
-    def flushing(self) -> float: 
+    # TODO: Check flush default volume     
+    def flushing(self) -> None: 
         # Get all the fluid out of the pipette       
-        self.set_volume(FLUSH_VOLUME)
-        track_volume = self.update_volume("flush")
-        return track_volume
+        self.set_volume(self.track_volume)
+        self.update_volume(self.track_volume, "flush")
     
-    def filling(self, volume: float) -> float:              
-        # Check if the pipette is empty
-        if track_volume != 0:
-            track_volume = self.flushing(track_volume)
-        
-        if track_volume < MAX_VOLUME:
+    # TODO: Check filling default volume 
+    def filling(self, volume: float = FILL_VOLUME) -> None:              
+        # Check if the pipette is empty, if not, then flush it out
+        if self.track_volume != 0:
+            self.flushing()
+        # Check if the filling does not cause an overflow
+        if self.track_volume + volume >= MAX_VOLUME:
+            logger.warning("The pipette is about to fill up! Please choose a new value between zero and %s", (self.track_volume + volume -5))
+        else:
             # Move down the head to reach the liquid
             self.Arm.set_head_position(MOVING_DOWN)
                     
             # Draw the liquid into the pipette        
-            self.set_volume(FILL_VOLUME)
-            track_volume = self.update_volume("fill")
+            self.set_volume(volume)
+            self.update_volume(volume, "fill")
                     
             # Move up the head
             self.Arm.set_head_position(MOVING_UP) 
-        else:
-            raise ValueError("There is no more room in the pipette!")
-        return track_volume    
     
-    def injecting(self, track_volume: float) -> float: 
-        
-        if track_volume >= INJECT_VOLUME:               
+    # TODO: Check inject default volume 
+    def injecting(self, volume: float = INJECT_VOLUME) -> None: 
+        # Check if there is enough liquid to inject   
+        if self.track_volume < volume:  
+            logger.warning("There is not enough liquid in the pipette. Please refill it!")
+        else:             
             # Move down the head to reach the liquid
             self.Arm.set_head_position(MOVING_DOWN)
                     
             # Draw the liquid into the pipette        
-            self.set_volume(INJECT_VOLUME)
-            track_volume = self.update_volume("inject")
+            self.set_volume(volume)
+            self.update_volume(volume, "inject")
                     
             # Move up the head
             self.Arm.set_head_position(MOVING_UP) 
-        else:
-            raise ValueError("There is not enugh liquid in the pipette!")
-        return track_volume
     
-    def mixing(self, track_volume: float, n: int):
-        # Check if the pipette is empty
-        if track_volume != 0:
-            track_volume = self.flushing(track_volume)
+    # TODO: Check mixing default volume
+    def mixing(self, n: int, volume: float = MIXING_VOLUME):
+        # Check if the pipette is empty, if not, then flush it out
+        if self.track_volume != 0:
+            self.flushing()
         else:
             # Move down the head to reach the liquid
             self.Arm.set_head_position(MOVING_DOWN)
@@ -136,19 +139,8 @@ class Head():
             # Draw the liquid into the pipette 
             # 'n': number of mixing cycles
             for i in range(n):       
-                self.set_volume(MIXING_VOLUME_UP)
-                self.set_volume(MIXING_VOLUME_DOWN)
+                self.set_volume(volume) # suck it up
+                self.set_volume(-volume) # let it out
                     
             # Move up the head
             self.Arm.set_head_position(MOVING_UP) 
-
-    @property
-    def track_volume(self) -> float:
-        return self._track_volume
-            
-              
-        
-        
-# Do I need the center position since the stage movement is handled by the Nikon class?
-
-        
