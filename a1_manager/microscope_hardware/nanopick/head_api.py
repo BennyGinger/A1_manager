@@ -1,9 +1,14 @@
 from __future__ import annotations # Enable type annotation to be stored as string
-
-from microscope_hardware.API_micropipette import MarZ
-from utils.utility_classes import StageCoord
+import logging
 
 import requests
+
+from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
+from utils.utility_classes import StageCoord
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
 BASE_URL = "http://localhost:5000"
 
 # Volumes
@@ -21,11 +26,13 @@ MOVING_DOWN = 33000
 class Head():
     """Class that controls the API head.
     """
-    __slots__ = 'arm' 
+    __slots__ = 'arm', '_track_volume'
     
     def __init__(self, arm: MarZ) -> None:
-        self.Arm = arm
+        self.arm = arm
+        self._track_volume = 0  # in nanoliters
     
+    # TODO: Check time default value
     def set_volume(self, volume: float, time: float = 100) -> None:
         """ A volume-time pair is sent to the controller. The piezo unit will start immediately 
             to withdraw or inject the specified volume under the specified time. The volume values 
@@ -34,41 +41,39 @@ class Head():
             will be injected back."""        
 
         #Endpoint and parameters
-        self.endpoint = f"{BASE_URL}/setVolume"
-        self.params = {
+        endpoint = f"{BASE_URL}/setVolume"
+        params = {
             "volume": volume,   # example volume in nanoliters
             "time": time    # example time in milliseconds
         }
         try:
-            self.response = requests.put(self.endpoint, params=self.params)
-    
-            if self.response.status_code == 200:
-                print("Success:", self.response.text)
+            response = requests.put(endpoint, params=params)
+
+            if response.status_code == 200:
+                logger.debug("Success:", response.text)
             else:
-                print(f"Error {self.response.status_code}:", self.response.text)
+                logger.error(f"Error {response.status_code}:", response.text)
         except requests.exceptions.RequestException as e:
-            print("Request failed:", e)
-    
+            logger.error("Request failed:", e)
     
     def set_LED(self, ID: int, brightness: int) -> None:
         """Set brightness level of LED """
         #Endpoint and parameters
-        self.endpoint = f"{BASE_URL}/setVolume"
-        self.params = {
+        endpoint = f"{BASE_URL}/setLED"
+        params = {
             "ID": ID,   # example volume in nanoliters
-            "brightness": brightness    # example time in milliseconds
-        }
+            "brightness": brightness }   # example time in milliseconds
         try:
-            self.response = requests.put(self.endpoint, params=self.params)
-    
-            if self.response.status_code == 200:
-                print("Success:", self.response.text)
-            else:
-                print(f"Error {self.response.status_code}:", self.response.text)
-        except requests.exceptions.RequestException as e:
-            print("Request failed:", e)
+            response = requests.put(endpoint, params=params)
 
-    def update_volume(self, track_volume: float, state: str) -> float:
+            if response.status_code == 200:
+                logger.debug("Success:", response.text)
+            else:
+                logger.error(f"Error {response.status_code}:", response.text)
+        except requests.exceptions.RequestException as e:
+            logger.error("Request failed:", e)
+
+    def _update_volume(self, track_volume: float, state: str) -> float:
             if state == "fill":
                 track_volume += FILL_VOLUME
             
@@ -85,7 +90,7 @@ class Head():
         track_volume = self.update_volume("flush")
         return track_volume
     
-    def filling(self, track_volume: float) -> float:              
+    def filling(self, volume: float) -> float:              
         # Check if the pipette is empty
         if track_volume != 0:
             track_volume = self.flushing(track_volume)
@@ -137,6 +142,9 @@ class Head():
             # Move up the head
             self.Arm.set_head_position(MOVING_UP) 
 
+    @property
+    def track_volume(self) -> float:
+        return self._track_volume
             
               
         
