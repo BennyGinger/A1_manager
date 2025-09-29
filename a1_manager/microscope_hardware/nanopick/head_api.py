@@ -5,7 +5,7 @@ import logging
 import requests
 
 from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
-from utils.utility_classes import StageCoord # Do I need the center position since the stage movement is handled by the Nikon class? No I don't think so, since this will be handled by the higher library (e.g. gem-screening). Once you see that message, please remove the import
+
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -81,6 +81,7 @@ class Head():
             logger.error(f"Request failed: {e}")
 
     # FIXME: If you have time, can you check the volume handleing by the api, because I think -vol is sucking up and +vol is pushing out, but I am not 100% sure. This needs to be then changed accordingly in the code (i.e. in the injecting and filling function)
+    # This is what it says, so I think you are right: "If the volume is less than the previously sent item, then fluid is withdrawn through the pipette. If the volume is greater than the previously sent one, fluid will be injected back."
     def filling(self, volume: float, time: float = 100) -> None:
         """
         Fill the pipette with a specified volume of liquid. If the requested volume exceeds the maximum capacity of the pipette, it will be capped at MAX_VOLUME.
