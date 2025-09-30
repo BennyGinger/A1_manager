@@ -1,8 +1,6 @@
-from __future__ import annotations # Enable type annotation to be stored as string
 import json
 from pathlib import Path
 import numpy as np
-from typing import Optional
 
 
 def load_config_file(calib_path: Path)-> dict:

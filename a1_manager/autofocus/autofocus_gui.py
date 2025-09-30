@@ -2,14 +2,10 @@
 
 import sys
 import numpy as np
-from typing import Optional
 import logging
 
-from PyQt6.QtWidgets import (
-    QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, 
-    QWidget, QLabel, QPushButton, QFrame, QSizePolicy
-)
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QSizePolicy
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal
 from PyQt6.QtGui import QPixmap, QImage, QFont
 
 logger = logging.getLogger(__name__)
@@ -22,37 +18,25 @@ class AutofocusResult:
     QUIT = "quit"
 
 
-class AutofocusWindow(QMainWindow):
-    """Main window for autofocus image review."""
-    
-    def __init__(self, image: np.ndarray, title: str = "Current Focus"):
-        super().__init__()
+class AutofocusWidget(QWidget):
+    """Widget for autofocus image review (embeddable)."""
+    result_signal = pyqtSignal(str)  # Emits the result: CONTINUE, RESTART, or QUIT
+
+    def __init__(self, image: np.ndarray, title: str = "Current Focus", parent=None):
+        super().__init__(parent)
         self.image = image
         self.window_title = title
         self.result = None
         self.original_pixmap = None  # Store original pixmap for resizing
-        self.setup_ui()
-        
-    def setup_ui(self):
-        """Set up the user interface."""
-        self.setWindowTitle("Focus Review")
-        self.setMinimumSize(600, 500)  # Set minimum size instead of fixed
-        self.resize(800, 650)  # Initial size, but resizable
-        
-        # Keep window on top and focused
-        self.setWindowFlags(Qt.WindowType.WindowStaysOnTopHint | Qt.WindowType.Window)
-        self.activateWindow()
-        self.raise_()
-        
-        # Central widget
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-        
-        # Main layout
-        layout = QVBoxLayout(central_widget)
+        self._setup_ui()
+
+    def _setup_ui(self):
+        self.setMinimumSize(600, 500)
+        self.resize(800, 650)
+        layout = QVBoxLayout(self)
         layout.setSpacing(20)
         layout.setContentsMargins(20, 20, 20, 20)
-        
+
         # Title
         title_label = QLabel(self.window_title)
         title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -61,31 +45,29 @@ class AutofocusWindow(QMainWindow):
         title_font.setBold(True)
         title_label.setFont(title_font)
         layout.addWidget(title_label)
-        
+
         # Instructions
         instruction_text = "Review focus quality and choose an action:"
         instruction_label = QLabel(instruction_text)
         instruction_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         instruction_label.setWordWrap(True)
         layout.addWidget(instruction_label)
-        
-        # Image display - no frame, just label
-        # Convert and display image
+
+        # Image display
         pixmap = self._convert_to_pixmap(self.image)
-        self.original_pixmap = pixmap  # Store for resizing
+        self.original_pixmap = pixmap
         self.image_label = QLabel()
         self.image_label.setPixmap(pixmap)
         self.image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.image_label.setScaledContents(False)  # Don't stretch, maintain aspect ratio
-        self.image_label.setMinimumSize(400, 400)  # Square minimum size
+        self.image_label.setScaledContents(False)
+        self.image_label.setMinimumSize(400, 400)
         self.image_label.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         layout.addWidget(self.image_label)
-        
+
         # Buttons
         button_layout = QHBoxLayout()
         button_layout.setSpacing(20)
-        
-        # Quit button
+
         self.quit_btn = QPushButton("❌ Quit")
         self.quit_btn.setFixedSize(120, 40)
         self.quit_btn.setStyleSheet("""
@@ -102,8 +84,7 @@ class AutofocusWindow(QMainWindow):
             }
         """)
         self.quit_btn.clicked.connect(lambda: self._on_button_click(AutofocusResult.QUIT))
-        
-        # Restart button
+
         self.restart_btn = QPushButton("🔄 Restart")
         self.restart_btn.setFixedSize(120, 40)
         self.restart_btn.setStyleSheet("""
@@ -120,8 +101,7 @@ class AutofocusWindow(QMainWindow):
             }
         """)
         self.restart_btn.clicked.connect(lambda: self._on_button_click(AutofocusResult.RESTART))
-        
-        # Continue button
+
         self.continue_btn = QPushButton("✅ Continue")
         self.continue_btn.setFixedSize(120, 40)
         self.continue_btn.setStyleSheet("""
@@ -138,43 +118,32 @@ class AutofocusWindow(QMainWindow):
             }
         """)
         self.continue_btn.clicked.connect(lambda: self._on_button_click(AutofocusResult.CONTINUE))
-        self.continue_btn.setDefault(True)  # Make it the default button
-        
-        # Add buttons to layout
+        self.continue_btn.setDefault(True)
+
         button_layout.addStretch()
         button_layout.addWidget(self.quit_btn)
         button_layout.addWidget(self.restart_btn)
         button_layout.addWidget(self.continue_btn)
         button_layout.addStretch()
-        
         layout.addLayout(button_layout)
-        
-        # Set focus to continue button
         self.continue_btn.setFocus()
-    
-    def resizeEvent(self, event):
-        """Handle window resize events to maintain image aspect ratio."""
-        super().resizeEvent(event)
+
+    def resizeEvent(self, a0):
+        super().resizeEvent(a0)
         if self.original_pixmap and hasattr(self, 'image_label'):
-            # Get available space for image (accounting for other widgets)
             available_size = self.image_label.size()
-            
-            # Scale pixmap to fit while maintaining aspect ratio
             scaled_pixmap = self.original_pixmap.scaled(
                 available_size,
                 Qt.AspectRatioMode.KeepAspectRatio,
                 Qt.TransformationMode.SmoothTransformation
             )
             self.image_label.setPixmap(scaled_pixmap)
-            
-    def showEvent(self, event):
-        """Handle initial show event to set proper image scaling."""
-        super().showEvent(event)
-        # Schedule a resize after the window is fully shown
+
+    def showEvent(self, a0):
+        super().showEvent(a0)
         QTimer.singleShot(50, self._update_image_scale)
-        
+
     def _update_image_scale(self):
-        """Update image scaling to fit current label size."""
         if self.original_pixmap and hasattr(self, 'image_label'):
             available_size = self.image_label.size()
             scaled_pixmap = self.original_pixmap.scaled(
@@ -183,28 +152,23 @@ class AutofocusWindow(QMainWindow):
                 Qt.TransformationMode.SmoothTransformation
             )
             self.image_label.setPixmap(scaled_pixmap)
-        
+
     def _convert_to_pixmap(self, image: np.ndarray) -> QPixmap:
-        """Convert numpy array to QPixmap for display with matplotlib-like contrast."""
-        # Handle different image formats and apply matplotlib-like scaling
+        # ...same as before...
         if image.dtype != np.uint8:
-            # Use percentile-based scaling like matplotlib for better contrast
-            vmin, vmax = np.percentile(image, [2, 98])  # Remove outliers
+            vmin, vmax = np.percentile(image, [2, 98])
             image_norm = np.clip((image - vmin) / (vmax - vmin) * 255, 0, 255).astype(np.uint8)
         else:
-            # For uint8 images, apply histogram stretching for better contrast
             vmin, vmax = np.percentile(image, [1, 99])
             if vmax > vmin:
                 image_norm = np.clip((image.astype(float) - vmin) / (vmax - vmin) * 255, 0, 255).astype(np.uint8)
             else:
                 image_norm = image
-        
-        # Get image dimensions
-        if len(image_norm.shape) == 2:  # Grayscale
+        if len(image_norm.shape) == 2:
             height, width = image_norm.shape
             bytes_per_line = width
             qt_format = QImage.Format.Format_Grayscale8
-        else:  # RGB
+        else:
             height, width, channels = image_norm.shape
             bytes_per_line = channels * width
             if channels == 3:
@@ -213,45 +177,58 @@ class AutofocusWindow(QMainWindow):
                 qt_format = QImage.Format.Format_RGBA8888
             else:
                 raise ValueError(f"Unsupported number of channels: {channels}")
-        
-        # Create QImage
         qt_image = QImage(image_norm.data, width, height, bytes_per_line, qt_format)
-        
-        # Convert to QPixmap and scale if necessary
         pixmap = QPixmap.fromImage(qt_image)
-        
-        # Scale down if too large (maintain aspect ratio)
-        max_width, max_height = 730, 500  # Increased max display size to fit the larger frame
+        max_width, max_height = 730, 500
         if pixmap.width() > max_width or pixmap.height() > max_height:
             pixmap = pixmap.scaled(
-                max_width, max_height, 
-                Qt.AspectRatioMode.KeepAspectRatio, 
+                max_width, max_height,
+                Qt.AspectRatioMode.KeepAspectRatio,
                 Qt.TransformationMode.SmoothTransformation
             )
-        
         return pixmap
-    
+
     def _on_button_click(self, result: str):
-        """Handle button click."""
         self.result = result
-        self.close()
-    
-    def keyPressEvent(self, event):
-        """Handle key press events."""
-        if event.key() == Qt.Key.Key_Return or event.key() == Qt.Key.Key_Enter:
-            self._on_button_click(AutofocusResult.CONTINUE)
-        elif event.key() == Qt.Key.Key_Escape:
-            self._on_button_click(AutofocusResult.QUIT)
-        elif event.key() == Qt.Key.Key_R:
-            self._on_button_click(AutofocusResult.RESTART)
+        self.result_signal.emit(result)
+        self.hide()
+
+    def keyPressEvent(self, a0):
+        if a0 is not None:
+            if a0.key() == Qt.Key.Key_Return or a0.key() == Qt.Key.Key_Enter:
+                self._on_button_click(AutofocusResult.CONTINUE)
+            elif a0.key() == Qt.Key.Key_Escape:
+                self._on_button_click(AutofocusResult.QUIT)
+            elif a0.key() == Qt.Key.Key_R:
+                self._on_button_click(AutofocusResult.RESTART)
+            else:
+                super().keyPressEvent(a0)
         else:
-            super().keyPressEvent(event)
-    
-    def closeEvent(self, event):
-        """Handle window close event."""
+            super().keyPressEvent(a0)
+
+# --- Keep AutofocusWindow for backward compatibility (modal window) ---
+class AutofocusWindow(QMainWindow):
+    """Main window for autofocus image review (standalone window)."""
+    def __init__(self, image: np.ndarray, title: str = "Current Focus"):
+        super().__init__()
+        self.widget = AutofocusWidget(image, title)
+        self.setCentralWidget(self.widget)
+        self.setWindowTitle("Focus Review")
+        self.setMinimumSize(600, 500)
+        self.resize(800, 650)
+        self.result = None
+
+    def keyPressEvent(self, a0):
+        self.widget.keyPressEvent(a0)
+        self.result = self.widget.result
+        if self.result is not None:
+            self.close()
+
+    def closeEvent(self, a0):
         if self.result is None:
-            self.result = AutofocusResult.QUIT
-        event.accept()
+            self.result = self.widget.result or AutofocusResult.QUIT
+        if a0 is not None:
+            a0.accept()
 
 
 def prompt_autofocus_gui(image: np.ndarray, title: str = "Current Focus") -> str:
