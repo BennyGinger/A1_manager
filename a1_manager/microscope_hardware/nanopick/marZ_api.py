@@ -7,17 +7,17 @@ from pycromanager import Core
 # Set up logging
 logger = logging.getLogger(__name__)
 
+# FIXME: These values need to be calibrated
 MAX_HEIGHT = 7000
 MIN_HEIGHT = -7000
-
 SAFE_HEIGHT = 3500 # The stage controller has to wait until the head reaches this altitude - will be used 
+
 @dataclass(slots=True)
 class MarZ:
     """
     Class to control the movement of the arm (Märzhäuser controller).
     """
     core: Core
-    destination: float
 
     @property
     def get_arm_position(self)->float:

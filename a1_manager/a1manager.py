@@ -10,7 +10,9 @@ warnings.filterwarnings("ignore", message=".*Java ZMQ server and Python client.*
 import numpy as np
 from pycromanager import Core
 
-from a1_manager.microscope_hardware.nikon import NikonTi2
+from a1_manager.microscope_hardware.nikon import NikonTi2, StageCoord
+from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
+from a1_manager.microscope_hardware.nanopick.head_api import Head
 from a1_manager.microscope_hardware.cameras import AndorCamera
 from a1_manager.microscope_hardware.dmd_manager import Dmd
 from a1_manager.microscope_hardware.lamps_factory import get_lamp
@@ -34,24 +36,42 @@ class A1Manager:
         lamp_name (str): The name of the lamp to use. Must be one of 'pE-800', 'pE-4000', 'DiaLamp'. Default is 'pE-4000'.
         focus_device (str): The focus device to use. Must be one of 'ZDrive', 'PFSOffset'. Default is 'ZDrive'.
         dmd_trigger_mode (str): The trigger mode for the DMD. Must be one of 'InternalExpose', 'ExternalTrigger'. Default is 'InternalExpose'.
+        attach_nanopick (bool): Whether to attach the nanopick arm and head. Default is False.
         """
-    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'is_dmd_attached'
+    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'is_dmd_attached', 'arm', 'head'
     
-    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-4000', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose') -> None:
+    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-4000', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose', attach_nanopick: bool = False) -> None:
         # Initialize Core bridge
         self.core = Core()
         
-        self.nikon = NikonTi2(self.core, objective, focus_device) # type: ignore 
-        self.camera = AndorCamera(self.core, binning, exposure_ms) # type: ignore
-        self.lamp = get_lamp(self.core, lamp_name) # type: ignore
+        self.nikon = NikonTi2(self.core, objective, focus_device) 
+        self.camera = AndorCamera(self.core, binning, exposure_ms) 
+        self.lamp = get_lamp(self.core, lamp_name)
+        if attach_nanopick:
+            self.arm = MarZ(self.core)
+            self.head = Head(self.arm)
         
         # Attach DMD to lamp
         self.dmd = None
         self.activate_dmd = False
         self.is_dmd_attached = IS_DMD_ATTACHED[lamp_name]
         if self.is_dmd_attached:
-            self.dmd = Dmd(self.core,dmd_trigger_mode) # type: ignore
+            self.dmd = Dmd(self.core, dmd_trigger_mode)
     
+    @property
+    def image_size(self)-> tuple[int,int]:
+        """Calculate window size in pixel for the camera."""
+        return (2048//self.camera.binning, 2048//self.camera.binning)
+    
+    @property
+    def get_arm_position(self)-> float:
+        """Get the current altitude of the head."""
+        if not hasattr(self, 'arm'):
+            logger.warning("Nanopick arm is not attached.")
+            return float('nan')
+        return self.arm.get_arm_position
+    
+    ######## Public methods ########
     def oc_settings(self, optical_configuration: str, intensity: float | None = None, exposure_ms: float | None = None, light_path: int | None = None)-> None:
         """Set the optical configuration for the microscope.
         
@@ -144,6 +164,76 @@ class A1Manager:
         sleep(duration_sec) # Time in seconds
         self.lamp.set_LED_shutter(0)
     
+    def set_arm_position(self, destination: float)->None:
+        """
+        Move the head to the desired position.
+        Args:
+            destination (float): The target altitude for the head movement (in range -7000 to 7000, arbitrary units).
+        """
+        if not hasattr(self, 'arm'):
+            logger.warning("Nanopick arm is not attached. It will be ignored.")
+            return
+        self.arm.set_arm_position(destination)
+    
+    def set_LED(self, ID: int, brightness: int) -> None:
+        """
+        Set the LED brightness.
+        Args:
+            ID (int): The ID of the LED to set (1-4).
+            brightness (int): The brightness level (0-100).
+        """
+        if not hasattr(self, 'head'):
+            logger.warning("Nanopick head is not attached. It will be ignored.")
+            return
+        self.head.set_LED(ID, brightness)
+    
+    def filling(self, volume: float, time: float = 100) -> None:
+        """
+        Fill the pipette with a specific volume.
+        Args:
+            volume (float): Volume in nanoliters (positive value to inject, negative value to withdraw)
+            time (float): Time in milliseconds (default: 100 ms)
+        """  
+        if not hasattr(self, 'head'):
+            logger.warning("Nanopick head is not attached. It will be ignored.")
+            return     
+        self.head.filling(volume, time)
+    
+    def injecting(self, volume: float, time: float = 100) -> None:
+        """
+        Inject a specific volume from the pipette.
+        Args:
+            volume (float): Volume in nanoliters (positive value to inject, negative value to withdraw)
+            time (float): Time in milliseconds (default: 100 ms)
+        """    
+        if not hasattr(self, 'head'):
+            logger.warning("Nanopick head is not attached. It will be ignored.")
+            return    
+        self.head.injecting(volume, time)
+    
+    def set_stage_position(self, stage_position: StageCoord)-> None:
+        """
+        Set the stage position in XY coordinates and the focus device position.
+        Args:
+            stage_position (StageCoord): StageCoord object containing the XY coordinates and the focus device position.
+        """
+        self.nikon.set_stage_position(stage_position)
+    
+    def window_size(self, dmd_window_only: bool)-> tuple[int,int]:
+        """Calculate window size in micron for the camera."""
+        
+        if self.is_dmd_attached and dmd_window_only and self.dmd is not None:
+            dmd_size = self.dmd.dmd_mask.dmd_size
+            return (int(self._size_pixel2micron(dmd_size[0])),int(self._size_pixel2micron(dmd_size[1])))
+        return (int(self._size_pixel2micron(self.image_size[0])),int(self._size_pixel2micron(self.image_size[1])))
+    
+    ############ Private methods ############
+    def _pfs_initialization(self)-> None:
+        """Initialize the PFS system."""
+        while True:  # Make sure that PFS is on, before snap
+            if self.core.get_property('PFS','PFS Status') == '0000001100001010': # type: ignore
+                break
+    
     def _size_pixel2micron(self, size_in_pixel: int | None = None)-> float:
         """Convert size from pixel to micron. Return the size in float."""
         pixel_calibration = {'10x':0.6461,'20x':0.3258}
@@ -154,26 +244,6 @@ class A1Manager:
             return size_in_pixel*pixel_in_um*binning
         image_size = (2048 // binning, 2048 // binning)
         return image_size[0]*pixel_in_um*binning
-    
-    @property
-    def image_size(self)-> tuple[int,int]:
-        """Calculate window size in pixel for the camera."""
-        return (2048//self.camera.binning, 2048//self.camera.binning)
-    
-    def window_size(self, dmd_window_only: bool)-> tuple[int,int]:
-        """Calculate window size in micron for the camera."""
-        
-        if self.is_dmd_attached and dmd_window_only and self.dmd is not None:
-            dmd_size = self.dmd.dmd_mask.dmd_size
-            return (int(self._size_pixel2micron(dmd_size[0])),int(self._size_pixel2micron(dmd_size[1])))
-        return (int(self._size_pixel2micron(self.image_size[0])),int(self._size_pixel2micron(self.image_size[1])))
-    
-    def _pfs_initialization(self)-> None:
-        """Initialize the PFS system."""
-        while True:  # Make sure that PFS is on, before snap
-            if self.core.get_property('PFS','PFS Status') == '0000001100001010': # type: ignore
-                break
-
 
 if __name__ == "__main__":
     # Example usage

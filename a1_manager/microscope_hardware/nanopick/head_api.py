@@ -9,16 +9,17 @@ from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
 
 # Set up logging
 logger = logging.getLogger(__name__)
-
-# TODO: Check default value
 BASE_URL = "http://localhost:5000"
 
 # Volumes
-MIXING_VOLUME = 50 # in nanoliters
+MAX_VOLUME = 500 # in nanoliters
+MIN_VOLUME = 10  # in nanoliters
+# FIXME: These values need to be calibrated
+MIXING_VOLUME = 8 # in nanoliters
 MIXING_TIME = 20 # in milliseconds
-MAX_VOLUME = 600 # in nanoliters
 
 # Movement of the head
+# FIXME: These values need to be calibrated
 MOVING_UP = -33000
 MOVING_DOWN = 33000
 
@@ -30,7 +31,7 @@ class Head():
     Class that controls the API head.
     """
     arm: MarZ
-    _track_volume: float = 0  # in nanoliters
+    _track_volume: float = MAX_VOLUME  # in nanoliters
 
     @property
     def track_volume(self) -> float:
@@ -80,15 +81,15 @@ class Head():
         except requests.exceptions.RequestException as e:
             logger.error(f"Request failed: {e}")
 
-    # FIXME: If you have time, can you check the volume handleing by the api, because I think -vol is sucking up and +vol is pushing out, but I am not 100% sure. This needs to be then changed accordingly in the code (i.e. in the injecting and filling function)
-    # This is what it says, so I think you are right: "If the volume is less than the previously sent item, then fluid is withdrawn through the pipette. If the volume is greater than the previously sent one, fluid will be injected back."
     def filling(self, volume: float, time: float = 100) -> None:
         """
         Fill the pipette with a specified volume of liquid. If the requested volume exceeds the maximum capacity of the pipette, it will be capped at MAX_VOLUME.
         """
-        if volume + self.track_volume >= MAX_VOLUME:
-            vol_to_fill = MAX_VOLUME - self.track_volume
-            logger.warning(f"The volume to fill exceeds the maximum volume of the pipette! It will be set to {MAX_VOLUME} nanoliters (i.e. maximum).")
+        volume = abs(volume)  # Ensure volume is positive
+        max_filling_volume = MAX_VOLUME - self.track_volume
+        if volume > max_filling_volume:
+            vol_to_fill = max_filling_volume
+            logger.warning(f"The volume to fill exceeds the maximum volume of the pipette! It will be set to {vol_to_fill} nanoliters.")
         else:
             vol_to_fill = volume
 
@@ -96,7 +97,7 @@ class Head():
         self.arm.set_arm_position(MOVING_DOWN)
 
         # Draw the liquid into the pipette
-        self._set_volume(vol_to_fill, time)
+        self._set_volume(self.track_volume - vol_to_fill, time)
         self._track_volume += vol_to_fill
 
         # Move up the head
@@ -106,9 +107,11 @@ class Head():
         """
         Inject a specified volume of liquid from the pipette. If the requested volume exceeds the current volume in the pipette, it will be capped at the current volume.
         """
-        if volume > self.track_volume:
-            logger.warning(f"The volume to inject exceeds the current volume in the pipette! It will be set to {self.track_volume} nanoliters (i.e. current volume).")
-            vol_to_inject = self.track_volume
+        volume = abs(volume)  # Ensure volume is positive
+        max_injection_volume = self.track_volume - MIN_VOLUME
+        if volume > max_injection_volume:
+            vol_to_inject = max_injection_volume
+            logger.warning(f"The volume to inject exceeds the current volume in the pipette! It will be set to {max_injection_volume} nanoliters (i.e. current volume - minimum volume).")
         else:
             vol_to_inject = volume   
         
@@ -116,7 +119,7 @@ class Head():
         self.arm.set_arm_position(MOVING_DOWN)
         
         # Draw the liquid into the pipette
-        self._set_volume(vol_to_inject, time)
+        self._set_volume(self.track_volume + vol_to_inject, time)
         self._mixing(mixing_cycles)
         self._track_volume -= vol_to_inject
 
