@@ -10,11 +10,13 @@ warnings.filterwarnings("ignore", message=".*Java ZMQ server and Python client.*
 import numpy as np
 from pycromanager import Core
 
+from a1_manager import StageCoord
 from a1_manager.microscope_hardware.nikon import NikonTi2
 from a1_manager.microscope_hardware.cameras import AndorCamera
 from a1_manager.microscope_hardware.dmd_manager import Dmd
 from a1_manager.microscope_hardware.lamps_factory import get_lamp
 from a1_manager.utils.utils import load_config_file
+
 
 # TODO: Find a way to populate config file in parent pkg directory
 OPTICAL_CONFIGURATION = load_config_file('optical_configuration')
@@ -143,6 +145,14 @@ class A1Manager:
         self.lamp.set_LED_shutter(1)
         sleep(duration_sec) # Time in seconds
         self.lamp.set_LED_shutter(0)
+    
+    def set_stage_position(self, stage_position: StageCoord)-> None:
+        """
+        Set the stage position in XY coordinates and the focus device position.
+        Args:
+            stage_position (StageCoord): StageCoord object containing the XY coordinates and the focus device position.
+        """
+        self.nikon.set_stage_position(stage_position)
     
     def _size_pixel2micron(self, size_in_pixel: int | None = None)-> float:
         """Convert size from pixel to micron. Return the size in float."""
