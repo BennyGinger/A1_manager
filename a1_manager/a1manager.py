@@ -18,6 +18,7 @@ from a1_manager.microscope_hardware.dmd_manager import Dmd
 from a1_manager.microscope_hardware.lamps_factory import get_lamp
 from a1_manager.utils.utils import load_config_file
 
+
 # TODO: Find a way to populate config file in parent pkg directory
 OPTICAL_CONFIGURATION = load_config_file('optical_configuration')
 
