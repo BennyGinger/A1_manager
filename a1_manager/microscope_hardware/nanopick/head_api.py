@@ -9,7 +9,7 @@ from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
 
 # Set up logging
 logger = logging.getLogger(__name__)
-BASE_URL = "http://localhost:5000"
+BASE_URL = "http://localhost:5000/api"  # Base URL for the API
 
 # Volumes
 MAX_VOLUME = 500 # in nanoliters
@@ -17,11 +17,6 @@ MIN_VOLUME = 10  # in nanoliters
 # FIXME: These values need to be calibrated
 MIXING_VOLUME = 8 # in nanoliters
 MIXING_TIME = 20 # in milliseconds
-
-# Movement of the head
-# FIXME: These values need to be calibrated
-MOVING_UP = -33000
-MOVING_DOWN = 33000
 
 
 # NOTE: For now I removed some methods, like flushing, we need to experiment with the API more before doing anything.
@@ -33,6 +28,9 @@ class Head():
     arm: MarZ
     _track_volume: float = MAX_VOLUME  # in nanoliters
 
+    def __post_init__(self):
+        self.switch_LED_off
+    
     @property
     def track_volume(self) -> float:
         return self._track_volume
@@ -47,11 +45,9 @@ class Head():
         """
 
         # Endpoint and parameters
-        endpoint = f"{BASE_URL}/setVolume"
-        params = {"volume": volume,   # example volume in nanoliters
-                    "time": time}    # example time in milliseconds
+        endpoint = f"{BASE_URL}/setVolume?volume={volume}&time={time}"
         try:
-            response = requests.put(endpoint, params=params)
+            response = requests.put(endpoint)
             if response.status_code == 200:
                 logger.debug(f"Success: {response.text}")
             else:
@@ -59,6 +55,22 @@ class Head():
         except requests.exceptions.RequestException as e:
             logger.error(f"Request failed: {e}")
     
+    @property
+    def switch_LED_on(self) -> None:
+        """
+        Switch on the LED light
+        """
+        self.set_LED(1, 100) 
+        self.set_LED(2, 100) 
+        
+    @property
+    def switch_LED_off(self) -> None:
+        """
+        Switch off the LED light
+        """
+        self.set_LED(1, 0) 
+        self.set_LED(2, 0) 
+            
     def set_LED(self, ID: int, brightness: int) -> None:
         """
         Set brightness level of LED 
@@ -68,12 +80,9 @@ class Head():
             brightness (int): Brightness level (0-100)
         """
         # Endpoint and parameters
-        endpoint = f"{BASE_URL}/setLED"
-        params = {"ID": ID,   # example volume in nanoliters
-                "brightness": brightness}   # example time in milliseconds
+        endpoint = f"{BASE_URL}/setLED/{ID}?brightness={brightness}"
         try:
-            response = requests.put(endpoint, params=params)
-
+            response = requests.put(endpoint)
             if response.status_code == 200:
                 logger.debug(f"Success: {response.text}")
             else:
@@ -94,14 +103,16 @@ class Head():
             vol_to_fill = volume
 
         # Move down the head to reach the liquid
-        self.arm.set_arm_position(MOVING_DOWN)
+        self.switch_LED_on
+        self.arm.set_arm_position(self.arm.safety_down)
 
         # Draw the liquid into the pipette
         self._set_volume(self.track_volume - vol_to_fill, time)
         self._track_volume += vol_to_fill
 
         # Move up the head
-        self.arm.set_arm_position(MOVING_UP)
+        self.arm.set_arm_position(self.arm.safety_up)
+        self.switch_LED_off
 
     def injecting(self, volume: float, time: float = 100, mixing_cycles: int = 3) -> None:
         """
@@ -116,7 +127,8 @@ class Head():
             vol_to_inject = volume   
         
         # Move down the head to reach the liquid
-        self.arm.set_arm_position(MOVING_DOWN)
+        self.switch_LED_on
+        self.arm.set_arm_position(self.arm.safety_down)
         
         # Draw the liquid into the pipette
         self._set_volume(self.track_volume + vol_to_inject, time)
@@ -124,7 +136,8 @@ class Head():
         self._track_volume -= vol_to_inject
 
         # Move up the head
-        self.arm.set_arm_position(MOVING_UP)
+        self.arm.set_arm_position(self.arm.safety_up)
+        self.switch_LED_off
 
     def _mixing(self, n: int):
         """

@@ -40,15 +40,15 @@ class A1Manager:
         """
     __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'is_dmd_attached', 'arm', 'head'
     
-    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-4000', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose', attach_nanopick: bool = False) -> None:
+    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-800', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose', nanopick_dish: str | None = None) -> None:
         # Initialize Core bridge
         self.core = Core()
         
-        self.nikon = NikonTi2(self.core, objective, focus_device) 
-        self.camera = AndorCamera(self.core, binning, exposure_ms) 
-        self.lamp = get_lamp(self.core, lamp_name)
-        if attach_nanopick:
-            self.arm = MarZ(self.core)
+        self.nikon = NikonTi2(self.core, objective, focus_device) # type: ignore
+        self.camera = AndorCamera(self.core, binning, exposure_ms) # type: ignore
+        self.lamp = get_lamp(self.core, lamp_name) # type: ignore
+        if nanopick_dish is not None:
+            self.arm = MarZ(self.core, nanopick_dish)  # type: ignore
             self.head = Head(self.arm)
         
         # Attach DMD to lamp
@@ -56,7 +56,7 @@ class A1Manager:
         self.activate_dmd = False
         self.is_dmd_attached = IS_DMD_ATTACHED[lamp_name]
         if self.is_dmd_attached:
-            self.dmd = Dmd(self.core, dmd_trigger_mode)
+            self.dmd = Dmd(self.core, dmd_trigger_mode) # type: ignore
     
     @property
     def image_size(self)-> tuple[int,int]:
@@ -246,10 +246,27 @@ class A1Manager:
         return image_size[0]*pixel_in_um*binning
 
 if __name__ == "__main__":
+    import json
+    from typing import Any
+    from time import sleep
+    
     # Example usage
     run_dir = Path('D:\\Raph\\test_lib')
-    a1_manager = A1Manager(objective='20x', exposure_ms=150, binning=2, lamp_name='pE-800')
-    a1_manager.oc_settings(optical_configuration='GFP', intensity=10)
-    a1_manager.light_stimulate(duration_sec=10)
-    image = a1_manager.snap_image(dmd_exposure_sec=10)
-    print(image.shape)
+    objective = '20x'
+    nanopick_dish = '96well'  
+    
+    
+    a1_manager = A1Manager(objective=objective, nanopick_dish=nanopick_dish, lamp_name='pE-800')
+    
+    dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
+    with open(dish_calib_path, 'r') as f:
+        dish_calib: dict[str, dict[str, Any]]= json.load(f)
+    filling_wells = ['H1', 'H2']
+    measure_wells = ['H8', 'H9', 'H10', 'H11', 'H12']
+    for well in measure_wells:
+        mst = dish_calib.get(well, {})
+        position = StageCoord(xy=mst['center'])
+        a1_manager.set_stage_position(position)
+        sleep(1)
+        a1_manager.head.injecting(80)
+
