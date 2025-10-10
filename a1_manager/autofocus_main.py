@@ -1,11 +1,14 @@
 from pathlib import Path
 import logging
-from typing import Callable, Optional
+import itertools
+from typing import Any, Callable, Optional
 
+import numpy as np
 from numpy.typing import NDArray
 from a1_manager.a1manager import A1Manager
 from a1_manager.autofocus.af_manager import AutoFocusManager
-from a1_manager.autofocus.af_utils import load_config_file, save_config_file, RestartAutofocus, QuitAutofocus
+from a1_manager.autofocus.af_utils import RestartAutofocus, QuitAutofocus
+from a1_manager.utils.json_utils import load_config_file, save_config_file
 from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 
 
@@ -46,12 +49,12 @@ def run_autofocus(method: str,
         a1_manager.core.set_property('DiaLamp', 'State', 0) # type: ignore
         
         # Load dish measurements
-        dish_measurements: dict[str, WellCircleCoord | WellSquareCoord] = load_config_file(calib_path)
+        dish_measurements = load_config_file(calib_path)
         autofocus = AutoFocusManager(a1_manager, method, af_savedir) 
-        
-        for idx, (well, measurement) in enumerate(dish_measurements.items()):
-            logger.info(f'Autofocus for well {well}')
-            
+
+        sorted_wells = _snake_sort_wells(dish_measurements)
+        for idx, (well, measurement) in enumerate(sorted_wells):
+            # Skip if no measurement coord
             if measurement[focus_device] is not None and not overwrite:
                 logger.info(f"Autofocus already done for {well} with {focus_device} at {measurement[focus_device]}")
                 continue
@@ -59,6 +62,7 @@ def run_autofocus(method: str,
             try:
                 # Process the well for autofocus
                 focus = _focus_one_well(idx=idx,
+                                        well=well,
                                         measurement=measurement,
                                         focus_device=focus_device,
                                         autofocus=autofocus,
@@ -70,26 +74,20 @@ def run_autofocus(method: str,
                 raise
             
             # Update dish measurements  
-            setattr(measurement, focus_device, focus)
+            measurement[focus_device] = focus
                 
             # Save dish measurements and exit
             save_config_file(calib_path, dish_measurements)
             
-            # success! move on to the next well
-            logger.info(f"Autofocus done for {well} with {focus_device} at {focus}")
+        if method == 'Manual':
+            logger.info("Autofocus was added mannually for all the wells.")
             
-
-def _focus_one_well(*,
-                    idx: int, 
-                    measurement: WellCircleCoord | WellSquareCoord,
-                    focus_device: str, 
-                    autofocus: AutoFocusManager, 
-                    review_callback: Optional[Callable[[NDArray], None]] = None
-                    ) -> float:
+def _focus_one_well(*, idx: int, well: str, measurement: WellCircleCoord | WellSquareCoord, focus_device: str, autofocus: AutoFocusManager, review_callback: Optional[Callable[[NDArray], None]] = None) -> float:
     """
     Process a single well for autofocus.
     Args:
         idx (int): Index of the well in the list of wells.
+        well (str): Well name (e.g., 'A1').
         measurement (WellCircleCoord | WellSquareCoord): Measurement data for the well.
         focus_device (str): Focus device to use. Choose from 'ZDrive' or 'PFSOffset'.
         autofocus (AutoFocusManager): AutoFocusManager object.
@@ -103,18 +101,19 @@ def _focus_one_well(*,
             a1_manager = autofocus.a1_manager
 
             # Move to center of well
-            point_center = StageCoord(xy=measurement['center'])
-            a1_manager.nikon.set_stage_position(point_center)
+            _move_stage_to_center(idx, well, measurement, a1_manager, autofocus.method)
 
             # Apply fine focus range
-            logger.info(f'Fine tuned autofocus with {focus_device} in the center of well')
             focus = autofocus.find_focus(**FOCUS_RANGES[focus_device]['small'])
-            logger.info(f'Focus value: {focus}')
 
             # If first well, show the image and prompt user
             if idx == 0:
+                logger.info(f'Focus value: {focus}')
                 img = a1_manager.snap_image()
                 _autofocus_review(img, review_callback=review_callback)  # Will use callback if provided, else blocking
+            
+            if idx != 0 and autofocus.method != 'Manual':
+                logger.info(f"Autofocus done for {well} with {focus_device} at {focus}")
             return focus
 
         except RestartAutofocus:
@@ -125,7 +124,17 @@ def _focus_one_well(*,
             logger.warning("   ✗ Quit detected in helper; propagating")
             raise QuitAutofocus
 
-# General autofocus review function: blocking by default, non-blocking if callback provided
+def _move_stage_to_center(idx: int, well: str, measurement: WellCircleCoord | WellSquareCoord, a1_manager: A1Manager, method: str) -> None:
+    if method == 'Manual' and idx != 0:
+        return
+    
+    if measurement.center is None:
+        logger.error(f"Measurement center is None for well {well}. Skipping autofocus for this well.")
+        raise ValueError("Measurement center cannot be None.")
+    logger.info(f"Autofocus for well {well}")
+    point_center = StageCoord(xy=measurement.center)
+    a1_manager.nikon.set_stage_position(point_center)
+
 def _autofocus_review(img: NDArray, review_callback: Optional[Callable[[NDArray], None]] = None):
     """
     Review autofocus image. If review_callback is provided, call it (non-blocking, GUI-embedded).
@@ -137,3 +146,25 @@ def _autofocus_review(img: NDArray, review_callback: Optional[Callable[[NDArray]
     else:
         from a1_manager.autofocus.af_utils import prompt_autofocus_with_image
         prompt_autofocus_with_image(img, use_gui=True)
+
+def _get_well_center(measurement: WellCircleCoord | WellSquareCoord) -> tuple[float, float]:
+    # Works for both WellCircleCoord and WellSquareCoord
+    return getattr(measurement, 'center', (np.nan, np.nan))
+
+def _snake_sort_wells(dish_measurements: dict[str, WellCircleCoord | WellSquareCoord]) -> list[tuple[str, WellCircleCoord | WellSquareCoord]]:
+    wells = [(well, m)
+        for well, m in dish_measurements.items()
+        if _get_well_center(m) is not None]
+
+    wells.sort(key=lambda item: _get_well_center(item[1])[1])  # sort by y
+    rows = []
+    for _, group in itertools.groupby(wells, key=lambda item: _get_well_center(item[1])[1]):
+        rows.append(list(group))
+    sorted_wells = []
+    for i, row in enumerate(rows):
+        # For even rows (starting from top), left-to-right is descending x
+        # For odd rows, right-to-left is ascending x
+        reverse = (i % 2 == 0)
+        row_sorted = sorted(row, key=lambda item: _get_well_center(item[1])[0], reverse=reverse)
+        sorted_wells.extend(row_sorted)
+    return sorted_wells

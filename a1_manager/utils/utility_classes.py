@@ -1,6 +1,6 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from dataclasses import dataclass, replace
-from typing import Literal, overload
+from typing import Any, Literal, overload
 
 
 @dataclass
@@ -56,6 +56,9 @@ class WellBaseCoord:
     def __getitem__(self, key: str):
         return getattr(self, key)
     
+    def __setitem__(self, key: str, value: Any | None):
+        setattr(self, key, value)
+    
     def _items(self):
         return self.__dict__.items()
     
@@ -81,6 +84,14 @@ class WellSquareCoord(WellBaseCoord):
     
     top_left: tuple[float, float] | None = None
     bottom_right: tuple[float, float] | None = None
+    
+    @property
+    def center(self) -> tuple[float, float] | None:
+        if self.top_left is not None and self.bottom_right is not None:
+            x = (self.top_left[0] + self.bottom_right[0]) / 2
+            y = (self.top_left[1] + self.bottom_right[1]) / 2
+            return (x, y)
+        return None
 
 @dataclass
 class WellCircleCoord(WellBaseCoord):

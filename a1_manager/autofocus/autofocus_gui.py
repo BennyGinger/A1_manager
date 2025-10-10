@@ -154,7 +154,16 @@ class AutofocusWidget(QWidget):
             self.image_label.setPixmap(scaled_pixmap)
 
     def _convert_to_pixmap(self, image: np.ndarray) -> QPixmap:
-        # ...same as before...
+        if image.size == 0:
+            # Create a blank pixmap with a warning message
+            pixmap = QPixmap(400, 400)
+            pixmap.fill(Qt.GlobalColor.lightGray)
+            painter = QPainter(pixmap)
+            painter.setPen(Qt.GlobalColor.red)
+            painter.setFont(QFont("Arial", 16))
+            painter.drawText(pixmap.rect(), Qt.AlignmentFlag.AlignCenter, "No image\n(PFS failed)")
+            painter.end()
+            return pixmap
         if image.dtype != np.uint8:
             vmin, vmax = np.percentile(image, [2, 98])
             image_norm = np.clip((image - vmin) / (vmax - vmin) * 255, 0, 255).astype(np.uint8)
@@ -218,6 +227,13 @@ class AutofocusWindow(QMainWindow):
         self.resize(800, 650)
         self.result = None
 
+        # Connect the widget's signal to close the window
+        self.widget.result_signal.connect(self._on_result)
+
+    def _on_result(self, result):
+        self.result = result
+        self.close()
+    
     def keyPressEvent(self, a0):
         self.widget.keyPressEvent(a0)
         self.result = self.widget.result
