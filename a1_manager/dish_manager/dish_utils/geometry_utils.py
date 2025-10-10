@@ -78,6 +78,20 @@ def randomise_fov(well_grid: dict[int, StageCoord], numb_field_view: int) -> dic
     The function solves the TSP problem for the input points and returns the shortest path between them.
     """
     
+    # Handle edge cases
+    if numb_field_view <= 0:
+        return {}
+    
+    if numb_field_view == 1:
+        # Just return one random point
+        random_index = np.random.choice(len(well_grid))
+        point = well_grid[random_index]
+        return {0: point}
+    
+    if numb_field_view >= len(well_grid):
+        # Return all points if requesting more than available
+        return well_grid.copy()
+    
     # Generate a random list of unique integers and coordinates 
     random_indices = sorted(np.random.choice(range(len(well_grid)), size=numb_field_view, replace=False))
     points_lst = [well_grid[i] for i in random_indices]

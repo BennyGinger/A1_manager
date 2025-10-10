@@ -140,7 +140,12 @@ class A1Manager:
             self.set_dmd_exposure(dmd_exposure_sec)
             
         if self.core.get_property('Core','Focus')=='PFSOffset': # type: ignore
-            self._pfs_initialization()
+            try:
+                self._pfs_initialization()
+            except RuntimeError as e:
+                logger.error(f"PFS initialization failed {e}")
+                return np.array([], dtype='uint16')
+        
         # Snap image
         self.core.snap_image() # type: ignore
         # Convert im to array
@@ -153,7 +158,11 @@ class A1Manager:
         """Turn on the lamp for a given duration."""
         # Illuminate, and keeps shutter open for exposure time
         if self.core.get_property('Core','Focus')=='PFSOffset': # type: ignore
-            self._pfs_initialization()
+            try:
+                self._pfs_initialization()
+            except RuntimeError as e:
+                logger.warning(f"PFS initialization failed during light stimulation: {e}")
+                # Continue with stimulation even if PFS fails
         
         if self.dmd:
             self.set_dmd_exposure(duration_sec)
@@ -228,23 +237,44 @@ class A1Manager:
             return (int(self._size_pixel2micron(dmd_size[0])),int(self._size_pixel2micron(dmd_size[1])))
         return (int(self._size_pixel2micron(self.image_size[0])),int(self._size_pixel2micron(self.image_size[1])))
     
-    ############ Private methods ############
-    def _pfs_initialization(self)-> None:
-        """Initialize the PFS system."""
-        while True:  # Make sure that PFS is on, before snap
-            if self.core.get_property('PFS','PFS Status') == '0000001100001010': # type: ignore
-                break
-    
-    def _size_pixel2micron(self, size_in_pixel: int | None = None)-> float:
-        """Convert size from pixel to micron. Return the size in float."""
-        pixel_calibration = {'10x':0.6461,'20x':0.3258}
-        objective = self.nikon.objective
-        binning = self.camera.binning
-        pixel_in_um = pixel_calibration[objective]
-        if size_in_pixel:
-            return size_in_pixel*pixel_in_um*binning
-        image_size = (2048 // binning, 2048 // binning)
-        return image_size[0]*pixel_in_um*binning
+    def _pfs_initialization(self, max_retries: int = 5)-> None:
+        """Initialize the PFS system with retry logic for different statuses."""
+        import time
+        
+        # PFS Status codes
+        PFS_ON = '0000001100001010'      # PFS is on and working
+        PFS_OFF = '0000000100000000'     # PFS is off but can be turned on
+        PFS_DISABLED = {'0010001000001001','0000001100001001'}  # PFS is disabled
+        
+        for attempt in range(max_retries):
+            current_status = self.core.get_property('PFS','PFS Status') # type: ignore
+            
+            if current_status == PFS_ON:
+                # PFS is already on and working
+                return
+            
+            elif current_status == PFS_OFF:
+                # PFS is off, try to turn it on
+                logger.debug(f"PFS is off, turning on (attempt {attempt + 1}/{max_retries})")
+                self.core.set_property('PFS','FocusMaintenance','On') # type: ignore
+                time.sleep(0.1)  # Give it some time to initialize
+                
+            elif current_status in PFS_DISABLED:
+                # PFS is disabled, try to enable and turn on
+                logger.debug(f"PFS is disabled, attempting to re-enable (attempt {attempt + 1}/{max_retries})")
+                self.core.set_property('PFS','FocusMaintenance','On') # type: ignore
+                time.sleep(0.5)  # Give it more time when recovering from disabled state
+                
+            else:
+                # Unknown status
+                logger.debug(f"Unknown PFS status: {current_status}, attempting to turn on (attempt {attempt + 1}/{max_retries})")
+                self.core.set_property('PFS','FocusMaintenance','On') # type: ignore
+                time.sleep(0.5)
+        
+        # If we get here, all attempts failed
+        final_status = self.core.get_property('PFS','PFS Status') # type: ignore
+        raise RuntimeError(f"after {max_retries} attempts. Final status: {final_status}")
+
 
 if __name__ == "__main__":
     import json

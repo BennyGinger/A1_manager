@@ -185,8 +185,16 @@ class AutofocusWindow(QMainWindow):
             self.image_label.setPixmap(scaled_pixmap)
         
     def _convert_to_pixmap(self, image: np.ndarray) -> QPixmap:
-        """Convert numpy array to QPixmap for display with matplotlib-like contrast."""
-        # Handle different image formats and apply matplotlib-like scaling
+        if image.size == 0:
+            # Create a blank pixmap with a warning message
+            pixmap = QPixmap(400, 400)
+            pixmap.fill(Qt.GlobalColor.lightGray)
+            painter = QPainter(pixmap)
+            painter.setPen(Qt.GlobalColor.red)
+            painter.setFont(QFont("Arial", 16))
+            painter.drawText(pixmap.rect(), Qt.AlignmentFlag.AlignCenter, "No image\n(PFS failed)")
+            painter.end()
+            return pixmap
         if image.dtype != np.uint8:
             # Use percentile-based scaling like matplotlib for better contrast
             vmin, vmax = np.percentile(image, [2, 98])  # Remove outliers
@@ -245,10 +253,34 @@ class AutofocusWindow(QMainWindow):
         elif event.key() == Qt.Key.Key_R:
             self._on_button_click(AutofocusResult.RESTART)
         else:
-            super().keyPressEvent(event)
+            super().keyPressEvent(a0)
+
+# --- Keep AutofocusWindow for backward compatibility (modal window) ---
+class AutofocusWindow(QMainWindow):
+    """Main window for autofocus image review (standalone window)."""
+    def __init__(self, image: np.ndarray, title: str = "Current Focus"):
+        super().__init__()
+        self.widget = AutofocusWidget(image, title)
+        self.setCentralWidget(self.widget)
+        self.setWindowTitle("Focus Review")
+        self.setMinimumSize(600, 500)
+        self.resize(800, 650)
+        self.result = None
+
+        # Connect the widget's signal to close the window
+        self.widget.result_signal.connect(self._on_result)
+
+    def _on_result(self, result):
+        self.result = result
+        self.close()
     
-    def closeEvent(self, event):
-        """Handle window close event."""
+    def keyPressEvent(self, a0):
+        self.widget.keyPressEvent(a0)
+        self.result = self.widget.result
+        if self.result is not None:
+            self.close()
+
+    def closeEvent(self, a0):
         if self.result is None:
             self.result = AutofocusResult.QUIT
         event.accept()
