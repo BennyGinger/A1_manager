@@ -21,7 +21,8 @@ FOCUS_RANGES = {
 
 def run_autofocus(method: str, 
                   a1_manager: A1Manager, 
-                  calib_path: Path, 
+                  calib_path: Path,
+                  well_selection: str | list[str], 
                   overwrite: bool, 
                   af_savedir: Path | None = None,
                   review_callback: Optional[Callable[[NDArray], None]] = None
@@ -50,9 +51,10 @@ def run_autofocus(method: str,
         
         # Load dish measurements
         dish_measurements = load_config_file(calib_path)
+        logger.info(f"Loaded dish measurements for {len(dish_measurements)} wells from {calib_path}")
         autofocus = AutoFocusManager(a1_manager, method, af_savedir) 
 
-        sorted_wells = _snake_sort_wells(dish_measurements)
+        sorted_wells = _snake_sort_wells(dish_measurements, well_selection)
         for idx, (well, measurement) in enumerate(sorted_wells):
             # Skip if no measurement coord
             if measurement[focus_device] is not None and not overwrite:
@@ -151,10 +153,24 @@ def _get_well_center(measurement: WellCircleCoord | WellSquareCoord) -> tuple[fl
     # Works for both WellCircleCoord and WellSquareCoord
     return getattr(measurement, 'center', (np.nan, np.nan))
 
-def _snake_sort_wells(dish_measurements: dict[str, WellCircleCoord | WellSquareCoord]) -> list[tuple[str, WellCircleCoord | WellSquareCoord]]:
+def _snake_sort_wells(dish_measurements: dict[str, WellCircleCoord | WellSquareCoord], well_selection: str | list[str] | None = None) -> list[tuple[str, WellCircleCoord | WellSquareCoord]]:
+    """
+    Sort wells in a snake pattern (left-to-right on one row, right-to-left on the next). Will only include wells in well_selection if provided.
+    """
+    # Convert well_selection to a set for efficient lookup
+    if well_selection is None:
+        selected_wells = None
+    elif isinstance(well_selection, str):
+        if well_selection.lower() == 'all':
+            selected_wells = None
+        else:
+            selected_wells = {well_selection}
+    else:
+        selected_wells = set(well_selection)
+    
     wells = [(well, m)
         for well, m in dish_measurements.items()
-        if _get_well_center(m) is not None]
+        if _get_well_center(m) is not None and (selected_wells is None or well in selected_wells)]
 
     wells.sort(key=lambda item: _get_well_center(item[1])[1])  # sort by y
     rows = []

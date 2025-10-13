@@ -4,8 +4,7 @@ from pathlib import Path
 import logging
 
 from a1_manager.autofocus_main import run_autofocus
-from a1_manager import CONFIG_DIR
-from a1_manager.utils.utils import save_json, load_json
+from a1_manager.utils.json_utils import save_config_file
 from a1_manager.dish_manager.well_grid_manager import WellGridManager
 from a1_manager.a1manager import A1Manager
 from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
@@ -46,16 +45,8 @@ class DishManager:
         # Set the calibration path
         calib_name = f"calib_{self.dish_name}.json"
         self.calib_path = self.config_path.joinpath(calib_name)
-        
-        # Copy the 96well calibration template file into the run directory
-        if self.dish_name == "96well":
-            calib_temp_path = CONFIG_DIR.joinpath(calib_name)
-            calib_96well = load_json(calib_temp_path)
-            if calib_96well is None:
-                raise ValueError(f"Failed to load calibration template from {calib_temp_path}")
-            save_json(self.calib_path, calib_96well)
 
-    def calibrate_dish(self, well_selection: str | list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
+    def calibrate_dish(self, overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
         """
         Calibrate the dish with the specified dish name.
         The calibration measurements are saved in a json file in the run directory, except for the 96well dish where the calibration measurements are pre-defined.
@@ -65,18 +56,18 @@ class DishManager:
         dish = DishCalibManager.dish_calib_factory(self.dish_name, self.calib_path)
         
         # Get the calibration measurements or calibrate the dish
-        self.dish_calibration = dish.calibrate_dish(self.a1_manager.nikon, well_selection, overwrite)
-        save_json(self.calib_path, self.dish_calibration)
+        self.dish_calibration = dish.calibrate_dish(self.a1_manager.nikon, overwrite)
+        save_config_file(self.calib_path, self.dish_calibration)
         return self.dish_calibration
 
-    def autofocus_dish(self, method: str, overwrite: bool, af_savedir: Path | None = None) -> None:
+    def autofocus_dish(self, method: str, overwrite: bool, well_selection: str | list[str], af_savedir: Path | None = None) -> None:
         """
         Run autofocus for the dish_calibration in each well.
         The autofocus measurements are saved in the same calibration file.
         """
-        return run_autofocus(method, self.a1_manager, self.calib_path, overwrite, af_savedir)
+        return run_autofocus(method, self.a1_manager, self.calib_path, well_selection, overwrite, af_savedir)
     
-    def create_well_grids(self, dmd_window_only: bool, numb_field_view: int | None = None, overlap_percent: int | None = None, n_corners_in: int = 4) -> dict[str, dict[int, StageCoord]]:
+    def create_well_grids(self, dmd_window_only: bool, numb_field_view: int | None = None, well_selection: str | list[str] | None = None, overlap_percent: int | None = None, n_corners_in: int = 4) -> dict[str, dict[int, StageCoord]]:
         """
         Create a well grid for a dish, where each well is a dictionary containing the coordinates of all the field of views.
         """
@@ -87,17 +78,28 @@ class DishManager:
         if overlap_percent is not None:
             overlap_deci = overlap_percent / 100 # Convert from % to decimal
         
+        # Filter wells based on well_selection
+        if well_selection is None:
+            selected_wells = self.dish_calibration
+        elif isinstance(well_selection, str):
+            if well_selection.lower() == 'all':
+                selected_wells = self.dish_calibration
+            else:
+                selected_wells = {well_selection: self.dish_calibration[well_selection]}
+        else:
+            selected_wells = {well: self.dish_calibration[well] for well in well_selection if well in self.dish_calibration}
+        
         # Initialize the well grid manager
         well_grid_manager = WellGridManager.load_subclass_instance(self.dish_name, dmd_window_only, self.a1_manager)
         
         # Create the well grid
         logger.info(f"{overlap_percent=} and {overlap_deci=}")
         dish_grids: dict[str, dict[int, StageCoord]] = {}
-        for well, well_coord in self.dish_calibration.items():
+        for well, well_coord in selected_wells.items():
             dish_grids[well] = well_grid_manager.create_well_grid(well_coord, numb_field_view, overlap_deci, n_corners_in)
         
         # Save the dish grids
         dish_grids_name = f"grid_{self.dish_name}.json"
         grids_path = self.config_path.joinpath(dish_grids_name)
-        save_json(grids_path, dish_grids)
+        save_config_file(grids_path, dish_grids)
         return dish_grids
