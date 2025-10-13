@@ -3,10 +3,12 @@ from dataclasses import dataclass, field
 from string import ascii_uppercase
 import logging
 
+from a1_manager import CONFIG_DIR
 from a1_manager.dish_manager.dish_utils.prompt_utils import prompt_for_center
-from a1_manager.utils.utility_classes import WellCircleCoord
+from a1_manager.utils.utility_classes import WellCircleCoord, WellSquareCoord
 from a1_manager.microscope_hardware.nikon import NikonTi2
 from a1_manager.dish_manager.dish_calib_manager import DishCalibManager
+from a1_manager.utils.json_utils import load_config_file, save_config_file
 
 
 SETTINGS_96WELL = {
@@ -39,7 +41,28 @@ class Dish96well(DishCalibManager):
     def __post_init__(self) -> None:
         self.unpack_settings(SETTINGS_96WELL)
 
-    def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord]:  # type: ignore[override]
+    def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord | WellSquareCoord]:
+        """
+        Try to load the calibration template for the 96-well plate from the config directory. If not found, perform manual calibration.
+        Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle objects.
+        """
+        # Try to load from template
+        calib_name = f"calib_96well.json"
+        calib_temp_path = CONFIG_DIR.joinpath(calib_name)
+        if calib_temp_path.exists():
+            calib_96well = load_config_file(calib_temp_path)
+            if calib_96well is not None:
+                logging.info(f"Loaded calibration template from {calib_temp_path}")
+                return calib_96well  # Return directly, don't save here
+            else:
+                logging.warning(f"Failed to load calibration template from {calib_temp_path}")
+        
+        # Fall back to manual calibration
+        logging.info("No template found, performing manual calibration")
+        calib_96well = self._calibrate_dish_manual(nikon)
+        save_config_file(self.calib_path, calib_96well)
+    
+    def _calibrate_dish_manual(self, nikon: NikonTi2) -> dict[str, WellCircleCoord]:  # type: ignore[override]
         """
         Calibrates a 96-well plate by computing each well's center.
         If the top-left center is not provided, the user is prompted to move to the A1 well.

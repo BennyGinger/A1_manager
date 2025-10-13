@@ -5,7 +5,7 @@ from cv2 import warpAffine
 from pycromanager import Core
 import numpy as np
 
-from a1_manager.utils.utils import load_config_file
+from a1_manager.utils.json_utils import load_config_file
 
 # Device constants for easy configuration
 DEFAULT_SLM_NAME = 'Mosaic3'

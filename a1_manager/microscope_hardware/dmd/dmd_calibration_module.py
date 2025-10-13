@@ -12,7 +12,8 @@ from cv2 import getAffineTransform
 from skimage.draw import disk
 
 from a1_manager.a1manager import A1Manager
-from a1_manager.utils.utils import image_to_rgb, save_tif, load_config_file, draw_square_from_circle, bounding_box_nDim, get_centroid, threshold_img
+from a1_manager.utils.utils import image_to_rgb, save_tif, draw_square_from_circle, bounding_box_nDim, get_centroid, threshold_img
+from a1_manager.utils.json_utils import load_config_file
 
 
 @dataclass

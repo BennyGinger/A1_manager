@@ -3,7 +3,10 @@ from pathlib import Path
 import logging
 
 from a1_manager.a1manager import A1Manager
-from a1_manager.utils.utils import create_date_savedir, load_config_file, save_config_file
+from a1_manager import CONFIG_DIR
+from a1_manager.utils.utils import create_date_savedir
+from a1_manager.utils.json_utils import load_config_file
+from a1_manager.utils.json_utils import save_config_file
 from a1_manager.microscope_hardware.dmd.dmd_calibration_module import CalibrateFTurret
 
 # TODO: Refactor the calibration module to use the new A1Manager class
@@ -57,6 +60,10 @@ def dmd_calibration(run_dir: Path, numb_points: int=9, overwrite: bool=False)-> 
     
     
     # Update dmd profile and transformation matrix to Aquisition object
-    save_config_file('dmd_profile', dmd_profile)
-    save_config_file('transfo_matrix', transfo_matrix)
+    config_path = CONFIG_DIR
+    dmd_profile_path = config_path.joinpath("dmd_profile.json")
+    save_config_file(dmd_profile_path, dmd_profile)
+
+    transfo_matrix_path = config_path.joinpath("transfo_matrix.json")
+    save_config_file(transfo_matrix_path, transfo_matrix)
     aquisition.dmd.dmd_mask.reload_transformation_matrix() if aquisition.dmd and aquisition.dmd.dmd_mask else None

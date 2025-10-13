@@ -5,7 +5,7 @@ from pathlib import Path
 import logging
 
 from a1_manager.utils.utility_classes import WellCircleCoord, WellSquareCoord
-from a1_manager.utils.utils import load_json
+from a1_manager.utils.json_utils import load_config_file
 from a1_manager.microscope_hardware.nikon import NikonTi2
 
 # Initialize logging
@@ -58,21 +58,19 @@ class DishCalibManager(ABC):
             if hasattr(self, key):
                 setattr(self, key, value)
     
-    def calibrate_dish(self, nikon: NikonTi2, well_selection: str | list[str], overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
+    def calibrate_dish(self, nikon: NikonTi2, overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
         """
-        Calibrate the dish by computing the coordinates for each well. If the calibration file already exists, it will be loaded instead of recalibrating. Only the wells that will be measured (i.e., in well_selection) will be returned.
+        Calibrate the dish by computing the coordinates for each well. If the calibration file already exists, it will be loaded instead of recalibrating.
         """
         if self.calib_path.exists() and not overwrite:
             logger.info(f"Calibration file already exists at {self.calib_path}.")
-            dish_calibration = load_json(self.calib_path)
+            dish_calibration = load_config_file(self.calib_path)
             if dish_calibration is None:
                 raise ValueError(f"Failed to load calibration file at {self.calib_path}.")
             # Filter the wells based on the provided well selection
-            return self._filter_wells(well_selection, dish_calibration)
+            return dish_calibration
         
-        dish_calibration = self._calibrate_dish(nikon)
-        filtered_dish_calibration = self._filter_wells(well_selection, dish_calibration)
-        return filtered_dish_calibration
+        return self._calibrate_dish(nikon)
     
     @abstractmethod
     def _calibrate_dish(self, nikon: NikonTi2) -> dict[str, WellCircleCoord | WellSquareCoord]:
@@ -80,18 +78,3 @@ class DishCalibManager(ABC):
         Abstract method to calibrate a dish. The calibration process is specific to each dish. It returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle or WellSquare objects coordinates.
         """
         pass
-    
-    @staticmethod
-    def _filter_wells(well_selection: str | list[str], dish_measurements: dict[str, WellCircleCoord | WellSquareCoord]) -> dict[str, WellCircleCoord | WellSquareCoord]:
-        """
-        Filter the dish measurements based on the provided well selection. If well_selection is 'all', return all the measurements.
-        """
-        if isinstance(well_selection, str):
-            if well_selection.lower() == 'all':
-                return dish_measurements
-            
-            if well_selection not in dish_measurements.keys():
-                raise ValueError(f"Well {well_selection} not found in dish measurements.")
-            well_selection = [well_selection]
-        
-        return {well: coord for well, coord in dish_measurements.items() if well in well_selection}

@@ -16,7 +16,7 @@ from a1_manager.microscope_hardware.nanopick.head_api import Head
 from a1_manager.microscope_hardware.cameras import AndorCamera
 from a1_manager.microscope_hardware.dmd_manager import Dmd
 from a1_manager.microscope_hardware.lamps_factory import get_lamp
-from a1_manager.utils.utils import load_config_file
+from a1_manager.utils.json_utils import load_config_file
 
 
 # TODO: Find a way to populate config file in parent pkg directory
@@ -144,8 +144,9 @@ class A1Manager:
                 self._pfs_initialization()
             except RuntimeError as e:
                 logger.error(f"PFS initialization failed {e}")
-                return np.array([], dtype='uint16')
-        
+                image_size = (2048 // self.camera.binning, 2048 // self.camera.binning)
+                return np.zeros(image_size, dtype='uint16')
+
         # Snap image
         self.core.snap_image() # type: ignore
         # Convert im to array
@@ -238,9 +239,9 @@ class A1Manager:
         return (int(self._size_pixel2micron(self.image_size[0])),int(self._size_pixel2micron(self.image_size[1])))
     
     def _pfs_initialization(self, max_retries: int = 5)-> None:
-        """Initialize the PFS system with retry logic for different statuses."""
-        import time
-        
+        """
+        Initialize the PFS system with retry logic for different statuses.
+        """
         # PFS Status codes
         PFS_ON = '0000001100001010'      # PFS is on and working
         PFS_OFF = '0000000100000000'     # PFS is off but can be turned on
@@ -257,19 +258,19 @@ class A1Manager:
                 # PFS is off, try to turn it on
                 logger.debug(f"PFS is off, turning on (attempt {attempt + 1}/{max_retries})")
                 self.core.set_property('PFS','FocusMaintenance','On') # type: ignore
-                time.sleep(0.1)  # Give it some time to initialize
+                sleep(0.1)  # Give it some time to initialize
                 
             elif current_status in PFS_DISABLED:
                 # PFS is disabled, try to enable and turn on
                 logger.debug(f"PFS is disabled, attempting to re-enable (attempt {attempt + 1}/{max_retries})")
                 self.core.set_property('PFS','FocusMaintenance','On') # type: ignore
-                time.sleep(0.5)  # Give it more time when recovering from disabled state
+                sleep(0.5)  # Give it more time when recovering from disabled state
                 
             else:
                 # Unknown status
                 logger.debug(f"Unknown PFS status: {current_status}, attempting to turn on (attempt {attempt + 1}/{max_retries})")
                 self.core.set_property('PFS','FocusMaintenance','On') # type: ignore
-                time.sleep(0.5)
+                sleep(0.5)
         
         # If we get here, all attempts failed
         final_status = self.core.get_property('PFS','PFS Status') # type: ignore

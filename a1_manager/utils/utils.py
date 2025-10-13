@@ -2,7 +2,6 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from pathlib import Path
 from datetime import datetime
 from typing import TypeVar
-import json
 from itertools import combinations
 import logging
 
@@ -12,9 +11,6 @@ import tifffile as tiff
 from skimage.draw import disk
 import cv2
 from skimage.measure import regionprops
-
-from a1_manager import CONFIG_DIR
-from .json_utils import decode_dataclass, encode_dataclass
 
 
 T = TypeVar('T', bound=np.generic)
@@ -42,51 +38,6 @@ def create_date_savedir(parent_path: Path, folder_name: str | None = None)-> Pat
     savedir = parent_path.joinpath(new_folder_name)
     savedir.mkdir(exist_ok=True)
     return savedir
-
-def load_config_file(file_name_key: str)-> dict | None:
-    """
-    Load a json file from the config folder. Use the decode_dataclass function to decode the dataclass if needed.
-    """
-    
-    config_path = CONFIG_DIR
-    found_file = None
-    for file in config_path.iterdir():
-        if file.match(f"*{file_name_key}*"):
-            found_file = file
-    
-    if found_file is None:
-        logger.warning(f"No {file_name_key} found. Ignoring it for now, but this will cause issues later. Should run dmd_calibration() to create it.")
-        return None
-    
-    return load_json(found_file)
-
-def load_json(file_path: Path)-> dict | None:
-    """
-    Load a json file. Use the decode_dataclass function to decode the dataclass if needed.
-    """
-    
-    if not file_path.exists():
-        logger.error(f"No file found at {file_path}")
-        return None
-    
-    with open(file_path) as json_file:
-        loaded_file: dict = json.load(json_file, object_hook=decode_dataclass)
-    return loaded_file
-
-def save_config_file(file_name_key: str, data: dict)-> None:
-    """Save a dictionary to a json file in the config folder."""
-    
-    config_path = CONFIG_DIR
-    save_name = f"{file_name_key}.json"
-    save_path = config_path.joinpath(save_name)
-    save_json(save_path, data)
-
-def save_json(file_path: Path, data: dict)-> None:
-    """
-    Save a dictionary to a json file.
-    """
-    with open(file_path, "w") as outfile:
-        json.dump(data, outfile, default=encode_dataclass, indent=4)
 
 def bounding_box_nDim(mask: NDArray[T]) -> tuple[NDArray[T], tuple[slice]]:
     """This function take a np.array (any dimension) and create a bounding box around the nonzero shape.

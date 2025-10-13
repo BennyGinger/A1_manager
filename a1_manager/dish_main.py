@@ -46,14 +46,14 @@ def launch_dish_workflow(a1_manager: A1Manager,
     dish_manager = DishManager(dish_name, run_dir, a1_manager) 
     
     # Calibrate the dish
-    dish_manager.calibrate_dish(well_selection, overwrite_calib)
+    dish_manager.calibrate_dish(overwrite_calib)
     
     try:
         # Perform autofocus, 'savedir' for the square gradient method is optional and can be passed as a keyword argument
-        dish_manager.autofocus_dish(af_method, overwrite_autofocus, af_savedir)
+        dish_manager.autofocus_dish(af_method, overwrite_autofocus, well_selection, af_savedir)
     except QuitAutofocus:
         # User quit during autofocus - propagate the exception to stop the entire pipeline
         raise
     
     # Get the grids, n_corners_in is optional and can be passed as a keyword argument
-    return dish_manager.create_well_grids(dmd_window_only, numb_field_view, overlap_percent, n_corners_in)
+    return dish_manager.create_well_grids(dmd_window_only, numb_field_view, well_selection, overlap_percent, n_corners_in)
