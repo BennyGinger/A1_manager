@@ -7,7 +7,7 @@ from pycromanager import Core
 LAPP_MAIN_BRANCH = {'pE-800': 0, 'pE-4000': 1, 'DiaLamp': None}
 
 class Lamp(ABC):
-    __slots__ = 'core', 'lamp_name', 'lapp_main_branch'
+    __slots__ = 'core', 'lamp_name', 'lapp_main_branch', '_cached_lamp_state'
     
     def __init__(self, core: Core, lamp_name: str) -> None:
         self.core = core
@@ -22,6 +22,18 @@ class Lamp(ABC):
         # Set Turret1 shutter
         turret_state = 0 if lamp_name == 'DiaLamp' else 1
         self.core.set_property('Turret1Shutter', 'State', turret_state) # type: ignore[call-arg]
+        
+        # Set LappMainBranch1 state if needed
+        if self.lapp_main_branch is not None:
+            self.core.set_property('LappMainBranch1', 'State', self.lapp_main_branch) # type: ignore[call-arg]
+        
+        # Initialize cache for lamp state
+        self._cached_lamp_state: dict = {
+            'fTurret': -1,
+            'fWheel': -1,
+            'led': '',
+            'intensity': 0.0
+        }
     
     @property
     @abstractmethod
@@ -46,11 +58,9 @@ class Lamp(ABC):
     
     def _select_intensity(self, led: str, intensity: float)-> None:
         """"Set the intensity of the LED lamp."""
-        self._reset_intensity()
-        
         # For pE-800, convert 405 to 400 since it does not support 405.
         if self.lamp_name=='pE-800':
-            converted_led = self.convert_405_to_400(led)
+            converted_led = self._convert_405_to_400(led)
             led = converted_led if isinstance(converted_led, str) else converted_led[0]
         
         # Get the channel
@@ -61,16 +71,18 @@ class Lamp(ABC):
         # Set the intensity of the given channel
         self.core.set_property(self.lamp_name, f'Intensity{channel}', str(intensity)) # type: ignore[call-arg]
 
-    def _reset_intensity(self)-> None:
+    def _reset_intensity(self, led: str)-> None:
         """Reset the intensity of all channels to 0."""
-        for channel in self.LEDdefault.values():
-            self.core.set_property(self.lamp_name, f'Intensity{channel}', 0) # type: ignore[call-arg]
+        if led == '':
+            return
+        channel = self.LEDdefault.get(led)
+        self.core.set_property(self.lamp_name, f'Intensity{channel}', 0) # type: ignore[call-arg]
     
     def set_LED_shutter(self, state: int)-> None:
         """0=close, 1=open"""
         self.core.set_property(self.lamp_name, 'Global State', state) # type: ignore[call-arg]
-                
-    def preset_channel(self, oc_dict: dict, intensity: float | None)-> None:
+
+    def preset_channel(self, oc_dict: dict[str, int | str | float], intensity: float | None)-> None:
         """
         Set the optical configuration for the lamp.
         Args:
@@ -80,27 +92,59 @@ class Lamp(ABC):
         if intensity is not None:
             oc_dict['intensity'] = intensity
         
-        # Apply the optical configuration
-        self._select_filters(oc_dict['fTurret'], oc_dict['fWheel'])
-        self.select_LED(oc_dict['led'])
-        self._select_intensity(oc_dict['led'], oc_dict['intensity'])
+        # Extract values
+        fTurret = int(oc_dict['fTurret'])
+        fWheel = int(oc_dict['fWheel'])
+        led = str(oc_dict['led'])
+        intensity_val = float(oc_dict['intensity'])
+
+        # Only update filters if they have changed
+        if (self._cached_lamp_state['fTurret'] != fTurret or self._cached_lamp_state['fWheel'] != fWheel):
+            self._select_filters(fTurret, fWheel)
+            self._cached_lamp_state['fTurret'] = fTurret
+            self._cached_lamp_state['fWheel'] = fWheel
+        
+        # Only update LED if it has changed
+        if self._cached_lamp_state['led'] != led:
+            # Switch off previous LED before changing to new one
+            self.reset_LED(self._cached_lamp_state['led'])
+            # self._reset_intensity(self._cached_lamp_state['led'])
+            self._cached_lamp_state['intensity'] = 0.0  # Reset intensity cache since we turned it off
+            # Select new LED
+            self.select_LED(led)
+            self._cached_lamp_state['led'] = led
+        
+        # Only update intensity if it has changed
+        if self._cached_lamp_state['intensity'] != intensity_val:
+            self._select_intensity(led, intensity_val)
+            self._cached_lamp_state['intensity'] = intensity_val
     
+    def clear_lamp_cache(self) -> None:
+        """Clear the lamp cache to force all settings to be reapplied on next call."""
+        self._cached_lamp_state: dict[str, int | str | float | None] = {
+            'fTurret': -1,
+            'fWheel': -1,
+            'led': '',
+            'intensity': 0.0}
+
     @staticmethod
-    def convert_405_to_400(led: str | list[str]) -> str | list[str]:
+    def _convert_405_to_400(led: str | list[str]) -> str | list[str]:
         """Convert 405 to 400 for pE-800."""
         if isinstance(led, list):
             return ['400' if item == '405' else item for item in led]
         return '400' if led == '405' else led
-
-    # LED handling is lamp specific – subclasses must implement these.
+    
+    @abstractmethod
     def select_LED(self, led: str | list[str]) -> None:
         """Select the LED lamp."""
-        raise NotImplementedError("Subclasses must implement select_LED.")
+        pass
     
+    @abstractmethod
     def reset_LED(self) -> None:
         """Reset the LED lamp."""
-        raise NotImplementedError("Subclasses must implement reset_LED.")
+        pass
     
+    @abstractmethod
     def validate_led_selection(self, led: str | list[str]) -> list[str]:
         """Validate the LED selection."""
-        raise NotImplementedError("Subclasses must implement validate_led_selection.")
+        pass

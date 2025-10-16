@@ -26,12 +26,12 @@ class NikonTi2:
         
         Default is ZDrive.
         """
-        self.core.set_property('Core','Focus',focus_device) # type: ignore
+        self.core.set_property('Core', 'Focus', focus_device) # type: ignore
         if focus_device == 'PFSOffset':
-            self.core.set_property('PFS','FocusMaintenance','On') # type: ignore
+            self.core.set_property('PFS', 'FocusMaintenance', 'On') # type: ignore
         else:
-            self.core.set_property('PFS','FocusMaintenance','Off') # type: ignore
-    
+            self.core.set_property('PFS', 'FocusMaintenance', 'Off') # type: ignore
+
     def get_stage_position(self)-> StageCoord:
         """Get the current stage position in XY coordinates and the focus device position."""
         return StageCoord(
