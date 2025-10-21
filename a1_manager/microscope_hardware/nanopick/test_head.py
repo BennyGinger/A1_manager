@@ -124,10 +124,21 @@ if __name__ == "__main__":
     
     # if pattern == "5x5":
     #     # 5*5 fov
-    #     fov_5_5 = [8, 9, 10, 11, 12, 19, 20, 21, 22, 23, 25, 26, 27, 28, 29, 38, 39, 40, 41, 42, 44, 45, 46, 47, 48]
-    #     center_5_5 = 27
+    #     fov_5_5 = [8, 9, 10, 11, 12, 19, 29, 38, 48, 47, 46, 45, 44, 42, 25, 23, 22, 21, 20, 28, 39, 40, 41, 26, 27]
+    #     fov5 = []
+    #     for i in range(len(fov_5_5)):
+              fov5.append([x[fov_5_5[i]], y[fov_5_5[i]]])
+          fov_3 = [27, 28, 29, 38, 48, 47, 46, 40, 39] # lower right
+          fov3 = []
+          for i in range(len(fov_3)):
+             fov3.append([x[fov_3[i]], y[fov_3[i]]])
+           return fov3, fov5
+
     #     fov_5_5_center = [x[center_5_5], y[center_5_5]]
     #     fov_5_5_ctr = data[well][str(center_5_5)]["xy"]
+
+
+
 
     #     all_index = list(np.arange(68))  
     #     indexes = [5, 6, 7, 9, 10, 11, 20, 21, 22, 27, 28, 29, 38, 39, 40, 46, 47, 48, 35, 36, 37, 49, 50, 51, 52, 53, 54]
