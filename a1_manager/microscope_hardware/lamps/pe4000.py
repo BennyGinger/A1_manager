@@ -22,9 +22,13 @@ class pE4000(Lamp):
     def __init__(self, core: Core, lamp_name: str) -> None:
         super().__init__(core, lamp_name)
     
-    def reset_LED(self)-> None:
-        channel_lst = set([val for val in self.LEDdefault.values()])
-        for channel in channel_lst:
+    def reset_LED(self, led: str | list[str])-> None:
+        if led == '':
+            return
+        if isinstance(led, str):
+            led = [led]
+        for l in led:
+            channel = self.LEDdefault[l]
             self.core.set_property('pE-4000', f'Selection{channel}', 0) # type: ignore[call-arg]
         self.core.set_property('DiaLamp', 'State', 0) # type: ignore[call-arg]
     
@@ -57,7 +61,6 @@ class pE4000(Lamp):
         return duplicates
     
     def select_LED(self, led: str | list[str]) -> None:
-        self.reset_LED()
         led_list = self.validate_led_selection(led)
         for label in led_list:
             channel = self.LEDdefault[label]
