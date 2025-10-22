@@ -20,8 +20,8 @@ class MarZ:
     core: Core
     nanopick_dish: str
 
-    def __post_init__(self):
-        self.set_arm_position(MAX_HEIGHT) # Move to the maximum height when initialized
+    #def __post_init__(self):
+        #self.set_arm_position(MAX_HEIGHT) # Move to the maximum height when initialized
         
     @property
     def get_arm_position(self)->float:

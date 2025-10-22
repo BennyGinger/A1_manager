@@ -39,7 +39,7 @@ if __name__ == "__main__":
     
     a1_manager = A1Manager(
         objective='20x',
-        lamp_name='pE-4000',
+        lamp_name='pE-800',
         focus_device='PFSOffset',
         nanopick_dish='96well',)
     

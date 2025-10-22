@@ -255,9 +255,8 @@ if __name__ == "__main__":
     objective = '20x'
     nanopick_dish = '96well'  
     
-    
     a1_manager = A1Manager(objective=objective, nanopick_dish=nanopick_dish, lamp_name='pE-800')
-    
+    print("Current head position:", a1_manager.get_arm_position)
     dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
     with open(dish_calib_path, 'r') as f:
         dish_calib: dict[str, dict[str, Any]]= json.load(f)
