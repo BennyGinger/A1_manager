@@ -3,6 +3,7 @@ from pathlib import Path
 from time import sleep
 import logging
 from typing import Any
+from functools import cached_property
 import warnings
 
 # Suppress pycromanager version mismatch warning
@@ -22,8 +23,6 @@ from a1_manager.utils.json_utils import load_config_file
 # TODO: Find a way to populate config file in parent pkg directory
 OPTICAL_CONFIGURATION = load_config_file('optical_configuration')
 
-IS_DMD_ATTACHED = {'pE-800': True, 'pE-4000': False, 'DiaLamp': False}
-
 logger = logging.getLogger(__name__)
 
 
@@ -38,7 +37,7 @@ class A1Manager:
         focus_device (str): The focus device to use. Must be one of 'ZDrive', 'PFSOffset'. Default is 'ZDrive'.
         dmd_trigger_mode (str): The trigger mode for the DMD. Must be one of 'InternalExpose', 'ExternalTrigger'. Default is 'InternalExpose'.
         """
-    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'is_dmd_attached', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state'
+    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state'
     
     def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-4000', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose') -> None:
         # Initialize Core bridge
@@ -53,10 +52,9 @@ class A1Manager:
         # Attach DMD to lamp
         self.dmd = None
         self.activate_dmd = False
-        self.is_dmd_attached = IS_DMD_ATTACHED[lamp_name]
         self.trigger_mode = ''
         if self.is_dmd_attached:
-            self.dmd = Dmd(self.core,dmd_trigger_mode) # type: ignore
+            self.dmd = Dmd(self.core, dmd_trigger_mode) # type: ignore
             self.trigger_mode = dmd_trigger_mode
         
         # Initialize cache for optical configuration state
@@ -243,11 +241,38 @@ class A1Manager:
                 sleep(0.4)
         # If we get here, all attempts failed
         self._is_pfs_disabled = True
-        
-
+    
+    @cached_property 
+    def is_dmd_attached(self) -> bool:
+        """
+        Check if a DMD device is attached.
+        """
+        # returns a StrVector of device labels
+        devices_vec = self.core.get_loaded_devices()  # type: ignore
+        device_list = [devices_vec.get(i) for i in range(devices_vec.size())]
+        if 'Mosaic3' in device_list:
+            return True
+        return False
 
 if __name__ == "__main__":
-    # Example usage
-    a1_manager = A1Manager(objective='20x', exposure_ms=150, binning=2, lamp_name='pE-800')
-    a1_manager.core.set_property('PFS','FocusMaintenance','On') # type: ignore
-    print(a1_manager.core.get_property('PFS','PFS Status')) # type: ignore
+    # # Example usage
+    # a1_manager = A1Manager(objective='20x', exposure_ms=150, binning=2, lamp_name='pE-800')
+    # a1_manager.core.set_property('PFS','FocusMaintenance','On') # type: ignore
+    # print(a1_manager.core.get_property('PFS','PFS Status')) # type: ignore
+    
+    
+    core = Core()
+    try:
+        print(core.get_property('Mosaic3','SerialNumber')) # type: ignore
+    except Exception as e:
+        print(f"Error retrieving DMD property:")
+    
+    try:
+        print(core.get_property('Andor sCMOS Camera','CameraName')) # type: ignore
+    except Exception as e:
+        print(f"Error retrieving Andor sCMOS Camera property: {e}")
+    
+    devices_vec = core.get_loaded_devices()  # type: ignore        # returns a StrVector of device labels
+    device_list = [devices_vec.get(i) for i in range(devices_vec.size())]
+    print("Loaded devices:", device_list)
+

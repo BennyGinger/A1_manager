@@ -1,10 +1,9 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from abc import ABC, abstractmethod
+from functools import cached_property
 
 from pycromanager import Core
 
-
-LAPP_MAIN_BRANCH = {'pE-800': 0, 'pE-4000': 1, 'DiaLamp': None}
 
 class Lamp(ABC):
     __slots__ = 'core', 'lamp_name', 'lapp_main_branch', '_cached_lamp_state'
@@ -14,8 +13,8 @@ class Lamp(ABC):
         self.lamp_name = lamp_name  #'pE-800', 'pE-4000', 'DiaLamp'
         
         # Set the lappMainBranch
-        self.lapp_main_branch = LAPP_MAIN_BRANCH[lamp_name]
-        
+        self.lapp_main_branch = 0 if self.is_dmd_attached else 1
+            
         # Set the core shutter
         self.core.set_property('Core', 'Shutter', lamp_name) # type: ignore[call-arg]
         
@@ -28,12 +27,11 @@ class Lamp(ABC):
             self.core.set_property('LappMainBranch1', 'State', self.lapp_main_branch) # type: ignore[call-arg]
         
         # Initialize cache for lamp state
-        self._cached_lamp_state: dict = {
+        self._cached_lamp_state = {
             'fTurret': -1,
             'fWheel': -1,
             'led': '',
-            'intensity': 0.0
-        }
+            'intensity': 0.0}
     
     @property
     @abstractmethod
@@ -107,7 +105,9 @@ class Lamp(ABC):
         # Only update LED if it has changed
         if self._cached_lamp_state['led'] != led:
             # Switch off previous LED before changing to new one
-            self.reset_LED(self._cached_lamp_state['led'])
+            cached_led = self._cached_lamp_state['led']
+            if isinstance(cached_led, str) and cached_led:
+                self.reset_LED(cached_led)
             # self._reset_intensity(self._cached_lamp_state['led'])
             self._cached_lamp_state['intensity'] = 0.0  # Reset intensity cache since we turned it off
             # Select new LED
@@ -126,7 +126,14 @@ class Lamp(ABC):
             'fWheel': -1,
             'led': '',
             'intensity': 0.0}
-
+    
+    @cached_property
+    def is_dmd_attached(self) -> bool:
+        """Check if a DMD device is attached."""
+        devices_vec = self.core.get_loaded_devices()  # type: ignore
+        device_list = [devices_vec.get(i) for i in range(devices_vec.size())]
+        return 'Mosaic3' in device_list
+    
     @staticmethod
     def _convert_405_to_400(led: str | list[str]) -> str | list[str]:
         """Convert 405 to 400 for pE-800."""
@@ -140,7 +147,7 @@ class Lamp(ABC):
         pass
     
     @abstractmethod
-    def reset_LED(self) -> None:
+    def reset_LED(self, led: str | list[str]) -> None:
         """Reset the LED lamp."""
         pass
     
