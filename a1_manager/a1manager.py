@@ -3,6 +3,7 @@ from pathlib import Path
 from time import sleep
 import logging
 from typing import Any
+from functools import cached_property
 import warnings
 
 # Suppress pycromanager version mismatch warning
@@ -22,8 +23,6 @@ from a1_manager.utils.json_utils import load_config_file
 
 # TODO: Find a way to populate config file in parent pkg directory
 OPTICAL_CONFIGURATION = load_config_file('optical_configuration')
-
-IS_DMD_ATTACHED = {'pE-800': True, 'pE-4000': False, 'DiaLamp': False}
 
 logger = logging.getLogger(__name__)
 
@@ -58,10 +57,9 @@ class A1Manager:
         # Attach DMD to lamp
         self.dmd = None
         self.activate_dmd = False
-        self.is_dmd_attached = IS_DMD_ATTACHED[lamp_name]
         self.trigger_mode = ''
         if self.is_dmd_attached:
-            self.dmd = Dmd(self.core,dmd_trigger_mode) # type: ignore
+            self.dmd = Dmd(self.core, dmd_trigger_mode) # type: ignore
             self.trigger_mode = dmd_trigger_mode
         
         # Initialize cache for optical configuration state
@@ -300,8 +298,18 @@ class A1Manager:
                 sleep(0.4)
         # If we get here, all attempts failed
         self._is_pfs_disabled = True
-        
-
+    
+    @cached_property 
+    def is_dmd_attached(self) -> bool:
+        """
+        Check if a DMD device is attached.
+        """
+        # returns a StrVector of device labels
+        devices_vec = self.core.get_loaded_devices()  # type: ignore
+        device_list = [devices_vec.get(i) for i in range(devices_vec.size())]
+        if 'Mosaic3' in device_list:
+            return True
+        return False
 
 if __name__ == "__main__":
     import json
