@@ -1,5 +1,11 @@
+from __future__ import annotations # Enable type annotation to be stored as string
+import logging
 import serial
 import time
+
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 class PICController:
     def __init__(self, port: str, baudrate: int = 9600, timeout: float = 1.0):
