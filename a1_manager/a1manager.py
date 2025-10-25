@@ -39,7 +39,7 @@ class A1Manager:
         dmd_trigger_mode (str): The trigger mode for the DMD. Must be one of 'InternalExpose', 'ExternalTrigger'. Default is 'InternalExpose'.
         attach_nanopick (bool): Whether to attach the nanopick arm and head. Default is False.
         """
-    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'is_dmd_attached', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state', 'arm', 'head'
+    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state', '__dict__', 'arm', 'head'
     
     def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-800', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose', nanopick_dish: str | None = None) -> None:
         # Initialize Core bridge
