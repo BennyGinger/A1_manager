@@ -37,7 +37,7 @@ class A1Manager:
         focus_device (str): The focus device to use. Must be one of 'ZDrive', 'PFSOffset'. Default is 'ZDrive'.
         dmd_trigger_mode (str): The trigger mode for the DMD. Must be one of 'InternalExpose', 'ExternalTrigger'. Default is 'InternalExpose'.
         """
-    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state'
+    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state', '__dict__'
     
     def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-4000', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose') -> None:
         # Initialize Core bridge
