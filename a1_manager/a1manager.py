@@ -117,20 +117,6 @@ class A1Manager:
             self.nikon.set_light_path(light_path)  # Change Light path: 0=EYE, 1=R, 2=AUX and 3=L       
             self._cached_oc_state['light_path'] = light_path
 
-    def clear_oc_cache(self) -> None:
-        """Clear the optical configuration cache to force all settings to be reapplied on next call."""
-        self._cached_oc_state = {
-            'exposure_ms': None,
-            'light_path': None}
-        self.lamp.clear_lamp_cache()
-
-    def set_dmd_exposure(self, dmd_exposure_sec: float=10)-> None:
-        """Set the DMD exposure time."""
-        if self.dmd is not None:
-            self.dmd.set_dmd_exposure(dmd_exposure_sec)
-            if self.trigger_mode == 'InternalExpose':
-                self.dmd.activate()
-    
     def load_dmd_mask(self, input_mask: str | Path | np.ndarray='fullON', transform_mask: bool=True) -> np.ndarray:
         """Load a DMD mask from a string, file path, or numpy array, optionally transforming it, and project it to the DMD."""
         return self.dmd.load_dmd_mask(input_mask,transform_mask) if self.dmd is not None else np.array([])
@@ -144,7 +130,7 @@ class A1Manager:
             image_size = (2048 // self.camera.binning, 2048 // self.camera.binning)
             return np.zeros(image_size, dtype='uint16')
 
-        self.set_dmd_exposure(dmd_exposure_sec)
+        self._set_dmd_exposure(dmd_exposure_sec)
         
         # Snap image
         self.core.snap_image() # type: ignore
@@ -165,7 +151,7 @@ class A1Manager:
                 # Continue with stimulation even if PFS fails
         
         if self.dmd:
-            self.set_dmd_exposure(duration_sec)
+            self._set_dmd_exposure(duration_sec)
         
         if self.activate_dmd:
             self.dmd.activate() if self.dmd is not None else None
@@ -228,6 +214,15 @@ class A1Manager:
             stage_position (StageCoord): StageCoord object containing the XY coordinates and the focus device position.
         """
         self.nikon.set_stage_position(stage_position)
+        if self._pfs_offset:
+            self._pfs_initialization()
+    
+    def _set_dmd_exposure(self, dmd_exposure_sec: float=10)-> None:
+        """Set the DMD exposure time."""
+        if self.dmd is not None:
+            self.dmd.set_dmd_exposure(dmd_exposure_sec)
+            if self.trigger_mode == 'InternalExpose':
+                self.dmd.activate()
     
     def _size_pixel2micron(self, size_in_pixel: int | None = None)-> float:
         """Convert size from pixel to micron. Return the size in float."""

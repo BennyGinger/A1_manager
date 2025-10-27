@@ -3,7 +3,7 @@ from pathlib import Path
 
 import logging
 import itertools
-from typing import Any, Callable, Optional
+from typing import Callable, Optional
 
 import numpy as np
 from numpy.typing import NDArray
@@ -52,6 +52,9 @@ def run_autofocus(method: str,
         
         # Load dish measurements
         dish_measurements = load_config_file(calib_path)
+        if dish_measurements is None:
+            logger.error(f"Failed to load dish measurements from {calib_path}")
+            return
         logger.info(f"Loaded dish measurements for {len(dish_measurements)} wells from {calib_path}")
         autofocus = AutoFocusManager(a1_manager, method, af_savedir) 
 
@@ -78,8 +81,8 @@ def run_autofocus(method: str,
             # Update dish measurements  
             measurement[focus_device] = focus
                 
-            # Save dish measurements and exit
-            save_config_file(calib_path, dish_measurements)
+        # Save dish measurements and exit
+        save_config_file(calib_path, dish_measurements)
             
         if method == 'Manual':
             logger.info("Autofocus was added mannually for all the wells.")
@@ -108,10 +111,12 @@ def _focus_one_well(*, idx: int, well: str, measurement: WellCircleCoord | WellS
             focus = autofocus.find_focus(**FOCUS_RANGES[focus_device]['small'])
 
             # If first well, show the image and prompt user
-            if idx == 0:
-                logger.info(f'Focus value: {focus}')
-                img = a1_manager.snap_image()
-                _autofocus_review(img, review_callback=review_callback)  # Will use callback if provided, else blocking
+            # if idx == 0:
+            logger.info(f'Focus value: {focus}')
+            #     img = a1_manager.snap_image()
+            #     _autofocus_review(img, review_callback=review_callback)  # Will use callback if provided, else blocking
+            img = a1_manager.snap_image()
+            _autofocus_review(img, review_callback=review_callback)
             
             if idx != 0 and autofocus.method != 'Manual':
                 logger.info(f"Autofocus done for {well} with {focus_device} at {focus}")
@@ -183,3 +188,23 @@ def _snake_sort_wells(dish_measurements: dict[str, WellCircleCoord | WellSquareC
         row_sorted = sorted(row, key=lambda item: _get_well_center(item[1])[0], reverse=reverse)
         sorted_wells.extend(row_sorted)
     return sorted_wells
+
+if __name__ == "__main__":
+    
+    
+    
+    # # Example usage
+    a1_manager = A1Manager(objective='20x', exposure_ms=150, binning=2, lamp_name='pE-800', focus_device='PFSOffset')
+    # a1_manager.core.set_property('PFS','FocusMaintenance','On') # type: ignore
+    # print(a1_manager.core.get_property('PFS','PFS Status')) # type: ignore
+    
+    a1_manager.oc_settings(optical_configuration='iRed')
+    
+    run_autofocus(method='sq_grad',
+                  a1_manager=a1_manager,
+                calib_path=Path(r'D:\Ben\autofocus_test\calib_96well.json'),
+                well_selection=['E5'],
+                overwrite=True,
+    )
+    
+    

@@ -38,7 +38,7 @@ class Dmd:
         """
         Project the given mask on the DMD and activate it.
         """
-        if not np.array_equal(self._cached_dmd['mask'], mask):
+        if self._cached_dmd['mask'] is None or not np.array_equal(self._cached_dmd['mask'], mask):
             self.core.set_slm_image(self.slm_name, mask) # type: ignore
             self._cached_dmd['mask'] = mask
         self.activate()

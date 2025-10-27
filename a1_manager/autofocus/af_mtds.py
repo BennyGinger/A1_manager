@@ -104,6 +104,8 @@ class SqGradAutoFocus:
                 imwrite(savedir.joinpath(f"af_im{idx+1}_{focus_val}.tiff"), img)
         
         focus_point = z_positions[np.argmax(focus_value_list)]
+        self.a1_manager.core.set_position(focus_point)  # type: ignore
+        self.a1_manager.core.wait_for_device(self.a1_manager.core.get_focus_device())  # type: ignore
         return focus_point
 
     @staticmethod
