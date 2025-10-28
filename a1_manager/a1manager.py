@@ -1,6 +1,6 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from pathlib import Path
-from time import sleep
+from time import sleep, time
 import logging
 from typing import Any
 from functools import cached_property
@@ -197,9 +197,10 @@ class A1Manager:
             return (int(self._size_pixel2micron(dmd_size[0])),int(self._size_pixel2micron(dmd_size[1])))
         return (int(self._size_pixel2micron(self.image_size[0])),int(self._size_pixel2micron(self.image_size[1])))
     
-    def _pfs_initialization(self, max_retries: int = 5)-> None:
+    def _pfs_initialization(self, timeout_sec: float = 30.0)-> None:
         """
-        Initialize the PFS system with retry logic for different statuses.
+        Initialize the PFS system with a while loop and timeout.
+        Keeps trying until PFS is on or timeout is reached.
         """
         # PFS Status codes
         PFS_ON = '0000001100001010'      # PFS is on and working
@@ -207,11 +208,14 @@ class A1Manager:
         PFS_WAITING = '0000001100001001'
         PFS_DISABLED = '0010001000001001'  # PFS is disabled
         
-        for _ in range(max_retries):
+        start_time = time()
+        
+        while time() - start_time < timeout_sec:
             current_status = self.core.get_property('PFS','PFS Status') # type: ignore
             
             if current_status == PFS_ON:
                 # PFS is already on and working
+                self._is_pfs_disabled = False
                 return 
             
             elif current_status == PFS_OFF:
@@ -232,7 +236,8 @@ class A1Manager:
                 # Unknown status
                 self.core.set_property('PFS','FocusMaintenance','On') # type: ignore
                 sleep(0.4)
-        # If we get here, all attempts failed
+        
+        # If we get here, timeout was reached without PFS turning on
         self._is_pfs_disabled = True
     
     @cached_property 

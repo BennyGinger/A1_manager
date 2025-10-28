@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 FOCUS_RANGES = {
     'ZDrive': {'small': {'searchRange':  200, 'step':  10},},
-    'PFSOffset': {'small': {'searchRange': 1000, 'step': 100},}}
+    'PFSOffset': {'small': {'searchRange': 1000, 'step': 50},}}
 
 
 def run_autofocus(method: str, 
@@ -112,12 +112,13 @@ def _focus_one_well(*, idx: int, well: str, measurement: WellCircleCoord | WellS
             focus = autofocus.find_focus(**FOCUS_RANGES[focus_device]['small'])
 
             # If first well, show the image and prompt user
-            # if idx == 0:
-            logger.info(f'Focus value: {focus}')
-            #     img = a1_manager.snap_image()
-            #     _autofocus_review(img, review_callback=review_callback)  # Will use callback if provided, else blocking
-            img = a1_manager.snap_image()
-            _autofocus_review(img, review_callback=review_callback)
+            if idx == 0:
+                logger.info(f'Focus value: {focus}')
+                # Move the stage to trigger the pfs initialization
+                loc = a1_manager.nikon.get_stage_position()
+                a1_manager.set_stage_position(loc)
+                img = a1_manager.snap_image()
+                _autofocus_review(img, review_callback=review_callback)  # Will use callback if provided, else blocking
             
             if idx != 0 and autofocus.method != 'Manual':
                 logger.info(f"Autofocus done for {well} with {focus_device} at {focus}")
@@ -195,17 +196,17 @@ if __name__ == "__main__":
     
     
     # # Example usage
-    a1_manager = A1Manager(objective='20x', exposure_ms=150, binning=2, lamp_name='pE-800', focus_device='PFSOffset')
+    a1_manager = A1Manager(objective='20x', exposure_ms=200, binning=2, lamp_name='pE-800', focus_device='PFSOffset')
     # a1_manager.core.set_property('PFS','FocusMaintenance','On') # type: ignore
     # print(a1_manager.core.get_property('PFS','PFS Status')) # type: ignore
     
-    a1_manager.oc_settings(optical_configuration='iRed')
+    a1_manager.oc_settings(optical_configuration='iRed', exposure_ms=100)
     
-    run_autofocus(method='sq_grad',
-                  a1_manager=a1_manager,
-                calib_path=Path(r'D:\Ben\autofocus_test\calib_96well.json'),
-                well_selection=['E5'],
-                overwrite=True,
-    )
-    
+    # run_autofocus(method='sq_grad',
+    #               a1_manager=a1_manager,
+    #             calib_path=Path(r'D:\Ben\autofocus_test\calib_96well.json'),
+    #             well_selection=['E5'],
+    #             overwrite=True,
+    # )
+    print(a1_manager.core.get_focus_device())
     
