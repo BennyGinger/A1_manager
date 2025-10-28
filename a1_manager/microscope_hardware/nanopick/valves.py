@@ -34,7 +34,7 @@ class PICController:
         self.ser.reset_input_buffer()
         time.sleep(0.1)
     
-    def send_command(self, command: str, inter_char_delay: float = 0.001, wait_for_reply: bool = True) -> str:
+    def _send_command(self, command: str, inter_char_delay: float = 0.001, wait_for_reply: bool = True) -> str:
         """
         Send a command string with optional inter-character delay.
         :param command: Command string (without CR)
@@ -71,7 +71,8 @@ class PICController:
         # Read response
         response = ""
         start_time = time.time()
-        while time.time() - start_time < self.ser.timeout:
+        timeout = self.ser.timeout if self.ser.timeout is not None else 1.0
+        while time.time() - start_time < timeout:
             if self.ser.in_waiting > 0:
                 char = self.ser.read(1)
                 if char:
@@ -89,23 +90,23 @@ class PICController:
         print(f"Response: '{response}'")
         return response
 
-    def test_connection(self):
+    def _test_connection(self):
         """Send the 'a' command to test communication."""
-        return self.send_command('a')
+        return self._send_command('a')
 
     def set_led_ring(self, ring: int = 0):
         """Toggle LED rings."""
         if ring == 0:
-            self.send_command('s1-', wait_for_reply=False)
-            return self.send_command('s5-', wait_for_reply=False)
+            self._send_command('s1-', wait_for_reply=False)
+            return self._send_command('s5-', wait_for_reply=False)
         if ring == 1:
-            self.send_command('s1-', wait_for_reply=False)
-            return self.send_command('s5+', wait_for_reply=False)
+            self._send_command('s1-', wait_for_reply=False)
+            return self._send_command('s5+', wait_for_reply=False)
         if ring == 2:
-            self.send_command('s1+', wait_for_reply=False)
-            return self.send_command('s5+', wait_for_reply=False)
+            self._send_command('s1+', wait_for_reply=False)
+            return self._send_command('s5+', wait_for_reply=False)
 
-    def set_switch(self, switch: int, action: str):
+    def _set_switch(self, switch: int, action: str):
         """
         Control switches using 'sXA' command.
         :param switch: switch number (1–7)
@@ -113,11 +114,11 @@ class PICController:
         """
         if action not in ['+', '-', '?']:
             raise ValueError("Action must be '+', '-', or '?'")
-        return self.send_command(f's{switch}{action}')
+        return self._send_command(f's{switch}{action}')
 
-    def query_all_outputs(self):
+    def _query_all_outputs(self):
         """Query all output statuses with 'S' command."""
-        return self.send_command('S')
+        return self._send_command('S')
 
     def set_valve_time(self, valve: int, duration: int):
         """
@@ -133,13 +134,13 @@ class PICController:
             cmd = f'j{duration}'
         else:
             raise ValueError("Valve must be 1 or 2")
-        return self.send_command(cmd)
+        return self._send_command(cmd)
 
     def set_delay(self, delay: int):
         """Set delay between valve openings with 'k' command."""
-        return self.send_command(f'k{delay}')
+        return self._send_command(f'k{delay}')
 
-    def open_valve(self, valve: int):
+    def _open_valve(self, valve: int):
         """
         Open valve for the previously specified time.
         Valve 1 → 'I', Valve 2 → 'J'
@@ -150,7 +151,7 @@ class PICController:
             cmd = 'J'
         else:
             raise ValueError("Valve must be 1 or 2")
-        return self.send_command(cmd)
+        return self._send_command(cmd)
 
     def open_valves_sequence(self, mode: str):
         """
@@ -160,7 +161,7 @@ class PICController:
         """
         if mode not in ['K', 'L']:
             raise ValueError("Mode must be 'K' or 'L'")
-        return self.send_command(mode)
+        return self._send_command(mode)
 
     def close(self):
         """Close the serial port."""
