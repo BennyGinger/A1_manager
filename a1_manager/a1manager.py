@@ -13,8 +13,7 @@ import numpy as np
 from pycromanager import Core
 
 from a1_manager.microscope_hardware.nikon import NikonTi2, StageCoord
-from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
-from a1_manager.microscope_hardware.nanopick.head_api import Head
+from a1_manager.microscope_hardware.nanopick.masterclass import InjecterManager 
 from a1_manager.microscope_hardware.cameras import AndorCamera
 from a1_manager.microscope_hardware.dmd_manager import Dmd
 from a1_manager.microscope_hardware.lamps_factory import get_lamp
@@ -39,9 +38,9 @@ class A1Manager:
         dmd_trigger_mode (str): The trigger mode for the DMD. Must be one of 'InternalExpose', 'ExternalTrigger'. Default is 'InternalExpose'.
         attach_nanopick (bool): Whether to attach the nanopick arm and head. Default is False.
         """
-    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state', '__dict__', 'arm', 'head'
+    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state', '__dict__', 'injection'
     
-    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-800', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose', nanopick_dish: str | None = None) -> None:
+    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-800', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose', nanopick_dish: str | None = None, injection_device: str | None = None, quick_port: str = 'COM10') -> None:
         # Initialize Core bridge
         self.core = Core()
         
@@ -50,9 +49,7 @@ class A1Manager:
         self._is_pfs_disabled = False
         self.camera = AndorCamera(self.core, binning, exposure_ms) # type: ignore
         self.lamp = get_lamp(self.core, lamp_name) # type: ignore
-        if nanopick_dish is not None:
-            self.arm = MarZ(self.core, nanopick_dish)  # type: ignore
-            self.head = Head(self.arm)
+        self.injection = InjecterManager(port=quick_port, nanopick_dish=nanopick_dish, injection_device=injection_device)  # type: ignore
         
         # Attach DMD to lamp
         self.dmd = None
@@ -166,46 +163,10 @@ class A1Manager:
         Args:
             destination (float): The target altitude for the head movement (in range -7000 to 7000, arbitrary units).
         """
-        if not hasattr(self, 'arm'):
+        if not hasattr(self, 'injection'):
             logger.warning("Nanopick arm is not attached. It will be ignored.")
             return
-        self.arm.set_arm_position(destination)
-    
-    def set_LED(self, ID: int, brightness: int) -> None:
-        """
-        Set the LED brightness.
-        Args:
-            ID (int): The ID of the LED to set (1-4).
-            brightness (int): The brightness level (0-100).
-        """
-        if not hasattr(self, 'head'):
-            logger.warning("Nanopick head is not attached. It will be ignored.")
-            return
-        self.head.set_LED(ID, brightness)
-    
-    def filling(self, volume: float, time: float = 100) -> None:
-        """
-        Fill the pipette with a specific volume.
-        Args:
-            volume (float): Volume in nanoliters (positive value to inject, negative value to withdraw)
-            time (float): Time in milliseconds (default: 100 ms)
-        """  
-        if not hasattr(self, 'head'):
-            logger.warning("Nanopick head is not attached. It will be ignored.")
-            return     
-        self.head.filling(volume, time)
-    
-    def injecting(self, volume: float, time: float = 100) -> None:
-        """
-        Inject a specific volume from the pipette.
-        Args:
-            volume (float): Volume in nanoliters (positive value to inject, negative value to withdraw)
-            time (float): Time in milliseconds (default: 100 ms)
-        """    
-        if not hasattr(self, 'head'):
-            logger.warning("Nanopick head is not attached. It will be ignored.")
-            return    
-        self.head.injecting(volume, time)
+        self.injection.arm._set_arm_position(destination)
     
     def set_stage_position(self, stage_position: StageCoord)-> None:
         """
@@ -243,10 +204,10 @@ class A1Manager:
     @property
     def get_arm_position(self)-> float:
         """Get the current altitude of the head."""
-        if not hasattr(self, 'arm'):
+        if not hasattr(self, 'injection'):
             logger.warning("Nanopick arm is not attached.")
             return float('nan')
-        return self.arm.get_arm_position
+        return self.injection.arm._get_arm_position
     
     def window_size(self, dmd_window_only: bool)-> tuple[int,int]:
         """Calculate window size in micron for the camera."""
@@ -316,17 +277,21 @@ if __name__ == "__main__":
     objective = '20x'
     nanopick_dish = '96well'  
     
-    a1_manager = A1Manager(objective=objective, nanopick_dish=nanopick_dish, lamp_name='pE-800')
-    print("Current head position:", a1_manager.get_arm_position)
-    dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
-    with open(dish_calib_path, 'r') as f:
-        dish_calib: dict[str, dict[str, Any]]= json.load(f)
-    filling_wells = ['H1', 'H2']
-    measure_wells = ['H8', 'H9', 'H10', 'H11', 'H12']
-    for well in measure_wells:
-        mst = dish_calib.get(well, {})
-        position = StageCoord(xy=mst['center'])
-        a1_manager.set_stage_position(position)
-        sleep(1)
-        a1_manager.head.injecting(80)
+    
+    try:
+        a1_manager = A1Manager(objective=objective, nanopick_dish=nanopick_dish, lamp_name='pE-800', injection_device='nanopick')
+        print("A1Manager initialized successfully")
+        
+        if hasattr(a1_manager, 'injection'):
+            print("Current head position:", a1_manager.get_arm_position)
+        else:
+            print("Arm not initialized - nanopick hardware may not be available")
+            
+    except Exception as e:
+        print(f"Error initializing A1Manager: {e}")
+        import traceback
+        traceback.print_exc()
+    
+    
+    
 
