@@ -110,7 +110,66 @@ if __name__ == "__main__":
     
     
     
+        
+    def set_LED(self, ID: int, brightness: int) -> None:
+        """
+        Set the LED brightness.
+        Args:
+            ID (int): The ID of the LED to set (1-4).
+            brightness (int): The brightness level (0-100).
+        """
+        if not hasattr(self, 'head'):
+            logger.warning("Nanopick head is not attached. It will be ignored.")
+            return
+        self.arm.attachment.set_LED(ID, brightness)
     
+    def filling(self, volume: float, time: float = 100) -> None:
+        """
+        Fill the pipette with a specific volume.
+        Args:
+            volume (float): Volume in nanoliters (positive value to inject, negative value to withdraw)
+            time (float): Time in milliseconds (default: 100 ms)
+        """  
+        if not hasattr(self, 'head'):
+            logger.warning("Nanopick head is not attached. It will be ignored.")
+            return     
+        self.arm.attachment.filling(volume, time)
+    
+    def injecting(self, volume: float, time: float = 100) -> None:
+        """
+        Inject a specific volume from the pipette.
+        Args:
+            volume (float): Volume in nanoliters (positive value to inject, negative value to withdraw)
+            time (float): Time in milliseconds (default: 100 ms)
+        """    
+        if not hasattr(self, 'head'):
+            logger.warning("Nanopick head is not attached. It will be ignored.")
+            return    
+        self.head.injecting(volume, time)
+        
+        
+        
+  def safety_up(self)->float:
+        """
+        Get the safe height for the current dish.
+        """
+        return SAFE_HEIGHT.get(self.nanopick_dish, {}).get('up', 100000)
+    
+    @property
+    def safety_down(self)->float:
+        """
+        Get the minimum height for the current dish.
+        """
+        return SAFE_HEIGHT.get(self.nanopick_dish, {}).get('down', MIN_HEIGHT)
+    
+    def _safety_waiting(self):
+        """
+        Wait until the head reaches a safe height.
+        """
+        while True:
+            height = self.get_arm_position
+            if height <= int(self.safety_up): # type: ignore
+                break
     
     
     
