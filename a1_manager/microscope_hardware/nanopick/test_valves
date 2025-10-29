@@ -1,0 +1,16 @@
+from a1_manager import A1Manager
+
+if __name__ == "__main__":
+    #from tifffile import imwrite
+    from pathlib import Path
+    from a1_manager.utils.utils import load_json
+    
+    run_dir = Path(r"D:\Ben\20251017_test_nanopick")  
+    
+    a1_manager = A1Manager(
+        objective='20x',
+        lamp_name='pE-800',
+        focus_device='PFSOffset',
+        injection_device="quicpick",
+        nanopick_dish = '96well')
+    print("Current head position:", a1_manager.get_arm_position)
