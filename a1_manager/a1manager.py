@@ -274,10 +274,10 @@ if __name__ == "__main__":
     
     # Example usage
     run_dir = Path('D:\\Raph\\test_lib')
-    objective = '20x'
+    objective = '20x' 
     nanopick_dish = '96well'  
     
-    
+    # Example usage
     try:
         a1_manager = A1Manager(objective=objective, nanopick_dish=nanopick_dish, lamp_name='pE-800', injection_device='nanopick')
         print("A1Manager initialized successfully")
