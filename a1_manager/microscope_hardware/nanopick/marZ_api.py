@@ -11,9 +11,8 @@ logger = logging.getLogger(__name__)
 DISTANCE_TO_LIQUID = {'96well': 15_000.0}   # Set to be 2000 um above the bottom of the well.
 DISTANCE_TO_AIR = {'96well': 5_000.0}   # Set to be 1000 um above the plate.
 
-
 @dataclass(slots=True)
-class MarZ:
+class MarZ():
     """
     Class to control the movement of the arm (Märzhäuser controller).
     """
@@ -67,9 +66,14 @@ class MarZ:
         self.core.set_position('ZAxis', position) # type: ignore
         self.core.wait_for_device('ZAxis') # type: ignore
     
-                
-    
- 
+    def safe_check(self) -> None:
+        """
+        Check the altitude before moving to avoid at any cost of breaking the needle.
+        """
+        if self._get_arm_position<(self._ref_position - DISTANCE_TO_AIR[self.dish]):
+            logger.warning("The arm is too low, it will sent home!")
+            self._set_arm_position(self._ref_position)
+            
 if __name__ == "__main__":
     import warnings
 
