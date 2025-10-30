@@ -170,6 +170,7 @@ if __name__ == "__main__":
             height = self.get_arm_position
             if height <= int(self.safety_up): # type: ignore
                 break
+            ggg
     
     
     
