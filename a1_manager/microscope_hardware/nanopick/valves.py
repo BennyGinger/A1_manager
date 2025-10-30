@@ -4,10 +4,16 @@ import serial
 import time
 
 
+#from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
+from a1_manager.microscope_hardware.nanopick.masterclass import InjecterManager
+
 # Set up logging
 logger = logging.getLogger(__name__)
 
-class PICController:
+VALVE_2_TIME = 100 # ms 
+DELAY_TIME = 0
+
+class PICController(InjecterManager):
     def __init__(self, port: str, baudrate: int = 9600, timeout: float = 1.0):
         """
         Initialize the PIC Controller connection.
@@ -28,6 +34,10 @@ class PICController:
         )
         time.sleep(2)  # wait for the serial connection to initialize
         self._clear_buffers()
+        
+    def __post_init__(self):
+        self.set_valve_time(2, VALVE_2_TIME)
+        self.set_delay(DELAY_TIME)
 
     def _clear_buffers(self):
         """Clear input and output buffers."""
@@ -94,7 +104,7 @@ class PICController:
         """Send the 'a' command to test communication."""
         return self._send_command('a')
 
-    def set_led_ring(self, ring: int = 0):
+    def set_led_ring(self, ring: int = 0, brightness: int | None = None):
         """Toggle LED rings."""
         if ring == 0:
             self._send_command('s1-', wait_for_reply=False)
@@ -167,6 +177,17 @@ class PICController:
         """Close the serial port."""
         self.ser.close()
 
+    def set_volume(self, volume: float, time: float | None = None) -> float:
+        # FIXME: need to calculate the time from the volume - it needs to be tested
+        opening_time = None
+        return opening_time
+
+    def injecting(self, volume: float, time: float | None = None, mixing_cycles: int | None = None) -> None:
+        # The pipette will inject the desired volume by converting the volume into valve opening time for valve 1
+        opening_time = self.set_volume(volume)
+        self.set_valve_time(1, opening_time)
+        self.open_valves_sequence('K')
+        
 
 # Example usage
 if __name__ == "__main__":
@@ -180,19 +201,20 @@ if __name__ == "__main__":
     # print("Set Valve1 time 100 ms:", controller.set_valve_time(1, 100))
     # print("Set delay 200 ms:", controller.set_delay(200))
 
-    print("Set ring 1:", controller.set_led_ring(1))
-    time.sleep(1)
-    print("Set ring 2:", controller.set_led_ring(2))
-    time.sleep(1)
-    print("Turn off rings:", controller.set_led_ring(0))
-    controller.set_valve_time(1, 400)
-    controller.set_valve_time(2, 500)
-    controller.set_delay(300)
-    # print("Open Valve1:", controller.open_valve(1))
-    # print("Open Valve2:", controller.open_valve(2))
-    print("Open both valves (1 then 2):", controller.open_valves_sequence('K'))
-    time.sleep(1)  # Wait a bit before the next command
-    time.sleep(1)
+    # print("Set ring 1:", controller.set_led_ring(1))
+    # time.sleep(1)
+    # print("Set ring 2:", controller.set_led_ring(2))
+    # time.sleep(1)
+    # print("Turn off rings:", controller.set_led_ring(0))
+    # controller.set_valve_time(1, 400)
+    # controller.set_valve_time(2, 500)
+    # controller.set_delay(300)
+    # # print("Open Valve1:", controller.open_valve(1))
+    # # print("Open Valve2:", controller.open_valve(2))
+    # print("Open both valves (1 then 2):", controller.open_valves_sequence('K'))
+    # time.sleep(1)  # Wait a bit before the next command
+    # time.sleep(1)
     # print("Open both valves (2 then 1):", controller.open_valves_sequence('L'))
     # print("Testing connection:", controller.test_connection())
+    
     controller.close()

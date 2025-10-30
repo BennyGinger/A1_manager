@@ -40,7 +40,7 @@ class A1Manager:
         """
     __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state', '__dict__', 'injection'
     
-    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-800', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose', nanopick_dish: str | None = None, injection_device: str | None = None, quick_port: str = 'COM10') -> None:
+    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-800', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose', nanopick_dish: str | None = None, injection_device: str | None = None) -> None:
         # Initialize Core bridge
         self.core = Core()
         
@@ -49,7 +49,7 @@ class A1Manager:
         self._is_pfs_disabled = False
         self.camera = AndorCamera(self.core, binning, exposure_ms) # type: ignore
         self.lamp = get_lamp(self.core, lamp_name) # type: ignore
-        self.injection = InjecterManager(port=quick_port, nanopick_dish=nanopick_dish, injection_device=injection_device)  # type: ignore
+        self.injection = InjecterManager(nanopick_dish=nanopick_dish, injection_device=injection_device)  # type: ignore
         
         # Attach DMD to lamp
         self.dmd = None
@@ -272,20 +272,21 @@ if __name__ == "__main__":
     from typing import Any
     from time import sleep
     
-    # Example usage
     run_dir = Path('D:\\Raph\\test_lib')
     objective = '20x' 
-    nanopick_dish = '96well'  
+    lamp_name = 'pE-800'
+    nanopick_dish = '96well' 
+    injection_device= 'quickpick'
     
-    # Example usage
+    # Example usage for initialization for quickpick
     try:
-        a1_manager = A1Manager(objective=objective, nanopick_dish=nanopick_dish, lamp_name='pE-800', injection_device='nanopick')
+        a1_manager = A1Manager(objective=objective, lamp_name=lamp_name, injection_device=injection_device, nanopick_dish=nanopick_dish,)
         print("A1Manager initialized successfully")
         
         if hasattr(a1_manager, 'injection'):
-            print("Current head position:", a1_manager.get_arm_position)
+            print("Current arm position:", a1_manager.get_arm_position)
         else:
-            print("Arm not initialized - nanopick hardware may not be available")
+            print("Arm not initialized - quicpick hardware may not be available")
             
     except Exception as e:
         print(f"Error initializing A1Manager: {e}")

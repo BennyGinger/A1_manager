@@ -5,6 +5,7 @@ import logging
 import requests
 
 from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
+from a1_manager.microscope_hardware.nanopick.masterclass import InjecterManager
 
 
 # Set up logging
@@ -21,7 +22,7 @@ MIXING_TIME = 20 # in milliseconds
 
 # NOTE: For now I removed some methods, like flushing, we need to experiment with the API more before doing anything.
 @dataclass(slots=True)
-class Head():
+class Head(InjecterManager):
     """
     Class that controls the API head.
     """
@@ -35,7 +36,7 @@ class Head():
     def track_volume(self) -> float:
         return self._track_volume
     
-    def _set_volume(self, volume: float, time: float = 100) -> None:
+    def _set_volume(self, volume: float, time: float | None = None) -> None:
         """
         A volume-time pair is sent to the controller. The piezo unit will start immediately to withdraw or inject the specified volume under the specified time. The volume values are absolute values. If the volume is less than the previously sent item, then fluid is withdrawn through the pipette. If the volume is greater than the previously sent one, fluid will be injected back.
         
@@ -60,35 +61,38 @@ class Head():
         """
         Switch on the LED light
         """
-        self.set_LED(1, 100) 
-        self.set_LED(2, 100) 
+        self.set_led_ring(1, 100) 
+        self.set_led_ring(2, 100) 
         
     @property
     def switch_LED_off(self) -> None:
         """
         Switch off the LED light
         """
-        self.set_LED(1, 0) 
-        self.set_LED(2, 0) 
+        self.set_led_ring(1, 0) 
+        self.set_led_ring(2, 0) 
             
-    def set_LED(self, ID: int, brightness: int) -> None:
+    def set_led_ring(self, ring: int = 0, brightness: int | None = None) -> None:
         """
         Set brightness level of LED 
         
         Args:
-            ID (int): LED ID (1-2)
+            ring (int): LED ID (1-2)
             brightness (int): Brightness level (0-100)
         """
-        # Endpoint and parameters
-        endpoint = f"{BASE_URL}/setLED/{ID}?brightness={brightness}"
-        try:
-            response = requests.put(endpoint)
-            if response.status_code == 200:
-                logger.debug(f"Success: {response.text}")
-            else:
-                logger.error(f"Error {response.status_code}: {response.text}")
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Request failed: {e}")
+        if brightness == None:
+            logger.error("You forgot to add a value for brightness between 0 and 100.")
+        else:
+            # Endpoint and parameters
+            endpoint = f"{BASE_URL}/setLED/{ring}?brightness={brightness}"
+            try:
+                response = requests.put(endpoint)
+                if response.status_code == 200:
+                    logger.debug(f"Success: {response.text}")
+                else:
+                    logger.error(f"Error {response.status_code}: {response.text}")
+            except requests.exceptions.RequestException as e:
+                logger.error(f"Request failed: {e}")
 
     def filling(self, volume: float, time: float = 100) -> None:
         """
@@ -114,7 +118,7 @@ class Head():
         self.arm.set_arm_position(self.arm.safety_up)
         self.switch_LED_off
 
-    def injecting(self, volume: float, time: float = 100, mixing_cycles: int = 3) -> None:
+    def injecting(self, volume: float, time: float | None = None, mixing_cycles: int | None = None) -> None:
         """
         Inject a specified volume of liquid from the pipette. If the requested volume exceeds the current volume in the pipette, it will be capped at the current volume.
         """

@@ -1,16 +1,116 @@
-from a1_manager import A1Manager
+from a1_manager import A1Manager, StageCoord
+from tifffile import imwrite
+from pathlib import Path
+
+import json
+from typing import Any
+from time import sleep
 
 if __name__ == "__main__":
-    #from tifffile import imwrite
-    from pathlib import Path
-    from a1_manager.utils.utils import load_json
     
-    run_dir = Path(r"D:\Ben\20251017_test_nanopick")  
+    run_dir = Path(r"D:\Ben\20251017_test_nanopick") 
+    well_selection = None # FIXME: All or None?
+    #well_selection_test = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12']
     
     a1_manager = A1Manager(
         objective='20x',
         lamp_name='pE-800',
         focus_device='PFSOffset',
-        injection_device="quicpick",
-        nanopick_dish = '96well')
-    print("Current head position:", a1_manager.get_arm_position)
+        nanopick_dish = '96well',
+        well_selection = well_selection,
+        injection_device="quickpick") # It still needs to be added in A1 manager
+    
+    dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
+    with open(dish_calib_path, 'r') as f:
+        dish_calib: dict[str, dict[str, Any]]= json.load(f)
+
+    for well in list(dish_calib.keys()[0:12]):
+        
+        a1_manager.injection.arm.to_air() # Lift up the head just above the plate 
+        mst = dish_calib.get(well, {})
+        position = StageCoord(xy=mst['center'])
+        a1_manager.injection.arm.safe_check()
+        a1_manager.set_stage_position(position)
+        sleep(1)
+        
+        # Image before stimulation
+        img = a1_manager.snap_image()
+        img_name = f"{well}_before.tif"
+        imwrite(run_dir / img_name, img, compression='zlib')
+        
+        # Injection of ligands
+        a1_manager.injection.arm.to_liquid()
+        a1_manager.injection.system.injecting(volume=10)
+        a1_manager.injection.arm.to_air()
+        # sleep(1)
+    
+        # Image after stimulation
+        img = a1_manager.snap_image()
+        img_name = f"{well}_after.tif"
+        imwrite(run_dir / img_name, img, compression='zlib')
+        
+    a1_manager.injection.system.close()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    """
+            # FIXME: DO I NEED AUTOFOCUS?
+        run_autofocus(method='sq_grad',
+                  a1_manager=a1_manager,
+                calib_path=dish_calib_path,
+                well_selection=well_selection,
+                overwrite=True,
+        )   
+    """
