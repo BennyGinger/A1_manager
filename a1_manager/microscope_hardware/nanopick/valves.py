@@ -192,6 +192,7 @@ if __name__ == "__main__":
     # print("Open Valve2:", controller.open_valve(2))
     print("Open both valves (1 then 2):", controller.open_valves_sequence('K'))
     time.sleep(1)  # Wait a bit before the next command
+    time.sleep(1)
     # print("Open both valves (2 then 1):", controller.open_valves_sequence('L'))
     # print("Testing connection:", controller.test_connection())
     controller.close()
