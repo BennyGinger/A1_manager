@@ -84,7 +84,6 @@ if __name__ == "__main__":
     arm = MarZ(core=Core(), dish='96well') # type: ignore
 
     print("Current head position:", arm._get_arm_position)
-    print("Current head position:", arm._get_arm_position)
     arm.to_air()
     print("Current head position after moving to air:", arm._get_arm_position)
     # sleep(5)
