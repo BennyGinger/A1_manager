@@ -5,6 +5,7 @@ import time
 
 
 #from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
+import a1_manager
 from a1_manager.microscope_hardware.nanopick.masterclass import InjecterManager
 
 # Set up logging
@@ -190,20 +191,87 @@ class PICController(InjecterManager):
         from time import sleep
         print("Open both valves (1 then 2):", self.open_valves_sequence('K'))
         print("Set ring 2:", self.set_led_ring(2))
-        sleep(1)
-        print("Turn off rings:", self.set_led_ring(0))
         sleep(0.5)
+        print("Turn off rings:", self.set_led_ring(0))
+        sleep(1)
         
 
 # Example usage
 if __name__ == "__main__":
     # Update COM port as needed (e.g., COM3)
+    from pycromanager import Core
+    from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
+    arm = MarZ(core=Core(), dish='96well') # type: ignore
     controller = PICController(port='COM10', timeout=1.0)
-
+    # If the pressure is good and there is enough liquid in the reservoir, the injection should work with a broken tip
+    # Pressure: 37
+    controller.set_valve_time(1, 30)
+    controller.set_valve_time(2, 100) 
+    # By increasing the delay we can increase the injected volume
+    controller.set_delay(50)
+    arm.to_air() # Lift up the head just above the plate 
+    arm.safe_check()
+    #print("Open both valves (1 then 2):", controller.open_valves_sequence('K'))
+    #arm.to_liquid()
+    
+    for i in range(50):
+        
+        print("Injection;", controller.injecting(volume=10, time=100))
+        print(i)
+    
+    controller.close()
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+""" 
     print("Testing connection:", controller.test_connection())
     #print("Toggle LED2:", controller.toggle_led2())
-    print("Set switch 1 ON:", controller.set_switch(1, '+'))
-    print("Query all outputs:", controller.query_all_outputs())
+    #print("Set switch 1 ON:", controller.set_switch(1, '+'))
+    #print("Query all outputs:", controller.query_all_outputs())
     # print("Set Valve1 time 100 ms:", controller.set_valve_time(1, 100))
     # print("Set delay 200 ms:", controller.set_delay(200))
 
@@ -227,6 +295,6 @@ if __name__ == "__main__":
     # time.sleep(1)  # Wait a bit before the next command
     # time.sleep(1)
     # print("Open both valves (2 then 1):", controller.open_valves_sequence('L'))
-    # print("Testing connection:", controller.test_connection())
+    # print("Testing connection:", controller.test_connection()) """
     
-    controller.close()
+
