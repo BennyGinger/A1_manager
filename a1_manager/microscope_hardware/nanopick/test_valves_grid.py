@@ -2,7 +2,7 @@ from a1_manager import A1Manager, StageCoord, launch_dish_workflow
 import numpy as np
 
 
-def fov_stimulate(self, data: dict, pattern: str) -> tuple[list, list, list]:  
+def fov_stimulate(data: dict, pattern: str):  
     x = [] 
     y = []   
     for _, coord in data.items():
@@ -43,10 +43,9 @@ if __name__ == "__main__":
     import json
     from typing import Any
     
-    # FIXME: create another folder
-    run_dir = Path(r"D:\Ben\20251017_test_nanopick")        
+    run_dir = Path(r"D:\Ben\20251104_test_valves")        
     well_selection = "B1"  # Choose the well to stimulate
-    focus_valuse = 15000  # Set the focus value for the selected well
+    focus_value = 15000  # Set the focus value for the selected well
     subgrid_instance = 0
     dish_name = '96well'
     
@@ -73,12 +72,16 @@ if __name__ == "__main__":
     # prepare the subgrid to stimulate
     subgrid_lst = fov_stimulate(grid[well_selection], "3x3")
     
+    a1_manager.injection.attachment.set_valve_time(1, 100)
+    a1_manager.injection.attachment.set_valve_time(2, 100) 
+    a1_manager.injection.attachment.set_delay(10)
+    
     for i, xy_coords in enumerate(subgrid_lst[subgrid_instance]):
         a1_manager.injection.arm.to_air()
          
         stage_coord = StageCoord()
-        stage_coord = setattr(stage_coord, 'xy', xy_coords)
-        stage_coord = setattr(stage_coord, 'PFSOffset', focus_valuse)
+        setattr(stage_coord, 'xy', xy_coords)
+        setattr(stage_coord, 'PFSOffset', focus_value)
         
         a1_manager.injection.arm.safe_check()
         a1_manager.set_stage_position(stage_coord)
@@ -88,13 +91,13 @@ if __name__ == "__main__":
         
         # Inject
         a1_manager.injection.arm.to_liquid()
-        a1_manager.injection.system.injecting(volume=10)
+        a1_manager.injection.attachment.injecting(volume=10, time=100)
         a1_manager.injection.arm.to_air()
         
     for i, xy_coords in enumerate(subgrid_lst[subgrid_instance][::-1]):
         stage_coord = StageCoord()
-        stage_coord = setattr(stage_coord, 'xy', xy_coords)
-        stage_coord = setattr(stage_coord, 'PFSOffset', focus_valuse)
+        setattr(stage_coord, 'xy', xy_coords)
+        setattr(stage_coord, 'PFSOffset', focus_value)
         
         a1_manager.injection.arm.safe_check()
         a1_manager.set_stage_position(stage_coord)

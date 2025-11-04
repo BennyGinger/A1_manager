@@ -100,7 +100,7 @@ class PICController(InjecterManager):
         print(f"Response: '{response}'")
         return response
 
-    def _test_connection(self):
+    def test_connection(self):
         """Send the 'a' command to test communication."""
         return self._send_command('a')
 
@@ -116,7 +116,7 @@ class PICController(InjecterManager):
             self._send_command('s1+', wait_for_reply=False)
             return self._send_command('s5+', wait_for_reply=False)
 
-    def _set_switch(self, switch: int, action: str):
+    def set_switch(self, switch: int, action: str):
         """
         Control switches using 'sXA' command.
         :param switch: switch number (1–7)
@@ -126,7 +126,7 @@ class PICController(InjecterManager):
             raise ValueError("Action must be '+', '-', or '?'")
         return self._send_command(f's{switch}{action}')
 
-    def _query_all_outputs(self):
+    def query_all_outputs(self):
         """Query all output statuses with 'S' command."""
         return self._send_command('S')
 
@@ -177,16 +177,22 @@ class PICController(InjecterManager):
         """Close the serial port."""
         self.ser.close()
 
-    def set_volume(self, volume: float, time: float | None = None) -> float:
+    def set_volume(self, volume: float, time: int) -> float:
         # FIXME: need to calculate the time from the volume - it needs to be tested
         opening_time = None
-        return opening_time
-
-    def injecting(self, volume: float, time: float | None = None, mixing_cycles: int | None = None) -> None:
+        return time
+   
+    def injecting(self, volume: float, time: int, mixing_cycles: int | None = None) -> None:
         # The pipette will inject the desired volume by converting the volume into valve opening time for valve 1
-        opening_time = self.set_volume(volume)
-        self.set_valve_time(1, opening_time)
-        self.open_valves_sequence('K')
+        #opening_time = self.set_volume(volume, time)
+        #self.set_valve_time(1,time)
+        #self.open_valves_sequence('K')
+        from time import sleep
+        print("Open both valves (1 then 2):", self.open_valves_sequence('K'))
+        print("Set ring 2:", self.set_led_ring(2))
+        sleep(1)
+        print("Turn off rings:", self.set_led_ring(0))
+        sleep(0.5)
         
 
 # Example usage
@@ -194,24 +200,30 @@ if __name__ == "__main__":
     # Update COM port as needed (e.g., COM3)
     controller = PICController(port='COM10', timeout=1.0)
 
-    # print("Testing connection:", controller.test_connection())
-    # print("Toggle LED2:", controller.toggle_led2())
-    # print("Set switch 1 ON:", controller.set_switch(1, '+'))
-    # print("Query all outputs:", controller.query_all_outputs())
+    print("Testing connection:", controller.test_connection())
+    #print("Toggle LED2:", controller.toggle_led2())
+    print("Set switch 1 ON:", controller.set_switch(1, '+'))
+    print("Query all outputs:", controller.query_all_outputs())
     # print("Set Valve1 time 100 ms:", controller.set_valve_time(1, 100))
     # print("Set delay 200 ms:", controller.set_delay(200))
 
-    # print("Set ring 1:", controller.set_led_ring(1))
-    # time.sleep(1)
-    # print("Set ring 2:", controller.set_led_ring(2))
-    # time.sleep(1)
-    # print("Turn off rings:", controller.set_led_ring(0))
-    # controller.set_valve_time(1, 400)
-    # controller.set_valve_time(2, 500)
-    # controller.set_delay(300)
+    print("Set ring 1:", controller.set_led_ring(1))
+    time.sleep(1)
+    print("Set ring 2:", controller.set_led_ring(2))
+    time.sleep(1)
+    print("Turn off rings:", controller.set_led_ring(0))
+    controller.set_valve_time(1, 100)
+    controller.set_valve_time(2, 100) 
+    controller.set_delay(10)
+    print("Open both valves (1 then 2):", controller.open_valves_sequence('K'))
     # # print("Open Valve1:", controller.open_valve(1))
     # # print("Open Valve2:", controller.open_valve(2))
-    # print("Open both valves (1 then 2):", controller.open_valves_sequence('K'))
+    #for i in range(3):
+        #print("Open both valves (1 then 2):", controller.open_valves_sequence('K'))
+        #print("Set ring 2:", controller.set_led_ring(2))
+        #time.sleep(1)
+        #print("Turn off rings:", controller.set_led_ring(0))
+        #time.sleep(0.5)
     # time.sleep(1)  # Wait a bit before the next command
     # time.sleep(1)
     # print("Open both valves (2 then 1):", controller.open_valves_sequence('L'))

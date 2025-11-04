@@ -16,7 +16,7 @@ class InjecterManager:
     "Class to control the injection depending on the chosen device: nanopick head or quicpick valve control."
     __slots__ = 'core', 'arm', 'attachment'
     
-    def __init__(self, port: str, nanopick_dish: str, injection_device: str = None): # type: ignore
+    def __init__(self,nanopick_dish: str, injection_device: str = None): # type: ignore
         self.core = Core()
         """
             Possible device names:
@@ -29,13 +29,13 @@ class InjecterManager:
             self.attachment = Head(self.arm)
         if injection_device == "quickpick":
             from a1_manager.microscope_hardware.nanopick.valves import PICController
-            self.attachment =  PICController(port=port, timeout=1.0)
+            self.attachment =  PICController(port='COM10', timeout=1.0)
             
 # Example usage
 if __name__ == "__main__":
     import time
     from a1_manager import A1Manager
-    a1_manager = A1Manager(objective= '20x', nanopick_dish='96well', lamp_name='pE-800', injection_device='quickpick', quick_port='COM9')
+    a1_manager = A1Manager(objective= '20x', nanopick_dish='96well', lamp_name='pE-800', injection_device='quickpick')
     controller =a1_manager.injection.attachment
 
     print("Testing connection:", controller.test_connection()) # type: ignore

@@ -8,23 +8,28 @@ from time import sleep
 
 if __name__ == "__main__":
     
-    run_dir = Path(r"D:\Ben\20251017_test_nanopick") 
-    well_selection = None # FIXME: All or None?
-    #well_selection_test = ['A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'A8', 'A9', 'A10', 'A11', 'A12']
+    run_dir = Path(r"D:\Ben\20251104_test_valves") 
+    #well_selection = None # FIXME: All or None?
+    well_selection_test = ['A1', 'A2', 'A3']
     
     a1_manager = A1Manager(
         objective='20x',
         lamp_name='pE-800',
         focus_device='PFSOffset',
         nanopick_dish = '96well',
-        well_selection = well_selection,
         injection_device="quickpick") # It still needs to be added in A1 manager
     
     dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
     with open(dish_calib_path, 'r') as f:
         dish_calib: dict[str, dict[str, Any]]= json.load(f)
+    keys = list(dish_calib.keys())
+    print("Wells in calibration:", keys)
+    
+    a1_manager.injection.attachment.set_valve_time(1, 100)
+    a1_manager.injection.attachment.set_valve_time(2, 100) 
+    a1_manager.injection.attachment.set_delay(10)
 
-    for well in list(dish_calib.keys()[0:12]):
+    for well in list(keys[0:10]):
         
         a1_manager.injection.arm.to_air() # Lift up the head just above the plate 
         mst = dish_calib.get(well, {})
@@ -40,7 +45,7 @@ if __name__ == "__main__":
         
         # Injection of ligands
         a1_manager.injection.arm.to_liquid()
-        a1_manager.injection.system.injecting(volume=10)
+        a1_manager.injection.attachment.injecting(volume=10, time=100)
         a1_manager.injection.arm.to_air()
         # sleep(1)
     
@@ -48,13 +53,10 @@ if __name__ == "__main__":
         img = a1_manager.snap_image()
         img_name = f"{well}_after.tif"
         imwrite(run_dir / img_name, img, compression='zlib')
-        
-    a1_manager.injection.system.close()
-    
-    
-    
-    
-    
+ 
+    a1_manager.injection.attachment.close()
+
+
     
     
     
