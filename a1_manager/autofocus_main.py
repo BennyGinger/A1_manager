@@ -43,12 +43,12 @@ def run_autofocus(method: str,
         """
         
         # Initialize focus device
-        focus_device = a1_manager.core.get_property('Core', 'Focus')
+        focus_device = a1_manager.core.get_property('Core', 'Focus') # type: ignore
         logger.info(f'Autofocus with {focus_device} using {method} method')
         a1_manager.nikon.select_focus_device(focus_device)
         
         # Switch off DIA light if on
-        a1_manager.core.set_property('DiaLamp', 'State', 0)
+        a1_manager.core.set_property('DiaLamp', 'State', 0) # type: ignore
         
         # Load dish measurements
         dish_measurements = load_config_file(calib_path)
