@@ -2,6 +2,10 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 import logging
 from dataclasses import dataclass, field
 from time import sleep
+import warnings
+
+# Suppress pycromanager version mismatch warning
+warnings.filterwarnings("ignore", message=".*Java ZMQ server and Python client.*")
 
 from pycromanager import Core
 

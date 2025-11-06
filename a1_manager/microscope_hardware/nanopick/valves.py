@@ -11,11 +11,10 @@ from a1_manager.microscope_hardware.nanopick.masterclass import InjecterManager
 # Set up logging
 logger = logging.getLogger(__name__)
 
-VALVE_2_TIME = 100 # ms 
-DELAY_TIME = 0
+VALVE_2_TIME = 200 # ms 
 
 class PICController(InjecterManager):
-    def __init__(self, port: str, baudrate: int = 9600, timeout: float = 1.0):
+    def __init__(self, port: str = "COM10", baudrate: int = 9600, timeout: float = 1.0):
         """
         Initialize the PIC Controller connection.
         :param port: COM port name (e.g., 'COM3')
@@ -36,9 +35,8 @@ class PICController(InjecterManager):
         time.sleep(2)  # wait for the serial connection to initialize
         self._clear_buffers()
         
-    def __post_init__(self):
+        # initialize valve 2 time
         self.set_valve_time(2, VALVE_2_TIME)
-        self.set_delay(DELAY_TIME)
 
     def _clear_buffers(self):
         """Clear input and output buffers."""
@@ -56,7 +54,7 @@ class PICController(InjecterManager):
         
         # Send command character by character for multi-character commands
         if len(command) > 1:
-            print(f"Sending multi-char command '{command}' with delay {inter_char_delay}s")
+            logger.debug(f"Sending multi-char command '{command}' with delay {inter_char_delay}s")
             for char in command:
                 self.ser.write(char.encode('ascii'))
                 self.ser.flush()
@@ -67,13 +65,13 @@ class PICController(InjecterManager):
         else:
             # Single character commands - send normally
             full_cmd = (command + '\r').encode('ascii')
-            print(f"Sending single-char command: {full_cmd}")
+            logger.debug(f"Sending single-char command: {full_cmd}")
             self.ser.write(full_cmd)
             self.ser.flush()
         
         # Return early if no reply expected
         if not wait_for_reply:
-            print("Command sent (no reply expected)")
+            logger.debug("Command sent (no reply expected)")
             return ""
         
         # Wait for response
@@ -93,12 +91,12 @@ class PICController(InjecterManager):
                             break
                         response += decoded_char
                     except UnicodeDecodeError:
-                        print(f"Decode error for byte: {char.hex()}")
+                        logger.error(f"Decode error for byte: {char.hex()}")
                         break
             else:
                 time.sleep(0.001)  # Small delay to prevent busy waiting
-        
-        print(f"Response: '{response}'")
+
+        logger.debug(f"Response: '{response}'")
         return response
 
     def test_connection(self):
@@ -178,46 +176,42 @@ class PICController(InjecterManager):
         """Close the serial port."""
         self.ser.close()
 
-    def set_volume(self, volume: float, time: int) -> float:
-        # FIXME: need to calculate the time from the volume - it needs to be tested
-        opening_time = None
-        return time
-   
-    def injecting(self, volume: float, time: int, mixing_cycles: int | None = None) -> None:
-        # The pipette will inject the desired volume by converting the volume into valve opening time for valve 1
-        #opening_time = self.set_volume(volume, time)
-        #self.set_valve_time(1,time)
-        #self.open_valves_sequence('K')
-        from time import sleep
-        print("Open both valves (1 then 2):", self.open_valves_sequence('K'))
-        print("Set ring 2:", self.set_led_ring(2))
-        sleep(0.5)
-        print("Turn off rings:", self.set_led_ring(0))
-        sleep(1)
+    def injecting(self, volume: float, time: int | None = None, mixing_cycles: int | None = None) -> None:
+        if time is not None:
+            logger.warning("Time injection cannot be specified for PIC controller, it will be ignored.")
         
+        if mixing_cycles is not None:
+            logger.warning("Mixing cycles cannot be specified for PIC controller, it will be ignored.")
+        
+       
+        valve_time = self._convert_volume_to_time(volume)
+        self.set_delay(valve_time)
+        self.set_valve_time(1, valve_time)
+        
+        self.open_valves_sequence('K')
+    
+    def _convert_volume_to_time(self, volume: float) -> int:
+        # logger.warning('Not implemented: volume to time conversion for PIC controller. Using volume as time directly.')
+        return int(volume)  # Placeholder implementation
 
 # Example usage
 if __name__ == "__main__":
     # Update COM port as needed (e.g., COM3)
-    from pycromanager import Core
-    from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
-    arm = MarZ(core=Core(), dish='96well') # type: ignore
+    # from pycromanager import Core
+    # from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
+    # arm = MarZ(core=Core(), dish='96well') # type: ignore
     controller = PICController(port='COM10', timeout=1.0)
-    # If the pressure is good and there is enough liquid in the reservoir, the injection should work with a broken tip
-    # Pressure: 37
-    controller.set_valve_time(1, 30)
-    controller.set_valve_time(2, 100) 
-    # By increasing the delay we can increase the injected volume
-    controller.set_delay(50)
-    arm.to_air() # Lift up the head just above the plate 
-    arm.safe_check()
-    #print("Open both valves (1 then 2):", controller.open_valves_sequence('K'))
-    #arm.to_liquid()
     
-    for i in range(50):
-        
-        print("Injection;", controller.injecting(volume=10, time=100))
-        print(i)
+    # print("Current head position:", arm._get_arm_position)
+    # #arm.to_air() # Lift up the head just above the plate
+    # arm._set_arm_position(arm._ref_position)
+    # print("Current head position after moving to air:", arm._get_arm_position)
+    vol_to_inject = 100
+    
+    for i in range(25):
+        print(f"Instance {i+1}")
+        controller.injecting(volume=vol_to_inject)
+        time.sleep(1)
     
     controller.close()
     
