@@ -40,6 +40,14 @@ class StageCoord:
         """Return a shallow copy of the object."""
         return replace(self)
     
+    def __eq__ (self, other: Any) -> bool:
+        if not isinstance(other, StageCoord):
+            return False
+        return self.xy == other.xy and self.ZDrive == other.ZDrive and self.PFSOffset == other.PFSOffset
+    
+    def __hash__ (self) -> int:
+        return hash((self.xy, self.ZDrive, self.PFSOffset))
+    
 @dataclass
 class WellBaseCoord:
     """
