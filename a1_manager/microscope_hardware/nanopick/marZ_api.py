@@ -12,8 +12,8 @@ from pycromanager import Core
 # Set up logging
 logger = logging.getLogger(__name__)
 
-DISTANCE_TO_LIQUID = {'96well': 15_000.0}   # Set to be 2000 um above the bottom of the well.
-DISTANCE_TO_AIR = {'96well': 5_000.0}   # Set to be 1000 um above the plate.
+DISTANCE_TO_LIQUID = {'96well': 20_100.0}   # Set to be ~ 2000 um above the bottom of the well in 100 um volume
+DISTANCE_TO_AIR = {'96well': 9_000.0}   # Set to be ~ 2000 um above the plate 
 
 @dataclass(slots=True)
 class MarZ():
@@ -90,9 +90,9 @@ if __name__ == "__main__":
     print("Current head position:", arm._get_arm_position)
     arm.to_air()
     print("Current head position after moving to air:", arm._get_arm_position)
-    # sleep(5)
-    # arm.to_liquid()
-    # print("Current head position after moving to liquid:", arm._get_arm_position)
-    # sleep(5)
-    # arm._set_arm_position(arm._ref_position)
-    # print("Current head position after going home:", arm._get_arm_position)
+    sleep(5)
+    arm.to_liquid()
+    print("Current head position after moving to liquid:", arm._get_arm_position)
+    sleep(5)
+    arm._set_arm_position(arm._ref_position)
+    print("Current head position after going home:", arm._get_arm_position)
