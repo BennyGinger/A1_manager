@@ -23,13 +23,14 @@ class InjecterManager:
             - 'nanopick'
             - 'quickpick'
         """
-        self.arm = MarZ(self.core, nanopick_dish) # type: ignore
-        if injection_device == "nanopick":
-            from a1_manager.microscope_hardware.nanopick.head_api import Head
-            self.attachment = Head(self.arm)
-        if injection_device == "quickpick":
-            from a1_manager.microscope_hardware.nanopick.valves import PICController
-            self.attachment =  PICController(port='COM10', timeout=1.0)
+        if injection_device is not None:
+            self.arm = MarZ(self.core, nanopick_dish) # type: ignore
+            if injection_device == "nanopick":
+                from a1_manager.microscope_hardware.nanopick.head_api import Head
+                self.attachment = Head(self.arm)
+            if injection_device == "quickpick":
+                from a1_manager.microscope_hardware.nanopick.valves import PICController
+                self.attachment =  PICController(port='COM10', timeout=1.0)
             
 # Example usage
 if __name__ == "__main__":
