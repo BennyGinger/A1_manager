@@ -13,7 +13,7 @@ import numpy as np
 from pycromanager import Core
 
 from a1_manager.microscope_hardware.nikon import NikonTi2, StageCoord
-# from a1_manager.microscope_hardware.nanopick.masterclass import InjecterManager 
+from a1_manager.microscope_hardware.nanopick.masterclass import InjectionManager
 from a1_manager.microscope_hardware.cameras import AndorCamera
 from a1_manager.microscope_hardware.dmd_manager import Dmd
 from a1_manager.microscope_hardware.lamps_factory import get_lamp
@@ -49,7 +49,7 @@ class A1Manager:
         self._is_pfs_disabled = False
         self.camera = AndorCamera(self.core, binning, exposure_ms) # type: ignore
         self.lamp = get_lamp(self.core, lamp_name) # type: ignore
-        # self.injection = InjecterManager(nanopick_dish=nanopick_dish, injection_device=injection_device)  # type: ignore
+        self.injection = InjectionManager(nanopick_dish=nanopick_dish, injection_device=injection_device)  # type: ignore
         
         # Attach DMD to lamp
         self.dmd = None
