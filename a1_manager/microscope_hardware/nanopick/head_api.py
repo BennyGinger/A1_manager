@@ -5,8 +5,7 @@ import logging
 import requests
 
 from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
-from a1_manager.microscope_hardware.nanopick.masterclass import InjecterManager
-
+from a1_manager.microscope_hardware.nanopick.masterclass import InjectionManager
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -22,7 +21,7 @@ MIXING_TIME = 20 # in milliseconds
 
 # NOTE: For now I removed some methods, like flushing, we need to experiment with the API more before doing anything.
 @dataclass(slots=True)
-class Head(InjecterManager):
+class Head(InjectionManager):
     """
     Class that controls the API head.
     """

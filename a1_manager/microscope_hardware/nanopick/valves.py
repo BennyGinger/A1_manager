@@ -6,14 +6,14 @@ import time
 
 #from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
 import a1_manager
-# from a1_manager.microscope_hardware.nanopick.masterclass import InjecterManager
+from a1_manager.microscope_hardware.nanopick.masterclass import InjectionManager
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
 VALVE_2_TIME = 1000 # ms 
 
-class PICController():
+class PICController(InjectionManager):
     def __init__(self, port: str = "COM10", baudrate: int = 9600, timeout: float = 1.0):
         """
         Initialize the PIC Controller connection.
@@ -99,10 +99,6 @@ class PICController():
         logger.debug(f"Response: '{response}'")
         return response
 
-    def test_connection(self):
-        """Send the 'a' command to test communication."""
-        return self._send_command('a')
-
     def set_led_ring(self, ring: int = 0, brightness: int | None = None):
         """Toggle LED rings."""
         if ring == 0:
@@ -114,20 +110,6 @@ class PICController():
         if ring == 2:
             self._send_command('s1+', wait_for_reply=False)
             return self._send_command('s5+', wait_for_reply=False)
-
-    def set_switch(self, switch: int, action: str):
-        """
-        Control switches using 'sXA' command.
-        :param switch: switch number (1–7)
-        :param action: '+', '-', or '?' for status
-        """
-        if action not in ['+', '-', '?']:
-            raise ValueError("Action must be '+', '-', or '?'")
-        return self._send_command(f's{switch}{action}')
-
-    def query_all_outputs(self):
-        """Query all output statuses with 'S' command."""
-        return self._send_command('S')
 
     def set_valve_time(self, valve: int, duration: int):
         """
@@ -148,19 +130,6 @@ class PICController():
     def set_delay(self, delay: int):
         """Set delay between valve openings with 'k' command."""
         return self._send_command(f'k{delay}')
-
-    def _open_valve(self, valve: int):
-        """
-        Open valve for the previously specified time.
-        Valve 1 → 'I', Valve 2 → 'J'
-        """
-        if valve == 1:
-            cmd = 'I'
-        elif valve == 2:
-            cmd = 'J'
-        else:
-            raise ValueError("Valve must be 1 or 2")
-        return self._send_command(cmd)
 
     def open_valves_sequence(self, mode: str):
         """
