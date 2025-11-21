@@ -6,14 +6,14 @@ import time
 
 #from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
 import a1_manager
-# from a1_manager.microscope_hardware.nanopick.masterclass import InjecterManager
+from a1_manager.microscope_hardware.nanopick.masterclass import InjectionManager
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
 VALVE_2_TIME = 1000 # ms 
 
-class PICController():
+class PICController(InjectionManager):
     def __init__(self, port: str = "COM10", baudrate: int = 9600, timeout: float = 1.0):
         """
         Initialize the PIC Controller connection.
