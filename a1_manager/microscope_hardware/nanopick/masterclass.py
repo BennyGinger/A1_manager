@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 # initialize arm always and create a condition for the head or the valves to initialize - so it will be a condition inside this class which will get as a parameter
 
-class InjecterManager:
+class InjectionManager:
     "Class to control the injection depending on the chosen device: nanopick head or quicpick valve control."
     __slots__ = 'core', 'arm', 'attachment'
     
