@@ -12,8 +12,8 @@ from pycromanager import Core
 # Set up logging
 logger = logging.getLogger(__name__)
 
-DISTANCE_TO_LIQUID = {'96well': 20_100.0}   # Set to be ~ 2000 um above the bottom of the well in 100 um volume
-DISTANCE_TO_AIR = {'96well': 9_000.0}   # Set to be ~ 2000 um above the plate 
+DISTANCE_TO_LIQUID = {'96well': 11_180.0}   # Set to be ~ 2000 um above the bottom of the well in 100 um volume
+# DISTANCE_TO_AIR = {'96well': 9_000.0}   # Set to be ~ 2000 um above the plate 
 
 @dataclass(slots=True)
 class MarZ():
@@ -55,11 +55,11 @@ class MarZ():
         """
         return self._set_arm_position(self._ref_position - DISTANCE_TO_LIQUID[self.dish])
 
-    def to_air(self) -> None:
+    def to_home(self) -> None:
         """
         Move to the safe height above the plate.
         """
-        return self._set_arm_position(self._ref_position - DISTANCE_TO_AIR[self.dish])
+        return self._set_arm_position(self._ref_position)
     
     def _set_arm_position(self, position: float) -> None:
         """
@@ -74,7 +74,7 @@ class MarZ():
         """
         Check the altitude before moving to avoid at any cost of breaking the needle.
         """
-        if self._get_arm_position<(self._ref_position - DISTANCE_TO_AIR[self.dish]):
+        if self._get_arm_position < self._ref_position:
             logger.warning("The arm is too low, it will sent home!")
             self._set_arm_position(self._ref_position)
             
@@ -88,11 +88,10 @@ if __name__ == "__main__":
     arm = MarZ(core=Core(), dish='96well') # type: ignore
 
     print("Current head position:", arm._get_arm_position)
-    arm.to_air()
-    print("Current head position after moving to air:", arm._get_arm_position)
     sleep(5)
     arm.to_liquid()
     print("Current head position after moving to liquid:", arm._get_arm_position)
-    sleep(5)
-    arm._set_arm_position(arm._ref_position)
-    print("Current head position after going home:", arm._get_arm_position)
+    # sleep(5)
+    # arm.to_home()
+    # print("Current head position after moving to home:", arm._get_arm_position)
+    

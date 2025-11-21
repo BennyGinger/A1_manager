@@ -202,28 +202,28 @@ if __name__ == "__main__":
     # arm = MarZ(core=Core(), dish='96well') # type: ignore
     controller = PICController(port='COM10', timeout=1.0)
     
-    a1_manager = A1Manager(objective='10x')
+    # a1_manager = A1Manager(objective='10x')
     
-    inject_position = StageCoord(xy=(-42667.4, 18511))
-    a1_manager.set_stage_position(inject_position)
+    # inject_position = StageCoord(xy=(-42667.4, 18511))
+    # a1_manager.set_stage_position(inject_position)
     
-    vol_to_inject = 10
+    vol_to_inject = 1000
     
     for i in range(100):
         print(f"Instance {i+1}")
         controller.injecting(volume=vol_to_inject)
         time.sleep(2)
     
-    fill_position = StageCoord(xy=(-3689.4, 18511))
+    # fill_position = StageCoord(xy=(-3689.4, 18511))
     
-    a1_manager.set_stage_position(fill_position)
+    # a1_manager.set_stage_position(fill_position)
     
     # print("Current head position:", arm._get_arm_position)
     # #arm.to_air() # Lift up the head just above the plate
     # arm._set_arm_position(arm._ref_position)
     # print("Current head position after moving to air:", arm._get_arm_position)
     
-    
+    # controller.set_led_ring(2)
     # controller.close()
     
     
