@@ -12,7 +12,7 @@ from pycromanager import Core
 # Set up logging
 logger = logging.getLogger(__name__)
 
-DISTANCE_TO_LIQUID = {'96well': 11_180.0}   # Set to be ~ 2000 um above the bottom of the well in 100 um volume
+DISTANCE_TO_LIQUID = {'96well': 10_180.0}   # Set to be ~ 3000 um above the bottom of the well in 100 um volume
 # DISTANCE_TO_AIR = {'96well': 9_000.0}   # Set to be ~ 2000 um above the plate 
 
 @dataclass(slots=True)
@@ -32,11 +32,18 @@ class MarZ():
         """
         Initialize the reference position of the arm.
         """
+        # Set the speed of the Z axis
+        self.core.set_property('ZAxis', 'SpeedZ [mm/s]', 25) # type: ignore
+        self.core.set_property('ZAxis', 'Acceleration Z [m/s^2]', 0.05) # type: ignore
+        
         # Ensure that the arm is at the top position when initialized
         # This up and down sequence ensures accurate homing
         self._set_arm_position(100000)
+        self.core.wait_for_device('ZAxis') # type: ignore
         self._set_arm_position(round(self._get_arm_position-5000))
+        self.core.wait_for_device('ZAxis') # type: ignore
         self._set_arm_position(100000)
+        self.core.wait_for_device('ZAxis') # type: ignore
         # Set the reference position just below the top position, i.e. where the accuracy is 100%
         self._set_arm_position(round(self._get_arm_position-500))
         # Store the reference position
@@ -91,7 +98,7 @@ if __name__ == "__main__":
     sleep(5)
     arm.to_liquid()
     print("Current head position after moving to liquid:", arm._get_arm_position)
-    # sleep(5)
-    # arm.to_home()
-    # print("Current head position after moving to home:", arm._get_arm_position)
+    sleep(5)
+    arm.to_home()
+    print("Current head position after moving to home:", arm._get_arm_position)
     

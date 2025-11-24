@@ -176,9 +176,9 @@ if __name__ == "__main__":
     # inject_position = StageCoord(xy=(-42667.4, 18511))
     # a1_manager.set_stage_position(inject_position)
     
-    vol_to_inject = 100
+    vol_to_inject = 650
     
-    for i in range(100):
+    for i in range(2):
         print(f"Instance {i+1}")
         controller.injecting(volume=vol_to_inject)
         time.sleep(2)
