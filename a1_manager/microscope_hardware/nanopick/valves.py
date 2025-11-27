@@ -12,19 +12,21 @@ from a1_manager.microscope_hardware.nanopick.masterclass import InjectionManager
 logger = logging.getLogger(__name__)
 
 VALVE_2_TIME = 1000 # ms 
+# Mapping of volume (ul) relationship to time (ms) as y = ax + b, with key as "needleSize_pressure" and value as (a, b)
+VOL_TIME_MAP = {"30_0.35": (0.0012, 0.0338)}
 
 class PICController(InjectionManager):
-    def __init__(self, port: str = "COM10", baudrate: int = 9600, timeout: float = 1.0):
+    def __init__(self, needle_size: int, pressure: float, port: str = "COM10"):
         """
         Initialize the PIC Controller connection.
+        :param needle_size: Needle size in microns (e.g., 30)
+        :param pressure: Pressure in bar (e.g., 0.35)
         :param port: COM port name (e.g., 'COM3')
-        :param baudrate: Baud rate (default 9600)
-        :param timeout: Read timeout in seconds
         """
         self.ser = serial.Serial(
             port=port, 
-            baudrate=baudrate, 
-            timeout=timeout,
+            baudrate=9600, 
+            timeout=1.0,
             bytesize=serial.EIGHTBITS,
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
@@ -34,6 +36,8 @@ class PICController(InjectionManager):
         )
         time.sleep(2)  # wait for the serial connection to initialize
         self._clear_buffers()
+        
+        self._map_converter = f"{needle_size}_{pressure}"
         
         # initialize valve 2 time
         self.set_valve_time(2, VALVE_2_TIME)
@@ -145,23 +149,29 @@ class PICController(InjectionManager):
         """Close the serial port."""
         self.ser.close()
 
-    def injecting(self, volume: float, time: int | None = None, mixing_cycles: int | None = None) -> None:
-        if time is not None:
+    def injecting(self, inject_vol_ul: float, inject_time_ms: int | None = None, mixing_cycles: int = 1) -> None:
+        if inject_time_ms is not None:
             logger.warning("Time injection cannot be specified for PIC controller, it will be ignored.")
         
-        if mixing_cycles is not None:
-            logger.warning("Mixing cycles cannot be specified for PIC controller, it will be ignored.")
+        # Calculate valve open time per cycle
+        valve_time = round(self._convert_volume_to_time(inject_vol_ul) / mixing_cycles)
         
-       
-        valve_time = self._convert_volume_to_time(volume)
-        self.set_delay(valve_time)
-        self.set_valve_time(1, valve_time)
-        
-        self.open_valves_sequence('K')
+        # Inject
+        for _ in range(mixing_cycles):
+            self.set_delay(valve_time)
+            self.set_valve_time(1, valve_time)
+            self.open_valves_sequence('K')
+            time.sleep((valve_time + VALVE_2_TIME)/1000)  # Wait for both valves to finish, in seconds
     
-    def _convert_volume_to_time(self, volume: float) -> int:
-        # logger.warning('Not implemented: volume to time conversion for PIC controller. Using volume as time directly.')
-        return int(volume)  # Placeholder implementation
+    def _convert_volume_to_time(self, vol_ul: float) -> int:
+        """
+        Convert volume in ul to time in ms using linear mapping, where vol = a * time + b.
+        :param vol_ul: Volume in microliters
+        :return: Time in milliseconds
+        """
+        a, b = VOL_TIME_MAP[self._map_converter]
+        vol_time = (vol_ul - b) / a
+        return int(vol_time)  
 
 # Example usage
 if __name__ == "__main__":
@@ -169,19 +179,18 @@ if __name__ == "__main__":
     # from pycromanager import Core
     from a1_manager import A1Manager, StageCoord
     # arm = MarZ(core=Core(), dish='96well') # type: ignore
-    controller = PICController(port='COM10', timeout=1.0)
+    controller = PICController(needle_size=30, port='COM10')
     
     # a1_manager = A1Manager(objective='10x')
     
     # inject_position = StageCoord(xy=(-42667.4, 18511))
     # a1_manager.set_stage_position(inject_position)
     
-    vol_to_inject = 650
+    vol_to_inject = 8305
     
-    for i in range(2):
+    for i in range(1):
         print(f"Instance {i+1}")
-        controller.injecting(volume=vol_to_inject)
-        time.sleep(2)
+        controller.injecting(inject_vol_ul=vol_to_inject, mixing_cycles=2)
     
     # fill_position = StageCoord(xy=(-3689.4, 18511))
     
