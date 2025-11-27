@@ -179,7 +179,7 @@ if __name__ == "__main__":
     # from pycromanager import Core
     from a1_manager import A1Manager, StageCoord
     # arm = MarZ(core=Core(), dish='96well') # type: ignore
-    controller = PICController(needle_size=30, port='COM10')
+    controller = PICController(needle_size=30, pressure=0.35, port='COM10')
     
     # a1_manager = A1Manager(objective='10x')
     
