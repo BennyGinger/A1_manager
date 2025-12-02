@@ -41,7 +41,7 @@ if __name__ == "__main__":
         
         # Injection of ligands
         a1_manager.injection.arm.to_liquid()
-        a1_manager.injection.attachment.injecting(volume=10, time=100)
+        a1_manager.injection.attachment.injecting(vol_to_inject=10)
         a1_manager.injection.arm.to_home()
         # sleep(1)
     
