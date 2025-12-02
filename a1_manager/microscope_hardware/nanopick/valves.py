@@ -175,9 +175,47 @@ class PICController(InjectionManager):
 
 # Example usage
 if __name__ == "__main__":
-    # Update COM port as needed (e.g., COM3)
-    # from pycromanager import Core
+    import json
+    from pathlib import Path
+    from time import sleep
+    from typing import Any
+    from pycromanager import Core
+
     from a1_manager import A1Manager, StageCoord
+    from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
+    arm = MarZ(core=Core(), dish='96well') # type: ignore
+    controller = PICController(needle_size=30, pressure=0.35, port='COM10')
+
+    a1_manager = A1Manager(
+        objective='20x',
+        nanopick_dish = '96well')
+   
+    dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
+    with open(dish_calib_path, 'r') as f:
+        dish_calib: dict[str, dict[str, Any]]= json.load(f)
+    keys = list(dish_calib.keys())
+    print("Wells in calibration:", keys)
+   
+    for well in list(keys):
+        print(well)
+       
+        arm.to_home() # Lift up the head above the plate
+        mt = dish_calib.get(well, {})
+        position = StageCoord(xy=mt['center'])
+        a1_manager.set_stage_position(position)
+        sleep(0.5)
+       
+       
+        # Injection of ligands
+        arm.to_liquid()
+        controller.injecting(inject_vol_ul=10)
+        arm.to_home()
+        sleep(0.5)
+   
+ 
+    controller.close()
+    
+"""     from a1_manager import A1Manager, StageCoord
     # arm = MarZ(core=Core(), dish='96well') # type: ignore
     controller = PICController(needle_size=30, pressure=0.35, port='COM10')
     
@@ -188,9 +226,33 @@ if __name__ == "__main__":
     
     vol_to_inject = 8305
     
-    for i in range(1):
+    for i in range(10):
         print(f"Instance {i+1}")
-        controller.injecting(inject_vol_ul=vol_to_inject, mixing_cycles=2)
+        controller.injecting(inject_vol_ul=5, mixing_cycles=1) """
+        
+    
+
+
+    
+    
+    
+    
+    # Update COM port as needed (e.g., COM3)
+    # from pycromanager import Core
+"""     from a1_manager import A1Manager, StageCoord
+    # arm = MarZ(core=Core(), dish='96well') # type: ignore
+    controller = PICController(needle_size=30, pressure=0.35, port='COM10')
+    
+    # a1_manager = A1Manager(objective='10x')
+    
+    # inject_position = StageCoord(xy=(-42667.4, 18511))
+    # a1_manager.set_stage_position(inject_position)
+    
+    vol_to_inject = 8305
+    
+    for i in range(5):
+        print(f"Instance {i+1}")
+        controller.injecting(inject_vol_ul=10, mixing_cycles=1) """
     
     # fill_position = StageCoord(xy=(-3689.4, 18511))
     
@@ -203,11 +265,7 @@ if __name__ == "__main__":
     
     # controller.set_led_ring(2)
     # controller.close()
-    
-    
-    
-    
-    
+
     
     
     

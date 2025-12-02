@@ -95,7 +95,7 @@ if __name__ == "__main__":
     arm = MarZ(core=Core(), dish='96well') # type: ignore
 
     print("Current head position:", arm._get_arm_position)
-    sleep(3)
+    sleep(1)
     arm.to_liquid()
     print("Current head position after moving to liquid:", arm._get_arm_position)
     #sleep(5)
