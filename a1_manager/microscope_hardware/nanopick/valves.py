@@ -265,7 +265,56 @@ if __name__ == "__main__":
     
     # controller.set_led_ring(2)
     # controller.close()
+    """
 
+    from a1_manager import A1Manager, StageCoord
+    arm = MarZ(core=Core(), dish='96well') # type: ignore
+    controller = PICController(needle_size=30, pressure=0.35, port='COM10')
+    #run_dir = Path(r"D:\Ben\20251202_test_valves") 
+    #well_selection = None # FIXME: All or None?
+    #well_selection_test = ['A1', 'A2', 'A3']
+    
+    a1_manager = A1Manager(
+        objective='20x',
+        lamp_name='pE-800',
+        focus_device='PFSOffset',
+        nanopick_dish = '96well')
+    
+    dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
+    with open(dish_calib_path, 'r') as f:
+        dish_calib: dict[str, dict[str, Any]]= json.load(f)
+    keys = list(dish_calib.keys())
+    print("Wells in calibration:", keys)
+    
+    for well in list(keys[0:10]):
+        print(well)
+        
+        arm.to_home() # Lift up the head above the plate 
+        mt = dish_calib.get(well, {})
+        position = StageCoord(xy=mt['center'])
+        a1_manager.set_stage_position(position)
+        sleep(1)
+        
+        # Image before stimulation
+        #img = a1_manager.snap_image()
+        #img_name = f"{well}_before.tif"
+        #imwrite(run_dir / img_name, img, compression='zlib')
+        
+        # Injection of ligands
+        arm.to_liquid()
+        controller.injecting(vol_to_inject=10)
+        arm.to_home()
+        # sleep(1)
+    
+        # Image after stimulation
+        #img = a1_manager.snap_image()
+        #img_name = f"{well}_after.tif"
+        #imwrite(run_dir / img_name, img, compression='zlib')
+ 
+    controller.close()
+
+    """
+    
     
     
     
