@@ -60,7 +60,7 @@ class MarZ():
         """
         Move to the position in the liquid safely above the cells.
         """
-        return self._set_arm_position(self._ref_position - DISTANCE_TO_LIQUID[self.dish])
+        return self._set_arm_position(self._ref_position - DISTANCE_TO_LIQUID[self.dish]+3000)
 
     def to_home(self) -> None:
         """
