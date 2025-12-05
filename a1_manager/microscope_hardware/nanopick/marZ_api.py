@@ -26,8 +26,8 @@ class MarZ():
 
     def __post_init__(self):
         # Set the speed of the Z axis
-        self.core.set_property('ZAxis', 'SpeedZ [mm/s]', 25) # type: ignore
-        self.core.set_property('ZAxis', 'Acceleration Z [m/s^2]', 0.05) # type: ignore
+        self.core.set_property('ZAxis', 'SpeedZ [mm/s]', 18) # type: ignore
+        self.core.set_property('ZAxis', 'Acceleration Z [m/s^2]', 0.18) # type: ignore
         
         self._init_ref_position()
         logger.debug(f"Arm initialized at reference position: {self._ref_position}")
@@ -60,7 +60,7 @@ class MarZ():
         """
         Move to the position in the liquid safely above the cells.
         """
-        return self._set_arm_position(self._ref_position - DISTANCE_TO_LIQUID[self.dish]+3000)
+        return self._set_arm_position(self._ref_position - DISTANCE_TO_LIQUID[self.dish])
 
     def to_home(self) -> None:
         """

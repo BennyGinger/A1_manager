@@ -13,7 +13,10 @@ logger = logging.getLogger(__name__)
 
 VALVE_2_TIME = 1000 # ms 
 # Mapping of volume (ul) relationship to time (ms) as y = ax + b, with key as "needleSize_pressure" and value as (a, b)
-VOL_TIME_MAP = {"30_0.35": (0.0012, 0.0338)}
+VOL_TIME_MAP = {
+    30: {"0.35": (0.0012, 0.0338),},
+    70: {"0.20": (0.0015, 0.065),},
+}
 
 class PICController(InjectionManager):
     def __init__(self, needle_size: int, pressure: float, port: str = "COM10"):
@@ -37,7 +40,14 @@ class PICController(InjectionManager):
         time.sleep(2)  # wait for the serial connection to initialize
         self._clear_buffers()
         
-        self._map_converter = f"{needle_size}_{pressure}"
+        if needle_size not in VOL_TIME_MAP:
+            raise ValueError(f"Needle size {needle_size} not supported. Only {list(VOL_TIME_MAP.keys())} are supported.")
+        
+        neddle_map = VOL_TIME_MAP[needle_size]
+        if f"{pressure:.2f}" not in neddle_map:
+            raise ValueError(f"Pressure {pressure} not supported for needle size {needle_size}. Only {list(neddle_map.keys())} are supported.")
+        
+        self._converter_params = neddle_map[f"{pressure:.2f}"]
         
         # initialize valve 2 time
         self.set_valve_time(2, VALVE_2_TIME)
@@ -169,7 +179,7 @@ class PICController(InjectionManager):
         :param vol_ul: Volume in microliters
         :return: Time in milliseconds
         """
-        # a, b = VOL_TIME_MAP[self._map_converter]
+        # a, b = self._converter_params
         # vol_time = (vol_ul - b) / a
         # return int(vol_time) 
         return int(vol_ul) 
@@ -186,10 +196,10 @@ if __name__ == "__main__":
      from a1_manager import A1Manager, StageCoord
      from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
      arm = MarZ(core=Core(), dish='96well') # type: ignore
-     controller = PICController(needle_size=30, pressure=0.35, port='COM10')
+     controller = PICController(needle_size=70, pressure=0.2, port='COM10')
 
      a1_manager = A1Manager(
-         objective='20x',
+         objective='10x',
          nanopick_dish = '96well')
    
      dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
@@ -209,8 +219,10 @@ if __name__ == "__main__":
        
        
          # Injection of ligands
+         
+         controller.injecting(inject_vol_ul=650)
          arm.to_liquid()
-         controller.injecting(inject_vol_ul=1200)
+        #  sleep(0.5)
          arm.to_home()
          sleep(1)
    
@@ -218,81 +230,14 @@ if __name__ == "__main__":
      controller.close()
       
     
-"""     # Update COM port as needed (e.g., COM3)
-    # from pycromanager import Core
-     from a1_manager import A1Manager, StageCoord
-    # arm = MarZ(core=Core(), dish='96well') # type: ignore
-     controller = PICController(needle_size=30, pressure=0.35, port='COM10')
-    
-    # a1_manager = A1Manager(objective='10x')
-    
-    # inject_position = StageCoord(xy=(-42667.4, 18511))
-    # a1_manager.set_stage_position(inject_position)
-    
+    # controller = PICController(needle_size=30, pressure=0.35, port='COM10')
    
+    # for i in range(2):
+    #     print(f"Instance {i+1}")
+    #     controller.injecting(inject_vol_ul=584, mixing_cycles=1) 
     
-     for i in range(2):
-        print(f"Instance {i+1}")
-        controller.injecting(inject_vol_ul=1200, mixing_cycles=1) 
-      """
-    # fill_position = StageCoord(xy=(-3689.4, 18511))
     
-    # a1_manager.set_stage_position(fill_position)
-    
-    # print("Current head position:", arm._get_arm_position)
-    # #arm.to_air() # Lift up the head just above the plate
-    # arm._set_arm_position(arm._ref_position)
-    # print("Current head position after moving to air:", arm._get_arm_position)
-    
-    # controller.set_led_ring(2)
-    # controller.close()
-""" from a1_manager import A1Manager, StageCoord
-arm = MarZ(core=Core(), dish='96well') # type: ignore
-controller = PICController(needle_size=30, pressure=0.35, port='COM10')
-#run_dir = Path(r"D:\Ben\20251202_test_valves") 
-#well_selection = None # FIXME: All or None?
-#well_selection_test = ['A1', 'A2', 'A3']
 
-a1_manager = A1Manager(
-    objective='20x',
-    lamp_name='pE-800',
-    focus_device='PFSOffset',
-    nanopick_dish = '96well')
-
-dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
-with open(dish_calib_path, 'r') as f:
-    dish_calib: dict[str, dict[str, Any]]= json.load(f)
-keys = list(dish_calib.keys())
-print("Wells in calibration:", keys)
-
-for well in list(keys[0:10]):
-    print(well)
-    
-    arm.to_home() # Lift up the head above the plate 
-    mt = dish_calib.get(well, {})
-    position = StageCoord(xy=mt['center'])
-    a1_manager.set_stage_position(position)
-    sleep(1)
-    
-    # Image before stimulation
-    #img = a1_manager.snap_image()
-    #img_name = f"{well}_before.tif"
-    #imwrite(run_dir / img_name, img, compression='zlib')
-    
-    # Injection of ligands
-    arm.to_liquid()
-    controller.injecting(vol_to_inject=10)
-    arm.to_home()
-    # sleep(1)
-
-    # Image after stimulation
-    #img = a1_manager.snap_image()
-    #img_name = f"{well}_after.tif"
-    #imwrite(run_dir / img_name, img, compression='zlib')
-
-controller.close()
-
-"""
     
     
     
