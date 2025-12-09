@@ -15,7 +15,7 @@ VALVE_2_TIME = 1000 # ms
 # Mapping of volume (ul) relationship to time (ms) as y = ax + b, with key as "needleSize_pressure" and value as (a, b)
 VOL_TIME_MAP = {
     30: {"0.35": (0.0012, 0.0338),},
-    70: {"0.20": (0.0015, 0.065),},
+    70: {"0.20": (0.0144, 1.5931),},
 }
 
 class PICController(InjectionManager):
@@ -179,10 +179,10 @@ class PICController(InjectionManager):
         :param vol_ul: Volume in microliters
         :return: Time in milliseconds
         """
-        # a, b = self._converter_params
-        # vol_time = (vol_ul - b) / a
-        # return int(vol_time) 
-        return int(vol_ul) 
+        a, b = self._converter_params
+        vol_time = (vol_ul - b) / a
+        return int(vol_time) 
+        # return int(vol_ul) 
 
 # Example usage
 if __name__ == "__main__":
@@ -205,7 +205,14 @@ if __name__ == "__main__":
      dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
      with open(dish_calib_path, 'r') as f:
          dish_calib: dict[str, dict[str, Any]]= json.load(f)
-     keys = list(dish_calib.keys())
+    #  keys = list(dish_calib.keys())
+     keys = [
+        #  'D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11','D12',
+        #      'E1','E2','E3','E4','E5','E6','E7','E8','E9','E10','E11','E12',
+            #  'F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12',
+             'G1','G2','G3','G4','G5','G6','G7','G8','G9','G10','G11','G12',
+            #  'H1','H2','H3','H4','H5','H6','H7','H8','H9','H10','H11','H12'
+             ]
      print("Wells in calibration:", keys)
    
      for well in list(keys):
@@ -220,9 +227,8 @@ if __name__ == "__main__":
        
          # Injection of ligands
          
-         controller.injecting(inject_vol_ul=650)
+         controller.injecting(inject_vol_ul=10, mixing_cycles=6)
          arm.to_liquid()
-        #  sleep(0.5)
          arm.to_home()
          sleep(1)
    
@@ -230,11 +236,11 @@ if __name__ == "__main__":
      controller.close()
       
     
-    # controller = PICController(needle_size=30, pressure=0.35, port='COM10')
+    # controller = PICController(needle_size=70, pressure=0.2, port='COM10')
    
-    # for i in range(2):
+    # for i in range(1):
     #     print(f"Instance {i+1}")
-    #     controller.injecting(inject_vol_ul=584, mixing_cycles=1) 
+    #     controller.injecting(inject_vol_ul=10, mixing_cycles=2) 
     
     
 
