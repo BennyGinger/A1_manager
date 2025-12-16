@@ -6,7 +6,6 @@ import time
 
 #from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
 import a1_manager
-from a1_manager.microscope_hardware.nanopick.masterclass import InjectionManager
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -18,7 +17,7 @@ VOL_TIME_MAP = {
     70: {"0.20": (0.0144, 1.5931),},
 }
 
-class PICController(InjectionManager):
+class PICController():
     def __init__(self, needle_size: int, pressure: float, port: str = "COM10"):
         """
         Initialize the PIC Controller connection.
@@ -113,7 +112,7 @@ class PICController(InjectionManager):
         logger.debug(f"Response: '{response}'")
         return response
 
-    def set_led_ring(self, ring: int = 0, brightness: int | None = None):
+    def _set_led_ring(self, ring: int = 0, brightness: int | None = None):
         """Toggle LED rings."""
         if ring == 0:
             self._send_command('s1-', wait_for_reply=False)
@@ -125,7 +124,7 @@ class PICController(InjectionManager):
             self._send_command('s1+', wait_for_reply=False)
             return self._send_command('s5+', wait_for_reply=False)
 
-    def set_valve_time(self, valve: int, duration: int):
+    def _set_valve_time(self, valve: int, duration: int):
         """
         Set the valve open duration.
         Valve 1 → 'i', Valve 2 → 'j'
@@ -141,11 +140,11 @@ class PICController(InjectionManager):
             raise ValueError("Valve must be 1 or 2")
         return self._send_command(cmd)
 
-    def set_delay(self, delay: int):
+    def _set_delay(self, delay: int):
         """Set delay between valve openings with 'k' command."""
         return self._send_command(f'k{delay}')
 
-    def open_valves_sequence(self, mode: str):
+    def _open_valves_sequence(self, mode: str):
         """
         Open valves in sequence with delay.
         'K' = Valve1 then Valve2
@@ -155,11 +154,19 @@ class PICController(InjectionManager):
             raise ValueError("Mode must be 'K' or 'L'")
         return self._send_command(mode)
 
-    def close(self):
+    def _close(self):
         """Close the serial port."""
         self.ser.close()
 
     def injecting(self, inject_vol_ul: float, inject_time_ms: int | None = None, mixing_cycles: int = 1) -> None:
+        """
+        Function controlling injection. Sets the volume according to number of mixing cycles. 
+        It sets the opening time of the first valve and the delay to the desired time by converting the desired volume to time.
+        Args:
+            inject_vol_ul(float): injection volume in microliters
+            inject_time_ms(int): injection time in milliseconds, will be None in case of valves
+            mixing_cycles(int): number of mixing cycles (default: 1)
+        """
         if inject_time_ms is not None:
             logger.warning("Time injection cannot be specified for PIC controller, it will be ignored.")
         
@@ -316,5 +323,4 @@ if __name__ == "__main__":
     # time.sleep(1)
     # print("Open both valves (2 then 1):", controller.open_valves_sequence('L'))
     # print("Testing connection:", controller.test_connection()) """
-    
-
+   
