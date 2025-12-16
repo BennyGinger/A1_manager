@@ -13,7 +13,6 @@ import numpy as np
 from pycromanager import Core
 
 from a1_manager.microscope_hardware.nikon import NikonTi2, StageCoord
-from a1_manager.microscope_hardware.nanopick.masterclass import InjectionManager
 from a1_manager.microscope_hardware.cameras import AndorCamera
 from a1_manager.microscope_hardware.dmd_manager import Dmd
 from a1_manager.microscope_hardware.lamps_factory import get_lamp
