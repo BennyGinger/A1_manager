@@ -36,11 +36,10 @@ class A1Manager:
         lamp_name (str): The name of the lamp to use. Must be one of 'pE-800', 'pE-4000', 'DiaLamp'. Default is 'pE-4000'.
         focus_device (str): The focus device to use. Must be one of 'ZDrive', 'PFSOffset'. Default is 'ZDrive'.
         dmd_trigger_mode (str): The trigger mode for the DMD. Must be one of 'InternalExpose', 'ExternalTrigger'. Default is 'InternalExpose'.
-        attach_nanopick (bool): Whether to attach the nanopick arm and head. Default is False.
         """
-    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state', '__dict__', 'injection'
+    __slots__ = 'core', 'nikon', 'camera', 'dmd', 'lamp', 'activate_dmd', 'trigger_mode', '_pfs_offset', '_is_pfs_disabled', '_cached_oc_state', '__dict__'
     
-    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-800', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose', nanopick_dish: str | None = None, injection_device: str | None = None) -> None:
+    def __init__(self, objective: str, exposure_ms: float=100, binning: int=2, lamp_name: str='pE-800', focus_device: str='ZDrive', dmd_trigger_mode: str='InternalExpose') -> None:
         # Initialize Core bridge
         self.core = Core()
         
@@ -49,7 +48,6 @@ class A1Manager:
         self._is_pfs_disabled = False
         self.camera = AndorCamera(self.core, binning, exposure_ms) # type: ignore
         self.lamp = get_lamp(self.core, lamp_name) # type: ignore
-        self.injection = InjectionManager(nanopick_dish=nanopick_dish, injection_device=injection_device)  # type: ignore
         
         # Attach DMD to lamp
         self.dmd = None
