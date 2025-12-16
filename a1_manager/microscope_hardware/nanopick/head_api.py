@@ -5,7 +5,7 @@ import logging
 import requests
 
 from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
-from a1_manager.microscope_hardware.nanopick.masterclass import InjectionManager
+
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -19,28 +19,30 @@ MIXING_VOLUME = 8 # in nanoliters
 MIXING_TIME = 20 # in milliseconds
 
 
-# NOTE: For now I removed some methods, like flushing, we need to experiment with the API more before doing anything.
+
 @dataclass(slots=True)
-class Head(InjectionManager):
+class Head():
     """
     Class that controls the API head.
     """
-    arm: MarZ
+
     _track_volume: float = MAX_VOLUME  # in nanoliters
 
     def __post_init__(self):
         self.switch_LED_off
     
     @property
-    def track_volume(self) -> float:
+    def _track_volume(self) -> float:
         return self._track_volume
     
     def _set_volume(self, volume: float, time: float | None = None) -> None:
         """
-        A volume-time pair is sent to the controller. The piezo unit will start immediately to withdraw or inject the specified volume under the specified time. The volume values are absolute values. If the volume is less than the previously sent item, then fluid is withdrawn through the pipette. If the volume is greater than the previously sent one, fluid will be injected back.
+        A volume-time pair is sent to the controller. The piezo unit will start immediately to withdraw or inject the specified volume under the specified time. 
+        The volume values are absolute values. If the volume is less than the previously sent item, then fluid is withdrawn through the pipette. 
+        If the volume is greater than the previously sent one, fluid will be injected back.
         
         Args:
-            volume (float): Volume in nanoliters (positive value to inject, negative value to withdraw)
+            volume (float): Volume in nanoliters 
             time (float): Time in milliseconds (default: 100 ms)
         """
 
@@ -71,7 +73,7 @@ class Head(InjectionManager):
         self.set_led_ring(1, 0) 
         self.set_led_ring(2, 0) 
             
-    def set_led_ring(self, ring: int = 0, brightness: int | None = None) -> None:
+    def _set_led_ring(self, ring: int = 0, brightness: int | None = None) -> None:
         """
         Set brightness level of LED 
         
@@ -96,6 +98,12 @@ class Head(InjectionManager):
     def filling(self, volume: float, time: float = 100) -> None:
         """
         Fill the pipette with a specified volume of liquid. If the requested volume exceeds the maximum capacity of the pipette, it will be capped at MAX_VOLUME.
+        It contains mixing cycles with a default number of 1.
+        Args: 
+            volume (float): Volume in nanoliters 
+            time (float): Time in milliseconds (default: 100 ms)
+            mixing_cycles(int): number of mixing cycles (default: 1)
+            
         """
         volume = abs(volume)  # Ensure volume is positive
         max_filling_volume = MAX_VOLUME - self.track_volume
@@ -105,21 +113,16 @@ class Head(InjectionManager):
         else:
             vol_to_fill = volume
 
-        # Move down the head to reach the liquid
-        self.switch_LED_on
-        self.arm.set_arm_position(self.arm.safety_down)
-
         # Draw the liquid into the pipette
         self._set_volume(self.track_volume - vol_to_fill, time)
         self._track_volume += vol_to_fill
 
-        # Move up the head
-        self.arm.set_arm_position(self.arm.safety_up)
-        self.switch_LED_off
-
     def injecting(self, volume: float, time: float | None = None, mixing_cycles: int | None = None) -> None:
         """
         Inject a specified volume of liquid from the pipette. If the requested volume exceeds the current volume in the pipette, it will be capped at the current volume.
+        Args: 
+            volume (float): Volume in nanoliters 
+            time (float): Time in milliseconds (default: 100 ms)
         """
         volume = abs(volume)  # Ensure volume is positive
         max_injection_volume = self.track_volume - MIN_VOLUME
@@ -128,24 +131,19 @@ class Head(InjectionManager):
             logger.warning(f"The volume to inject exceeds the current volume in the pipette! It will be set to {max_injection_volume} nanoliters (i.e. current volume - minimum volume).")
         else:
             vol_to_inject = volume   
-        
-        # Move down the head to reach the liquid
-        self.switch_LED_on
-        self.arm.set_arm_position(self.arm.safety_down)
-        
+
         # Draw the liquid into the pipette
         self._set_volume(self.track_volume + vol_to_inject, time)
         self._mixing(mixing_cycles)
         self._track_volume -= vol_to_inject
 
-        # Move up the head
-        self.arm.set_arm_position(self.arm.safety_up)
-        self.switch_LED_off
 
-    def _mixing(self, n: int):
+    def _mixing(self, mixing_cycles: int = 1):
         """
         Mix the liquid in the pipette by sucking it up and letting it out multiple times.
+        Args:
+            mixing_cycles(int): number of mixing cycles (default: 1)
         """
-        for _ in range(n):
+        for _ in range(mixing_cycles):
             self._set_volume(MIXING_VOLUME, MIXING_TIME)  # suck it up
             self._set_volume(-MIXING_VOLUME, MIXING_TIME)  # let it out
