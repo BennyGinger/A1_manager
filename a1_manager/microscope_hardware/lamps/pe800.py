@@ -7,7 +7,7 @@ from a1_manager.microscope_hardware.lamps.base_lamp import Lamp
 
 class pE800(Lamp):
     # Default LED label
-    _led_default = {'400':'A','435':'B','470':'C','500':'D','740':'E','635':'F','580':'G','550':'H'}
+    _led_default = {'400':'A(400)','435':'B(435)','470':'C(470)','500':'D(500)','740':'E(740)','635':'F(635)','580':'G(580)','550':'H(550)'}
     
     @property
     def LEDdefault(self) -> dict[str, str]:
