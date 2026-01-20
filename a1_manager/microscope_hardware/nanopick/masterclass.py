@@ -4,12 +4,17 @@ from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
 from a1_manager import A1Manager
 from a1_manager import StageCoord
 
+import json
+from pathlib import Path
+from tifffile import imwrite
+from time import sleep
+from typing import Any
+
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
-
-class InjectionManager():
+class WayofWater():
     """ 
     Class to control the injection depending on the chosen device: nanopick head or quicpick valve control.
     Args:
@@ -18,61 +23,117 @@ class InjectionManager():
         - nanopick_dish(str): name of the used dish (e.g.: "96-well")
     """
     
-    __slots__ = 'a1_manager', 'arm', 'device', 'injection_time', 'injection_volume', 'nanopick_dish'
+    __slots__ = 'a1_manager', 'arm', 'carrier', 'injection_time_ms', 'injection_volume_ul', 'dish_name'
     
-    def __init__(self,  nanopick_dish: str, injection_volume: float, injection_time: int = 100 | None = None): # type: ignore
+    def __init__(self,  dish_name: str, injection_volume_ul: float, injection_time_ms: int | None = 100 ): # type: ignore
         
-        self.a1_manager = A1Manager()
-        self.arm = MarZ(self.core, nanopick_dish) # type: ignore
-        self.injection_time = injection_time
-        self.injection_volume = injection_volume
-        self.nanopick_dish = nanopick_dish
+        self.a1_manager = A1Manager(objective = '20x', lamp_name = 'pE-800')
+        self.arm = MarZ(self.a1_manager.core, dish_name) # type: ignore
+        self.injection_time_ms = injection_time_ms    # in milliseconds
+        self.injection_volume_ul = injection_volume_ul # in microliters
+        self.dish_name = dish_name
     
-    def _position_converter(self, position):
+    def position_converter(self, position) -> StageCoord:
+        """ 
+        Convert position from list to StageCoord.
+        """
         return StageCoord(position)
     
-    def _ul_to_nl_converter(self, volume_ul: float):
+    def _ul_to_nl_converter(self, volume_ul: float) -> float:
+        """
+        Convert volume from microliters to nanoliters.
+        """
         return volume_ul*1000
+    
+    def arm_to_home(self)->None:
+        """
+        Move to the safe height above the plate.
+        """
+        return self.arm.to_home()
+    
+    def arm_to_liquid(self)->None:
+        """
+        Move to the position in the liquid safely above the cells.
+        """
+        return self.arm.to_liquid()
         
-    def initialize_pick(self, injection_device: str, needle_size: int | None = None, pressure: float | None = None):
-            """
-                Args:
-                    - injection_device(str): possible device names -> 'nanopick', 'quickpick'
-                    - needle_size(int): for valves, possible values -> 30, 50, 70 um
-                    - pressure(float): for valves, possible values -> [0,6] bar
-            """
-            if injection_device == "nanopick":
-                from a1_manager.microscope_hardware.nanopick.head_api import Head
-                self.device = Head()
-            if injection_device == "quickpick":
-                if needle_size == None or pressure == None:
-                    logger.error("Needle size and pressure value is needed for using the valve system.")
-                else:
-                    from a1_manager.microscope_hardware.nanopick.valves import PICController
-                    self.device =  PICController(needle_size = needle_size, pressure=pressure)
-                    
-    def mini_injection_pipeline(self):
-        """Automated stimulation protocol using the valve system. """
-         import json
-         from pathlib import Path
-         from tifffile import imwrite
-         from time import sleep
-         from typing import Any
-         
+    def get_arm_position(self)-> float:
+        """
+        Get the current altitude of the head.
+        """
+        return self.arm._get_arm_position
+        
+    def initialize_environment(self, injection_device: str, needle_size: int | None = None, pressure: float | None = None):
+        """ 
+        Initialize the injection device. 
 
-         run_dir = Path(r"D:\Ben\20251104_test_valves") 
+        Args:
+            - injection_device(str): possible device names -> 'nanopick', 'quickpick'
+            - needle_size(int): for valves, possible values -> 30, 50, 70 um
+            - pressure(float): for valves, possible values -> [0,6] bar - for the 50 um needle size: 0.2, 0.3, 0.4 bar
+        """
+        if injection_device == "nanopick":
+            from a1_manager.microscope_hardware.nanopick.head_api import Head
+            self.carrier = Head()
+            
+        if injection_device == "quickpick":
+            if needle_size == None or pressure == None:
+                    logger.error("Needle size and pressure value is needed for using the valve system.")
+            else:
+                    from a1_manager.microscope_hardware.nanopick.valves import PICController
+                    self.carrier =  PICController(needle_size = needle_size, pressure=pressure)
+                    
+    def fill_head(self, fill_vol_ul: float, fill_time_ms: float = 100) -> None:
+        """ 
+        Filling using the head system.
+
+        Args:
+            - fill_vol_ul(float): filling volume in microliters
+            - fill_time_ms(float): filling time in milliseconds (default: 100 ms)
+        """
+        if self.carrier == "quickpick":
+            logger.error("Filling is not possible with the valve system.")  
+            
+        if self.carrier == "nanopick":
+            fill_vol_ul = self._ul_to_nl_converter(fill_vol_ul)
+            self.carrier.filling(fill_vol_ul, fill_time_ms)  # type: ignore
+                    
+                    
+    def inject(self, inject_vol_ul: float, inject_time_ms: float | None = None, mixing_cycles: int = 1):
+        """ 
+        Injection using the valve system.
+
+        Args:
+            - inject_vol_ul(float): injection volume in microliters
+            - inject_time_ms(float): injection time in milliseconds, will be None in case of valves
+            - mixing_cycles(int): number of mixing cycles (default: 1)
+        """
+        if self.carrier == "nanopick":
+            inject_vol_ul = self._ul_to_nl_converter(inject_vol_ul)
+            
+        self.carrier.injecting(inject_vol_ul, inject_time_ms, mixing_cycles)
+                    
+    def mini_injection_pipeline(self, run_dir: Path):
+        """
+        Automated stimulation protocol using the valve system. 
+        
+        """
          
-         if self.nanopick_dish == '96well':
-            dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
+        run_dir = run_dir
+        dish_calib = {}
+        keys = []
+         
+        if self.dish_name == '96well':
+            dish_calib_path = Path(r"C:\Users\uManager\Documents\__repos__\GEM_suite\A1_manager\config\calib_96well.json")
             with open(dish_calib_path, 'r') as f:
                 dish_calib: dict[str, dict[str, Any]]= json.load(f)
                 keys = list(dish_calib.keys())
    
-         for well in list(keys):
+        for well in list(keys):
        
-             self.arm.to_home() # Lift up the head above the plate
+             self.arm_to_home() # Lift up the arm above the plate
              mt = dish_calib.get(well, {})
-             position = self.position_converter(xy=mt['center'])#StageCoord(xy=mt['center'])
+             position = self.position_converter(position=mt['center'])
              self.a1_manager.set_stage_position(position)
              sleep(1)
 
@@ -81,13 +142,11 @@ class InjectionManager():
              img_name = f"{well}_before.tif"
              imwrite(run_dir / img_name, img, compression='zlib')
         
-           
              # Injection of ligands
-             self.device.injecting(inject_vol_ul=self.injection_volume)
-             self.arm.to_liquid()
-             self.arm.to_home()
+             self.carrier.injecting(self.injection_volume_ul)
+             self.arm_to_liquid() # Dip it in the liquid because of the drops.
+             self.arm_to_home()
              sleep(1)
-
 
              # Image after stimulation
              img = self.a1_manager.snap_image()
@@ -95,19 +154,18 @@ class InjectionManager():
              imwrite(run_dir / img_name, img, compression='zlib')
 
 
-    def mini_diffusion_pipeline(self):
-         """Diffusion stimulation protocol using the head. """
-        import json
-        from pathlib import Path
-        from tifffile import imwrite
-        from time import sleep
-        from typing import Any
-        from a1_manager import StageCoord
-
-        run_dir = Path(r"D:\Ben\20251104_test_valves") 
+    def mini_diffusion_pipeline(self, run_dir: Path):
+        """
+         Diffusion stimulation protocol using the head. 
          
-        if self.nanopick_dish == '96well':
-            dish_calib_path = Path(r"C:\repos\A1_manager\config\calib_96well.json")
+        """
+
+        run_dir = run_dir
+        dish_calib = {} 
+        keys = []
+         
+        if self.dish_name == '96well':
+            dish_calib_path = Path(r"C:\Users\uManager\Documents\__repos__\GEM_suite\A1_manager\config\calib_96well.json")
             with open(dish_calib_path, 'r') as f:
                 dish_calib: dict[str, dict[str, Any]]= json.load(f)
                 keys = list(dish_calib.keys())
@@ -117,9 +175,9 @@ class InjectionManager():
             
         for i in range(len(injection_wells)):
                 
-                self.arm.to_home() # Lift up the head above the plate
+                self.arm_to_home() # Lift up the arm above the plate
                 mt = dish_calib.get(injection_wells[i], {})
-                position = self.position_converter(xy=mt['center'])
+                position = self.position_converter(position=mt['center'])
                 self.a1_manager.set_stage_position(position)
                 sleep(1)
                 
@@ -128,53 +186,76 @@ class InjectionManager():
                 img_name = f"{injection_wells[i]}_before.tif"
                 imwrite(run_dir / img_name, img, compression='zlib')
                 
-                # Move down the head to reach the liquid
-                self.device.switch_LED_on
-                self.arm.to_liquid()
+                # Move down the arm to reach the liquid
+                self.carrier.switch_LED_on() # type: ignore
+                self.arm_to_liquid()
 
                 # Injection from the head
-                self.device.injection(self.ul_to_nl_converter(self.injection_volume), self.injection_time)
+                if self.injection_time_ms is not None:
+                    self.carrier.injecting(self.injection_volume_ul, self.injection_time_ms)
+                else:
+                    self.carrier.injecting(self.injection_volume_ul)
 
                 # Move up the head
-                self.arm.to_home()
-                self.device.switch_LED_off
+                self.arm_to_home()
+                self.carrier.switch_LED_off() # type: ignore
                 
                 # Image after stimulation
                 img = self.a1_manager.snap_image()
                 img_name = f"{injection_wells[i]}_after.tif"
                 imwrite(run_dir / img_name, img, compression='zlib')
 
-                # Fill the wells after every row
+                # Fill the head after every row
                 if i % 11 == 0: 
                     # Move up the head
-                    self.arm.to_home()
+                    self.arm_to_home()
+                    filling_well_index = (i // 11) -1
         
                     # Go to filling station
-                    mt = dish_calib.get(filling_wells[(i/11)-1], {})
-                    position = self.position_converter(xy=mt['center'])#StageCoord(xy=mt['center'])
+                    mt = dish_calib.get(filling_wells[filling_well_index], {})
+                    position = self.position_converter(position=mt['center'])
                     self.a1_manager.set_stage_position(position)
         
                     # Move down the head to reach the liquid
-                    self.device.switch_LED_on
-                    self.arm.to_liquid()
+                    self.carrier.switch_LED_on() # type: ignore
+                    self.arm_to_liquid()
 
                     # Fill the head
-                    #FIXME: these values needs to be calibrated
-                    self.device.filling(400, 100)
+                    #FIXME: this value needs to be calibrated
+                    self.fill_head(400) # type: ignore  # 400 nl in 100 ms
             
                     # Move up the head
-                    self.arm.to_home()
-                    self.device.switch_LED_off
-                    
+                    self.arm_to_home()
+                    self.carrier.switch_LED_off() # type: ignore
             
 if __name__ == "__main__":
 
-     master = InjectionManager(nanopick_dish = '96well', injection_volume = 10)
-     master.initialize_pick(injection_device = 'quickpick', needle_size = 50, pressure=0.35)
+    ### Initialization of the valve system
+    
+    captain = WayofWater(dish_name = '96well', injection_volume_ul = 10)
+    
+    # Needle size and pressure is needed for valve system
+    captain.initialize_environment(injection_device = 'quickpick', needle_size = 50, pressure=0.3)
+    
+    #For calibration of the valve system
+    for i in range(10):
+        print(f"Instance {i+1}")
+        captain.carrier.injecting(inject_vol_ul=10) 
+         
+    # Run stimulation pipeline     
+    run_dir = Path('D:\\Zsuzsi\\test_lib')
+    captain.mini_injection_pipeline(run_dir=run_dir)
+    
+    
+    
+    
+    # ## Initialization of the head (nanopick)
+    
+    # captain = WayofWater(dish_name = '96well', injection_volume_ul = 10, injection_time_ms = 100)
+    # captain.initialize_environment(injection_device = 'nanopick')
+    
+    # run_dir = Path('D:\\Zsuzsi\\test_lib')
+    # captain.mini_diffusion_pipeline(run_dir=run_dir)
 
-     #For testing
-     for i in range(100):
-         print(f"Instance {i+1}")
-         master.device.injecting(inject_vol_ul=10, mixing_cycles=2) 
      
 

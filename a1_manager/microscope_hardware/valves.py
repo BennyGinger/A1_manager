@@ -14,12 +14,14 @@ VALVE_2_TIME = 1000 # ms
 # Mapping of volume (ul) relationship to time (ms) as y = ax + b, with key as "needleSize_pressure" and value as (a, b)
 VOL_TIME_MAP = {
     30: {"0.35": (0.0012, 0.0338),},
-    50: {"0.20": (0.0039, 0.3043),"0.30": (0.0057, 0.101),"0.40": (0.0072, 0.1051),},
+    50: {"0.30": (0.0039, 0.3043),},
+    50: {"0.30": (0.0057, 0.101),},
+    50: {"0.40": (0.0072, 0.1051),},
     70: {"0.20": (0.0144, 1.5931),},
 }
 
 class PICController():
-    def __init__(self, needle_size: int, pressure: float, port: str = "COM8"):
+    def __init__(self, needle_size: int, pressure: float, port: str = "COM10"):
         """
         Initialize the PIC Controller connection.
         :param needle_size: Needle size in microns (e.g., 30)
@@ -172,11 +174,8 @@ class PICController():
             logger.warning("Time injection cannot be specified for PIC controller, it will be ignored.")
         
         # Calculate valve open time per cycle
-        valve_time = round(self._convert_volume_to_time(inject_vol_ul) / mixing_cycles)
-        
-        # For testing
-        #valve_time = round(inject_vol_ul)   
-             
+        # valve_time = round(self._convert_volume_to_time(inject_vol_ul) / mixing_cycles)
+        valve_time = round(inject_vol_ul)        
         # Inject
         for _ in range(mixing_cycles):
             self.set_delay(valve_time)
@@ -198,7 +197,7 @@ class PICController():
 # Example usage
 if __name__ == "__main__":
     """ 
-    Calibrate and test the PIC controller. 100x injection of desired volume and mixing cycles.
+    Calibrate and test the PIC controller. 100 times injection of desired volume and mixing cycles.
      
     """
 

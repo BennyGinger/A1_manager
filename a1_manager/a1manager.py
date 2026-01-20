@@ -152,18 +152,7 @@ class A1Manager:
         
         self.lamp.set_LED_shutter(1)
         sleep(duration_sec) # Time in seconds
-        self.lamp.set_LED_shutter(0)
-    
-    def set_arm_position(self, destination: float)->None:
-        """
-        Move the head to the desired position.
-        Args:
-            destination (float): The target altitude for the head movement (in range -7000 to 7000, arbitrary units).
-        """
-        if not hasattr(self, 'injection'):
-            logger.warning("Nanopick arm is not attached. It will be ignored.")
-            return
-        self.injection.arm._set_arm_position(destination)
+        self.lamp.set_LED_shutter(0) 
     
     def set_stage_position(self, stage_position: StageCoord)-> None:
         """
@@ -198,13 +187,6 @@ class A1Manager:
         """Calculate window size in pixel for the camera."""
         return (2048//self.camera.binning, 2048//self.camera.binning)
     
-    @property
-    def get_arm_position(self)-> float:
-        """Get the current altitude of the head."""
-        if not hasattr(self, 'injection'):
-            logger.warning("Nanopick arm is not attached.")
-            return float('nan')
-        return self.injection.arm._get_arm_position
     
     def window_size(self, dmd_window_only: bool)-> tuple[int,int]:
         """Calculate window size in micron for the camera."""
@@ -265,30 +247,21 @@ class A1Manager:
         return False
 
 if __name__ == "__main__":
-    import json
-    from typing import Any
-    from time import sleep
+    # Example usage
+    a1 = A1Manager(objective='10x', exposure_ms=100, binning=2, lamp_name='pE-4000', focus_device='PFSOffset', dmd_trigger_mode='InternalExpose')
     
-    run_dir = Path('D:\\Raph\\test_lib')
-    objective = '20x' 
-    lamp_name = 'pE-800'
-    nanopick_dish = '96well' 
-    injection_device= 'quickpick'
+    # Set optical configuration to GFP channel
+    a1.oc_settings('GFP', intensity=50)
     
-    # Example usage for initialization for quickpick
-    try:
-        a1_manager = A1Manager(objective=objective, lamp_name=lamp_name, injection_device=injection_device, nanopick_dish=nanopick_dish,)
-        print("A1Manager initialized successfully")
-        
-        if hasattr(a1_manager, 'injection'):
-            print("Current arm position:", a1_manager.get_arm_position)
-        else:
-            print("Arm not initialized - quicpick hardware may not be available")
-            
-    except Exception as e:
-        print(f"Error initializing A1Manager: {e}")
-        import traceback
-        traceback.print_exc()
+    # Load a DMD mask and project it
+    a1.load_dmd_mask('fullON', transform_mask=True)
+    
+    # Snap an image
+    image = a1.snap_image(dmd_exposure_sec=5)
+    print("Snapped image shape:", image.shape)
+    
+    # Light stimulation for 10 seconds
+    a1.light_stimulate(duration_sec=10)
     
     
     
