@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 class WayofWater():
     """ 
-    Class to control the injection depending on the chosen device: nanopick head or quicpick valve control.
+    Class to control the injection depending on the chosen device: nanopick head or quickpick valve control.
     Args:
         - injection_volume(float): injected volume in microliters
         - injection_time(int): injection time in milliseconds
@@ -33,9 +33,9 @@ class WayofWater():
         self.injection_volume_ul = injection_volume_ul # in microliters
         self.dish_name = dish_name
     
-    def position_converter(self, position) -> StageCoord:
+    def position_converter(self, position: tuple[float, float]) -> StageCoord:
         """ 
-        Convert position from list to StageCoord.
+        Convert position from tuple to StageCoord.
         """
         return StageCoord(position)
     

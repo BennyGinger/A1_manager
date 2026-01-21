@@ -173,13 +173,13 @@ class PICController():
         if inject_time_ms is not None:
             logger.warning("Time injection cannot be specified for PIC controller, it will be ignored.")
         
-        # Calculate valve open time per cycle
-        valve_time = round(self._convert_volume_to_time(inject_vol_ul) / mixing_cycles)
         
-        # For testing
+        # Calculate valve open time per cycle
         if self.test_mode:
-            valve_time = round(inject_vol_ul)   
-             
+            valve_time = round(inject_vol_ul)
+        else:
+            valve_time = round(self._convert_volume_to_time(inject_vol_ul) / mixing_cycles)
+              
         # Inject
         for _ in range(mixing_cycles):
             self.set_delay(valve_time)
@@ -195,8 +195,8 @@ class PICController():
         """
         a, b = self._converter_params
         vol_time = (vol_ul - b) / a
-        return int(vol_time) 
-        # return int(vol_ul) 
+        return int(vol_time)
+    
 
 # Example usage
 if __name__ == "__main__":
