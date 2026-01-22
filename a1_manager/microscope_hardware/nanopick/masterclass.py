@@ -27,7 +27,7 @@ class WayofWater():
     
     def __init__(self,  dish_name: str, injection_volume_ul: float, injection_time_ms: int | None = 100 ): # type: ignore
         
-        self.a1_manager = A1Manager(objective = '20x', lamp_name = 'pE-800')
+        self.a1_manager = A1Manager(objective = '10x', lamp_name = 'pE-800')
         self.arm = MarZ(self.a1_manager.core, dish_name) # type: ignore
         self.injection_time_ms = injection_time_ms    # in milliseconds
         self.injection_volume_ul = injection_volume_ul # in microliters
@@ -81,7 +81,7 @@ class WayofWater():
                     logger.error("Needle size and pressure value is needed for using the valve system.")
             else:
                     from a1_manager.microscope_hardware.nanopick.valves import PICController
-                    self.carrier =  PICController(needle_size = needle_size, pressure=pressure)
+                    self.carrier =  PICController(needle_size = needle_size, pressure=pressure, test_mode= True)
                     
     def fill_head(self, fill_vol_ul: float, fill_time_ms: float = 100) -> None:
         """ 
@@ -238,13 +238,13 @@ if __name__ == "__main__":
     captain.initialize_environment(injection_device = 'quickpick', needle_size = 50, pressure=0.3)
     
     #For calibration of the valve system
-    for i in range(10):
+    for i in range(1):
         print(f"Instance {i+1}")
-        captain.carrier.injecting(inject_vol_ul=10) 
+        captain.carrier.injecting(inject_vol_ul=1740) 
          
     # Run stimulation pipeline     
-    run_dir = Path('D:\\Zsuzsi\\test_lib')
-    captain.mini_injection_pipeline(run_dir=run_dir)
+    # run_dir = Path('D:\\Zsuzsi\\test_lib')
+    # captain.mini_injection_pipeline(run_dir=run_dir)
     
     
     
