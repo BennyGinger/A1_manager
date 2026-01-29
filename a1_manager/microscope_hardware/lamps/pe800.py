@@ -23,7 +23,10 @@ class pE800(Lamp):
         if isinstance(led, str):
             led = [led]
         for l in led:
-            channel = self.LEDdefault[l]
+            led_converted = self._convert_405_to_400(l)
+            if isinstance(led_converted, list):
+                raise ValueError("LED channel must be a single string when resetting.")
+            channel = self.LEDdefault[led_converted]
             self.core.set_property('pE-800', f'Selection{channel}', 0) # type: ignore[call-arg]
         self.core.set_property('DiaLamp', 'State', 0) # type: ignore[call-arg]
     
