@@ -4,7 +4,7 @@
  "Intensity": "0-100%",
 
 
- "GFP": {"fTurret": 3, "fWheel": 0, "led": "470", "intensity": 15.0, "exposure_ms": 100.0},  
+ "GFP": {"fTurret": 3, "fWheel": 5, "led": "470", "intensity": 5.0, "exposure_ms": 200.0},  
 
  "RFP": {"fTurret": 3, "fWheel": 6, "led": "580", "intensity": 40.0, "exposure_ms": 200.0},
 
@@ -14,4 +14,4 @@
 
  "bf": {"fTurret": 0, "fWheel": 0, "led": "bf", "intensity": 20.0, "exposure_ms": 50.0},
 
-"405GFP": {"fTurret": 3, "fWheel": 0, "led": "405", "intensity": 30.0, "exposure_ms": 100.0}}
+"405GFP": {"fTurret": 3, "fWheel": 5, "led": "405", "intensity": 5.0, "exposure_ms": 200.0}}

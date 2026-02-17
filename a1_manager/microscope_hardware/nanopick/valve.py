@@ -231,26 +231,36 @@ if __name__ == "__main__":
     #          ]
     # mt = dish_calib.get(keys[0], {})
     # position = StageCoord(xy=mt['center'])
-    a1_manager = A1Manager(objective='20x', lamp_name='pE-800', )
+    # a1_manager = A1Manager(objective='20x', lamp_name='pE-800', )
     # a1_manager.set_stage_position(position)
     
     controller = PICController(needle_size=50, pressure=0.2)
-    save_dir = Path(r"C:\Users\uManager\Desktop\test\first")
-    a1_manager = A1Manager(objective='20x', lamp_name='pE-800', )
-    for i in range(10):
+    save_dir = Path(r"C:\Users\uManager\Desktop\test\fourth")
+    a1_manager = A1Manager(objective='20x', lamp_name='pE-800', focus_device='PFSOffset')
+    a1_manager.oc_settings(optical_configuration='GFP')
+    for i in range(13):
+        print(f"Cycle {i}")
         # channel 1
         a1_manager.oc_settings(optical_configuration='GFP')
+        if i==0:
+            a1_manager.snap_image()
+            time.sleep(3)
         img = a1_manager.snap_image()
-        imwrite(save_dir / f"channel1_image_{i}.tif", img)
+        imwrite(save_dir / f"GFP_{i}.tif", img)
         
         # channel 2
         a1_manager.oc_settings(optical_configuration='405GFP')
+        if i==0:
+            a1_manager.snap_image()
+            time.sleep(1)
         img2 = a1_manager.snap_image()
-        imwrite(save_dir / f"channel2_image_{i}.tif", img2)
+        imwrite(save_dir / f"405_{i}.tif", img2)
         
-        if i == 3:
-            #continue
-            controller.injecting(inject_vol_ul=10, mixing_cycles=3)
-        time.sleep(4)
+        if i == 5:
+            print("Injecting...")
+        # if i == 3:
+        #     #continue
+        #     controller.injecting(inject_vol_ul=10, mixing_cycles=3)
+        time.sleep(10)
     
     controller._close() 
