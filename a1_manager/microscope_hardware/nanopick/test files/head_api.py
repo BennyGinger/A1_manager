@@ -1,0 +1,157 @@
+from __future__ import annotations # Enable type annotation to be stored as string
+from dataclasses import dataclass
+import logging
+
+import requests
+
+from a1_manager.microscope_hardware.nanopick.marZ_api import MarZ
+
+
+# Set up logging
+logger = logging.getLogger(__name__)
+BASE_URL = "http://localhost:5000/api"  # Base URL for the API
+
+# Volumes
+MAX_VOLUME = 500 # in nanoliters
+MIN_VOLUME = 10  # in nanoliters
+
+
+@dataclass(slots=True)
+class Head():
+    """
+    Class that controls the API head.
+    """
+
+    _track_volume: float = MAX_VOLUME  # in nanoliters
+
+    def __post_init__(self):
+        self.switch_LED_off
+    
+    @property
+    def get_track_volume(self) -> float:
+        return self._track_volume
+    
+    def _set_volume(self, volume_nl: float, time_ms: float | None = None) -> None:
+        """
+        A volume-time pair is sent to the controller. The piezo unit will start immediately to withdraw or inject the specified volume under the specified time. 
+        The volume values are absolute values. If the volume is less than the previously sent item, then fluid is withdrawn 
+        through the pipette. 
+        If the volume is greater than the previously sent one, fluid will be injected back.
+        
+        Args:
+            volume_nl (float): Volume in nanoliters 
+            time_ms (float): Time in milliseconds (default: 100 ms)
+        """
+
+        # Endpoint and parameters
+        endpoint = f"{BASE_URL}/setVolume?volume={volume_nl}&time={time_ms}"
+        try:
+            response = requests.put(endpoint)
+            if response.status_code == 200:
+                logger.debug(f"Success: {response.text}")
+            else:
+                logger.error(f"Error {response.status_code}: {response.text}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request failed: {e}")
+    
+    @property
+    def switch_LED_on(self) -> None:
+        """
+        Switch on the LED light
+        """
+        self.set_led_ring(1, 100) 
+        self.set_led_ring(2, 100) 
+        
+    @property
+    def switch_LED_off(self) -> None:
+        """
+        Switch off the LED light
+        """
+        self.set_led_ring(1, 0) 
+        self.set_led_ring(2, 0) 
+            
+    def set_led_ring(self, ring: int = 0, brightness: int | None = None) -> None:
+        """
+        Set brightness level of LED 
+        
+        Args:
+            ring (int): LED ID (1-2)
+            brightness (int): Brightness level (0-100)
+        """
+        if brightness == None:
+            logger.error("You forgot to add a value for brightness between 0 and 100.")
+        else:
+            # Endpoint and parameters
+            endpoint = f"{BASE_URL}/setLED/{ring}?brightness={brightness}"
+            try:
+                response = requests.put(endpoint)
+                if response.status_code == 200:
+                    logger.debug(f"Success: {response.text}")
+                else:
+                    logger.error(f"Error {response.status_code}: {response.text}")
+            except requests.exceptions.RequestException as e:
+                logger.error(f"Request failed: {e}")
+
+    def filling(self, fill_vol_nl: float, fill_time_ms : float = 100) -> None:
+        """
+        Fill the pipette with a specified volume of liquid. If the requested volume exceeds the maximum capacity of the pipette, 
+        it will be capped at MAX_VOLUME.
+        Args: 
+            fill_vol_nl (float): Volume in nanoliters 
+            fill_time_ms (float): Time in milliseconds (default: 100 ms)
+            
+        """
+        fill_vol_nl = abs(fill_vol_nl)  # Ensure volume is positive
+        max_filling_volume = MAX_VOLUME - self.get_track_volume
+        
+        if fill_vol_nl > max_filling_volume:
+            vol_to_fill = max_filling_volume
+            logger.warning(f"The volume to fill exceeds the maximum volume of the pipette! It will be set to {vol_to_fill} nanoliters.")
+        else:
+            vol_to_fill = fill_vol_nl
+
+        # Draw the liquid into the pipette
+        self._set_volume(self.get_track_volume - vol_to_fill, fill_time_ms)
+        self._track_volume += vol_to_fill
+
+    def injecting(self, inject_vol_ul: float, inject_time_ms: float | None = None, mixing_cycles: int = 1) -> None:
+        """
+        Inject a specified volume of liquid from the pipette. If the requested volume exceeds the current volume in the pipette, 
+        it will be capped at the current volume.
+        Args: 
+            inject_vol_ul (float): Volume in nanoliters  ("ul" is just a notation here, the nanoliter conversion has been taken care of in the pipeline.)
+            
+            inject_time_ms (float): Time in milliseconds (default: 100 ms)
+            mixing_cycles(int): number of mixing cycles (default: 1 - meaning there is no mixing)
+        """
+        
+        inject_vol_nl = abs(inject_vol_ul)  # Ensure volume is positive. 
+        max_injection_volume = self.get_track_volume - MIN_VOLUME
+        
+        if inject_vol_nl > max_injection_volume:
+            vol_to_inject = max_injection_volume
+            logger.warning(f"The volume to inject exceeds the current volume in the pipette! It will be set to {max_injection_volume} nanoliters (i.e. current volume - minimum volume).")
+        else:
+            vol_to_inject = inject_vol_nl
+            
+        # Draw the liquid into the pipette
+        self._set_volume(self.get_track_volume + vol_to_inject, inject_time_ms)
+        self._mixing(mixing_cycles, vol_to_inject)
+        self._track_volume -= vol_to_inject
+
+
+    def _mixing(self, mixing_cycles: int = 1, vol_to_mix: float = 0, mixing_time_ms: float = 20) -> None:
+        """
+        Mix the liquid in the pipette by sucking it up and letting it out multiple times.
+        Args:
+            mixing_cycles(int): number of mixing cycles (default: 1 - meaning there is no mixing)
+            mixing_time_ms(float): time for each mixing cycle in milliseconds (default: 20 ms)
+            vol_to_mix(float): volume to inject in nanoliters
+        """
+        
+        if mixing_cycles > 1:
+            for _ in range(mixing_cycles):
+                self._set_volume(self.get_track_volume - vol_to_mix, mixing_time_ms)  # suck it up
+                self._set_volume(self.get_track_volume + vol_to_mix, mixing_time_ms)  # let it out
+        else:
+            pass
