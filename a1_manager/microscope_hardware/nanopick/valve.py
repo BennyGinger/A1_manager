@@ -235,8 +235,8 @@ if __name__ == "__main__":
     # a1_manager.set_stage_position(position)
     
     controller = PICController(needle_size=50, pressure=0.2)
-    save_dir = Path(r"C:\Users\uManager\Desktop\test\fourth")
-    a1_manager = A1Manager(objective='20x', lamp_name='pE-800', focus_device='PFSOffset')
+    save_dir = Path(r"C:\Users\uManager\Desktop\test\sixth")
+    a1_manager = A1Manager(objective='20x', lamp_name='pE-800')
     a1_manager.oc_settings(optical_configuration='GFP')
     for i in range(13):
         print(f"Cycle {i}")
