@@ -47,12 +47,6 @@ class InjectionDevice(ABC):
             brightness (int | None): Brightness level (if applicable).
         """
         pass
-    
-    @property
-    @abstractmethod
-    def injection_altitude(self) -> str:
-        """Gives the altitude at which the injection happens, among 'air', 'dip' or 'deep'."""
-        pass
 
 
 #### Valve Class ####
