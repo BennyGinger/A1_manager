@@ -3,7 +3,7 @@ import logging
 from dataclasses import dataclass
 import logging
 
-from a1_manager.microscope_hardware.nanopick.injection_device import InjectionDevice
+from a1_manager.microscope_hardware.nanopick.devices.injection_device import InjectionDevice
 
 import requests
 
