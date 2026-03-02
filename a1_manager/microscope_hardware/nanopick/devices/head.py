@@ -54,22 +54,9 @@ class Head(InjectionDevice):
                 logger.error(f"Error {response.status_code}: {response.text}")
         except requests.exceptions.RequestException as e:
             logger.error(f"Request failed: {e}")
-    
-    def switch_LED_on(self) -> None:
-        """
-        Switch on the LED light
-        """
-        self.set_led_ring(1, 100) 
-        self.set_led_ring(2, 100) 
-        
-    def switch_LED_off(self) -> None:
-        """
-        Switch off the LED light
-        """
-        self.set_led_ring(1, 0) 
-        self.set_led_ring(2, 0) 
+
             
-    def set_led_ring(self, ring: int = 0, brightness: int | None = None) -> None:
+    def set_led_ring(self, ring: int = 1, brightness: int | None = None) -> None:
         """
         Set brightness level of LED 
         
@@ -121,11 +108,6 @@ class Head(InjectionDevice):
         self._set_volume(self.get_track_volume + vol_to_inject, inject_time_ms)
         self._mixing(mixing_cycles, vol_to_inject)
         self._track_volume -= vol_to_inject
-
-    @property
-    def injection_altitude(self) -> str:
-        """Gives the altitude at which the injection happens, among 'air', 'dip' or 'deep'."""
-        return "deep"
 
     def _mixing(self, mixing_cycles: int = 1, vol_to_mix: float = 0, mixing_time_ms: float = 20) -> None:
         """
