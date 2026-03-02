@@ -12,16 +12,16 @@ class Injection():
     """ 
     Class to control the injection depending on the chosen device: nanopick head or quickpick valve control.
     Args:
-        - injection_volume(float): injected volume in microliters
-        - injection_time(int): injection time in milliseconds
-        - nanopick_dish(str): name of the used dish (e.g.: "96-well")
+        - arm
+        - injection_device
+        - a1_manager
     """
     
-    __slots__ =  'arm', 'injection_time_ms', 'injection_volume_ul', 'dish_name'
+    __slots__ =  'arm', 'injection_device', 'a1_manager'
     
-    def __init__(self,  ): # type: ignore
+    def __init__(self, arm, injection_device, a1_manager): # type: ignore
         
-        self.arm = MarZ(self.a1_manager.core, dish_name) # type: ignore
+        self.arm = arm
         self.injection_device = injection_device
         self.a1_manager = a1_manager
     
@@ -54,29 +54,7 @@ class Injection():
         Get the current altitude of the head.
         """
         return self.arm._get_arm_position
-        
-    def get_injection_device(self, injection_device: str, needle_size: int | None = None, pressure: float | None = None) -> InjectionDevice:
-        """ 
-        Initialize the injection device. 
 
-        Args:
-            - injection_device(str): possible device names -> 'nanopick', 'quickpick'
-            - needle_size(int): for valves, possible values -> 30, 50, 70 um
-            - pressure(float): for valves, possible values -> [0,6] bar - for the 50 um needle size: 0.2, 0.3, 0.4 bar
-        """
-        if injection_device == "nanopick":
-            from a1_manager.microscope_hardware.nanopick.devices.injection_device import Head  
-            return Head()
-            
-        if injection_device == "quickpick":
-            if needle_size == None or pressure == None:
-                    logger.error("Needle size and pressure value is needed for using the valve system.")
-            else:
-                    from a1_manager.microscope_hardware.nanopick.devices.injection_device import PICController
-                    return PICController(needle_size = needle_size, pressure=pressure, test_mode= True)
-                
-        # Fallback for unsupported strings
-        raise ValueError(f"Unsupported injection device: {injection_device}")
     
     
 
