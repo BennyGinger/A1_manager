@@ -185,7 +185,7 @@ class PICController(InjectionDevice):
             self._open_valves_sequence('K')
             time.sleep((valve_time + VALVE_2_TIME)/1000)  # Wait for both valves to finish, in seconds
     
-    def set_led_ring(self, ring: int = 0, brightness: int | None = None) -> None:
+    def set_led_ring(self, ring: int, brightness: int | None = None) -> None:
         """Toggle LED rings."""
         
         if brightness is not None:
@@ -207,7 +207,3 @@ class PICController(InjectionDevice):
     def fill(self, fill_vol_nl: float, fill_time_ms: int | None = 100) -> None:
         logger.warning("Filling method is not implemented for PIC controller.")
 
-    @property
-    def injection_altitude(self) -> str:
-        """Gives the altitude at which the injection happens, among 'air', 'dip' or 'deep'."""
-        return "air"
