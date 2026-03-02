@@ -11,6 +11,33 @@ import requests
 # Set up logging
 logger = logging.getLogger(__name__)
 
+
+class Init_Device():
+            
+    def __init__(self, injection_device: str):
+        """ 
+        Initialize the injection device. 
+
+        Args:
+            - injection_device(str): possible device names -> 'nanopick', 'quickpick'
+            - needle_size(int): for valves, possible values -> 30, 50, 70 um
+            - pressure(float): for valves, possible values -> [0,6] bar - for the 50 um needle size: 0.2, 0.3, 0.4 bar
+        """
+        if injection_device == "nanopick":
+            from a1_manager.microscope_hardware.nanopick.devices.injection_device import Head 
+            self.injection_device = Head()
+        elif injection_device == "quickpick":
+            from a1_manager.microscope_hardware.nanopick.devices.injection_device import PICController
+            self.injection_device = PICController(needle_size = needle_size, pressure=pressure, test_mode= True)
+        else
+            # Fallback for unsupported strings
+            raise ValueError(f"Unsupported injection device: {injection_device}")
+            
+    def set_quick_params(self, needle_size: float, pressure: float):
+        if injection_device == "quickpick":
+            self.injection_device = PICController(needle_size = needle_size, pressure=pressure)
+
+
 class InjectionDevice(ABC):
     """ Abstract base class for injection devices. """
     
@@ -61,7 +88,7 @@ VOL_TIME_MAP = {
 }
 
 class PICController(InjectionDevice):
-    def __init__(self, needle_size: int, pressure: float, test_mode: bool = False, port: str = "COM8") -> None:
+    def __init__(self, needle_size: int = 50, pressure: float = 0.2, test_mode: bool = False, port: str = "COM8") -> None:
         """
         Initialize the PIC Controller connection.
         :param needle_size: Needle size in microns (e.g., 30)
