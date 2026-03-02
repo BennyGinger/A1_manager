@@ -56,7 +56,7 @@ class Head(InjectionDevice):
             logger.error(f"Request failed: {e}")
 
             
-    def set_led_ring(self, ring: int = 1, brightness: int | None = None) -> None:
+    def set_led_ring(self, ring: int, brightness: int | None = None) -> None:
         """
         Set brightness level of LED 
         
