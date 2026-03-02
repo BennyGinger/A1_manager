@@ -4,7 +4,7 @@ import serial
 import time
 import logging
 
-from a1_manager.microscope_hardware.nanopick.injection_device import InjectionDevice
+from a1_manager.microscope_hardware.nanopick.devices.injection_device import InjectionDevice
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ VOL_TIME_MAP = {
 }
 
 class PICController(InjectionDevice):
-    def __init__(self, needle_size: int, pressure: float, test_mode: bool = False, port: str = "COM8") -> None:
+    def __init__(self, needle_size: int = 50, pressure: float = 0.2, test_mode: bool = False, port: str = "COM8") -> None:
         """
         Initialize the PIC Controller connection.
         :param needle_size: Needle size in microns (e.g., 30)
