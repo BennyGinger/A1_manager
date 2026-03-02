@@ -1,8 +1,6 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 import logging
 
-from a1_manager.microscope_hardware.nanopick.devices.marZ import MarZ
-from a1_manager.microscope_hardware.nanopick.devices.injection_device import InjectionDevice
 from a1_manager import StageCoord
 
 # Set up logging
