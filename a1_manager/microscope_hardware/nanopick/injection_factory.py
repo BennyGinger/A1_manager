@@ -19,12 +19,11 @@ class Injection():
     
     __slots__ =  'arm', 'injection_time_ms', 'injection_volume_ul', 'dish_name'
     
-    def __init__(self,  dish_name: str, injection_volume_ul: float, injection_time_ms: int | None = 100 ): # type: ignore
+    def __init__(self,  ): # type: ignore
         
         self.arm = MarZ(self.a1_manager.core, dish_name) # type: ignore
-        self.injection_time_ms = injection_time_ms    # in milliseconds
-        self.injection_volume_ul = injection_volume_ul # in microliters
-        self.dish_name = dish_name
+        self.injection_device = injection_device
+        self.a1_manager = a1_manager
     
     def position_converter(self, position: tuple[float, float]) -> StageCoord:
         """ 
