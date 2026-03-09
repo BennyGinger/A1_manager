@@ -96,9 +96,4 @@ if __name__ == "__main__":
 
     print("Current head position:", arm._get_arm_position)
     sleep(1)
-    arm.to_liquid()
-    print("Current head position after moving to liquid:", arm._get_arm_position)
-    #sleep(5)
-    #arm.to_home()
-    #print("Current head position after moving to home:", arm._get_arm_position)
     

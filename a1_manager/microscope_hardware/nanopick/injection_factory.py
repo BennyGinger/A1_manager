@@ -18,15 +18,25 @@ class Injection():
         - nanopick_dish(str): name of the used dish (e.g.: "96-well")
     """
     
-    __slots__ =  'arm', 'injection_time_ms', 'injection_volume_ul', 'dish_name'
+    __slots__ =  'arm', 'injection_device',  'dish_name'
     
-    def __init__(self,  dish_name: str, injection_volume_ul: float, injection_time_ms: int | None = 100 ): # type: ignore
-        
-        core = Core()
-        self.arm = MarZ(core, dish_name) # type: ignore
-        self.injection_time_ms = injection_time_ms    # in milliseconds
-        self.injection_volume_ul = injection_volume_ul # in microliters
+    def __init__(self,  injection_device: str, dish_name: str, needle_size: int | None = None, pressure: float | None = None): # type: ignore
+        self.arm = MarZ(core = Core(), dish_name) # type: ignore    
         self.dish_name = dish_name
+        
+        if injection_device == "nanopick":
+            from a1_manager.microscope_hardware.nanopick.devices.head import Head  
+            self.injection_device = Head()
+            
+        if injection_device == "quickpick":
+            if needle_size == None or pressure == None:
+                    logger.error("Needle size and pressure value is needed for using the valve system.")
+            else:
+                    from a1_manager.microscope_hardware.nanopick.devices.valve import PICController
+                    self.injection_device = PICController(needle_size = needle_size, pressure=pressure)
+                
+        # Fallback for unsupported strings
+        raise ValueError(f"Unsupported injection device: {injection_device}")
     
     def position_converter(self, position: tuple[float, float]) -> StageCoord:
         """ 
@@ -58,29 +68,24 @@ class Injection():
         """
         return self.arm._get_arm_position
         
-    def get_injection_device(self, injection_device: str, needle_size: int | None = None, pressure: float | None = None) -> InjectionDevice:
+    def inject(self,  inject_vol_ul: float, injection_time_ms: float | None = None, mixing_cycles: int = 1) -> None:
         """ 
-        Initialize the injection device. 
+        Injection function to control the injection depending on the chosen device: nanopick head or quickpick valve control.
 
         Args:
-            - injection_device(str): possible device names -> 'nanopick', 'quickpick'
-            - needle_size(int): for valves, possible values -> 30, 50, 70 um
-            - pressure(float): for valves, possible values -> [0,6] bar - for the 50 um needle size: 0.2, 0.3, 0.4 bar
+        - injection_volume_ul(float): injected volume in microliters
+        - injection_time_ms(float): injection time in milliseconds (only needed for nanopick head control)
         """
-        if injection_device == "nanopick":
-            from a1_manager.microscope_hardware.nanopick.devices.injection_device import Head  
-            return Head()
-            
-        if injection_device == "quickpick":
-            if needle_size == None or pressure == None:
-                    logger.error("Needle size and pressure value is needed for using the valve system.")
-            else:
-                    from a1_manager.microscope_hardware.nanopick.devices.injection_device import PICController
-                    return PICController(needle_size = needle_size, pressure=pressure, test_mode= True)
+        if self.injection_device == "nanopick":
+                injection_volume = self._ul_to_nl_converter(inject_vol_ul)
+        else:
+                injection_volume = inject_vol_ul
                 
-        # Fallback for unsupported strings
-        raise ValueError(f"Unsupported injection device: {injection_device}")
-    
+        self.arm_to_home()
+        self.injection_device.inject(injection_volume, injection_time_ms)    
+        self.arm_to_liquid()
+        self.arm_to_home()
+
     
 
     
