@@ -25,11 +25,10 @@ if __name__ == "__main__":
         from tifffile import imwrite
         from typing import Any
 
-
         master = Injection(injection_device = 'quickpick', dish_name = "96well", needle_size = 50, pressure=0.3)   
         a1_manager = A1Manager(objective = '20x', lamp_name = 'pE-800', focus_device  = 'PFSOffset') # type: ignore
         
-        run_dir = Path('D:\\Zsuzsi\\inj_pipeline_test')
+        run_dir = Path('D:\\Zsuzsi\\inj_pipeline_test\\20260312_injection_test') # Set the directory where the images will be saved
         well_selection = "all" #['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12']  # Choose the well to stimulate
 
         grids = launch_dish_workflow(

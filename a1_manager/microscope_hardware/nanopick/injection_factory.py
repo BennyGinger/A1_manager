@@ -20,8 +20,10 @@ class Injection():
     
     __slots__ =  'arm', 'injection_device',  'dish_name'
     
-    def __init__(self,  injection_device: str, dish_name: str, needle_size: int | None = None, pressure: float | None = None): # type: ignore
-        self.arm = MarZ(core = Core(), dish_name) # type: ignore    
+    def __init__(self,  injection_device: str, dish_name: str, needle_size: int | None = None, pressure: float | None = None): 
+        
+        core = Core()
+        self.arm = MarZ(core, dish_name) # type: ignore    
         self.dish_name = dish_name
         
         if injection_device == "nanopick":
@@ -35,8 +37,6 @@ class Injection():
                     from a1_manager.microscope_hardware.nanopick.devices.valve import PICController
                     self.injection_device = PICController(needle_size = needle_size, pressure=pressure)
                 
-        # Fallback for unsupported strings
-        raise ValueError(f"Unsupported injection device: {injection_device}")
     
     def position_converter(self, position: tuple[float, float]) -> StageCoord:
         """ 
@@ -82,7 +82,7 @@ class Injection():
                 injection_volume = inject_vol_ul
                 
         self.arm_to_home()
-        self.injection_device.inject(injection_volume, injection_time_ms)    
+        self.injection_device.inject(injection_volume, injection_time_ms, mixing_cycles = mixing_cycles)    
         self.arm_to_liquid()
         self.arm_to_home()
 
