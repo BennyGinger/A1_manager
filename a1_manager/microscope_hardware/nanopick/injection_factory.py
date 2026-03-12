@@ -4,7 +4,6 @@ import logging
 from a1_manager.microscope_hardware.nanopick.devices.marZ import MarZ
 from a1_manager.microscope_hardware.nanopick.devices.injection_device import InjectionDevice
 from a1_manager import StageCoord
-from pycromanager import Core
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -20,9 +19,8 @@ class Injection():
     
     __slots__ =  'arm', 'injection_device',  'dish_name'
     
-    def __init__(self,  injection_device: str, dish_name: str, needle_size: int | None = None, pressure: float | None = None): 
+    def __init__(self,  core, injection_device: str, dish_name: str, needle_size: int | None = None, pressure: float | None = None): 
         
-        core = Core()
         self.arm = MarZ(core, dish_name) # type: ignore    
         self.dish_name = dish_name
         

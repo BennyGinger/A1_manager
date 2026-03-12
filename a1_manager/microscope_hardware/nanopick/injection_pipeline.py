@@ -25,11 +25,11 @@ if __name__ == "__main__":
         from tifffile import imwrite
         from typing import Any
 
-        master = Injection(injection_device = 'quickpick', dish_name = "96well", needle_size = 50, pressure=0.3)   
         a1_manager = A1Manager(objective = '20x', lamp_name = 'pE-800', focus_device  = 'PFSOffset') # type: ignore
+        master = Injection(a1_manager.core, injection_device = 'quickpick', dish_name = "96well", needle_size = 50, pressure=0.3)   
         
-        run_dir = Path('D:\\Zsuzsi\\inj_pipeline_test\\20260312_injection_test') # Set the directory where the images will be saved
-        well_selection = "all" #['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12']  # Choose the well to stimulate
+        run_dir = Path('D:\\Zsuzsi\\20260312_inj_pipeline_test') # Set the directory where the images will be saved
+        well_selection = ['B1','B2','B3','B4','B5','B6','B7','B8','B9','B10','B11','B12','C1', 'C2', 'C3','C4','C5','C6','C7','C8','C9','C10','C11','C12' ]#"all" #['F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12']  # Choose the well to stimulate ['B1','B2','B3','B4','B5','B6','B7','B8','B9','B10','B11','B12'] 
 
         grids = launch_dish_workflow(
         a1_manager=a1_manager,
@@ -59,7 +59,7 @@ if __name__ == "__main__":
              for ind, point in grid.items():
                 a1_manager.set_stage_position(point)
                 img = a1_manager.snap_image()
-                img_name = f"baseline_{well}P{ind}.tif"
+                img_name = f"{well}P{ind}_1.tif"
                 imwrite(run_dir / img_name, img)
                 print(f"Saved image {img_name}")
             
@@ -71,7 +71,7 @@ if __name__ == "__main__":
             
              # Take an image from the center before injection
              img = a1_manager.snap_image()
-             img_name = f"InjectionBefore_{well}.tif"
+             img_name = f"{well}_c1.tif"
              imwrite(run_dir / img_name, img, compression='zlib')
              print(f"Saved image {img_name}")
              
@@ -80,7 +80,7 @@ if __name__ == "__main__":
              
              # Take an image from the center after injection
              img = a1_manager.snap_image()
-             img_name = f"InjectionAfter_{well}.tif"
+             img_name = f"{well}_c2.tif"
              imwrite(run_dir / img_name, img, compression='zlib')
              print(f"Saved image {img_name}")
              
@@ -90,7 +90,7 @@ if __name__ == "__main__":
              for ind, point in grid.items():
                 a1_manager.set_stage_position(point)
                 img = a1_manager.snap_image()
-                img_name = f"stimulated_{well}P{ind}.tif"
+                img_name = f"{well}P{ind}_2.tif"
                 imwrite(run_dir / img_name, img, compression='zlib')
                 print(f"Saved image {img_name}")
                 
