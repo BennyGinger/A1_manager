@@ -2,6 +2,7 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from dataclasses import dataclass, field
 from abc import ABC, abstractmethod
 from typing import Iterable
+import math
 
 from a1_manager.dish_manager.dish_utils.geometry_utils import randomise_fov
 from a1_manager.utils.json_utils import load_config_file
@@ -123,6 +124,24 @@ class WellGridManager(ABC):
             for y in y_iterable:
                 count = self.update_well_grid(well_grid, temp_point, count, x, y)
         return well_grid
+    
+    # def _build_well_grid(self, x_coords: list[float], y_coords: list[float], temp_point: StageCoord) -> dict[int, StageCoord]:
+    #     well_grid: dict[int, StageCoord] = {}
+    #     count: int = 0
+        
+    #     coord_list = []
+    #     for x in x_coords:
+    #         for y in y_coords:
+    #             distance = math.sqrt((x - self.center[0])**2 + (y - self.center[1])**2)
+    #             angle = math.atan2(y - self.center[1], x - self.center[0])
+    #             coord_list.append((x, y, distance, angle))
+        
+    #     coord_list.sort(key=lambda item: (-item[2], item[3]))
+        
+    #     for x, y, _, _ in coord_list:
+    #         count = self.update_well_grid(well_grid, temp_point, count, x, y)
+        
+    #     return well_grid
     
     @abstractmethod
     def update_well_grid(self, well_grid: dict[int, StageCoord], temp_point: StageCoord, count: int, x: float, y: float) -> int:
