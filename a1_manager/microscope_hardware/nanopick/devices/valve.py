@@ -1,6 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 import json
 import logging
+from a1_manager.microscope_hardware.nanopick.devices.injection_protocol import PickDevice
 import serial
 import time
 
@@ -15,7 +16,7 @@ VOL_TIME_MAP = {
     70: {"0.20": (0.0144, 1.5931),},
 }
 
-class PICController():
+class PICController(PickDevice):
     def __init__(self, needle_size: int, pressure: float, test_mode: bool = False, port: str = "COM8"):
         """
         Initialize the PIC Controller connection.
@@ -48,7 +49,7 @@ class PICController():
         self._converter_params = neddle_map[f"{pressure:.2f}"]
         
         # initialize valve 2 time
-        self.set_valve_time(2, VALVE_2_TIME)
+        self._set_valve_time(2, VALVE_2_TIME)
         self.test_mode = test_mode
 
     def _clear_buffers(self):
@@ -112,19 +113,22 @@ class PICController():
         logger.debug(f"Response: '{response}'")
         return response
 
-    def _set_led_ring(self, ring: int = 0, brightness: int | None = None):
+    def set_led_ring(self, ring: int = 0, brightness: int | None = None) -> None:
         """Toggle LED rings."""
         if ring == 0:
             self._send_command('s1-', wait_for_reply=False)
-            return self._send_command('s5-', wait_for_reply=False)
+            self._send_command('s5-', wait_for_reply=False)
+            return
         if ring == 1:
             self._send_command('s1-', wait_for_reply=False)
-            return self._send_command('s5+', wait_for_reply=False)
+            self._send_command('s5+', wait_for_reply=False)
+            return
         if ring == 2:
             self._send_command('s1+', wait_for_reply=False)
-            return self._send_command('s5+', wait_for_reply=False)
+            self._send_command('s5+', wait_for_reply=False)
+            return
 
-    def set_valve_time(self, valve: int, duration: int):
+    def _set_valve_time(self, valve: int, duration: int):
         """
         Set the valve open duration.
         Valve 1 → 'i', Valve 2 → 'j'
@@ -140,11 +144,11 @@ class PICController():
             raise ValueError("Valve must be 1 or 2")
         return self._send_command(cmd)
 
-    def set_delay(self, delay: int):
+    def _set_delay(self, delay: int):
         """Set delay between valve openings with 'k' command."""
         return self._send_command(f'k{delay}')
 
-    def open_valves_sequence(self, mode: str):
+    def _open_valves_sequence(self, mode: str):
         """
         Open valves in sequence with delay.
         'K' = Valve1 then Valve2
@@ -179,9 +183,9 @@ class PICController():
               
         # Inject
         for _ in range(mixing_cycles):
-            self.set_delay(valve_time)
-            self.set_valve_time(1, valve_time)
-            self.open_valves_sequence('K')
+            self._set_delay(valve_time)
+            self._set_valve_time(1, valve_time)
+            self._open_valves_sequence('K')
             time.sleep((valve_time + VALVE_2_TIME)/1000)  # Wait for both valves to finish, in seconds
     
     def _convert_volume_to_time(self, vol_ul: float) -> int:
@@ -194,6 +198,8 @@ class PICController():
         vol_time = (vol_ul - b) / a
         return int(vol_time)
     
+    def fill(self, fill_vol_nl: float, fill_time_ms: float | None = 100) -> None:
+        logger.warning("Filling is not supported for PIC controller, skipping.")
 
 # Example usage
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from pathlib import Path
 
-from a1_manager.utils.utility_classes import StageCoord
+from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
 from a1_manager.a1manager import A1Manager
 from a1_manager.dish_manager.main_dish_manager import DishManager
 from a1_manager.autofocus.af_utils import QuitAutofocus
@@ -20,7 +20,7 @@ def launch_dish_workflow(a1_manager: A1Manager,
                          overwrite_autofocus: bool = False, 
                          af_savedir: Path | None = None,
                          n_corners_in: int = 4
-                         ) -> dict[str, dict[int, StageCoord]]:
+                         ) -> tuple[dict[str, dict[int, StageCoord]], dict[str, WellCircleCoord | WellSquareCoord]]:
     """
     Launch the dish workflow to calibrate the dish, perform autofocus, and create the well grids.
     
@@ -39,7 +39,8 @@ def launch_dish_workflow(a1_manager: A1Manager,
         n_corners_in (int, optional): Number of corners of each fov that should be contained within a round well at the edges. Defaults to 4.
     
     Returns:
-        dict[str, dict[int, StageCoord]]: Dictionary where each well is a dictionary containing the coordinates of all the field of views.
+        dish_grid (dict[str, dict[int, StageCoord]]): The generated dish grid containing the coordinates of the field of views for each well.
+        dish_calibration (dict[str, WellCircleCoord | WellSquareCoord]): The calibration measurements for the dish.
     """
     
     # Initialize the dish manager
@@ -56,4 +57,5 @@ def launch_dish_workflow(a1_manager: A1Manager,
         raise
     
     # Get the grids, n_corners_in is optional and can be passed as a keyword argument
-    return dish_manager.create_well_grids(dmd_window_only, numb_field_view, well_selection, overlap_percent, n_corners_in)
+    dish_grid = dish_manager.create_well_grids(dmd_window_only, numb_field_view, well_selection, overlap_percent, n_corners_in)
+    return dish_grid, dish_manager.dish_calibration

@@ -1,7 +1,7 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 import requests
 from dataclasses import dataclass   
-from .injection_device import InjectionDevice
+from .injection_protocol import PickDevice
 import logging
 
 
@@ -18,7 +18,7 @@ MIN_VOLUME = 10  # in nanoliters
 
 
 @dataclass(slots=True)
-class Head(InjectionDevice):
+class Head(PickDevice):
     """
     Class that controls the API head.
     """
