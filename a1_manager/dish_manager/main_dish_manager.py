@@ -96,7 +96,17 @@ class DishManager:
         logger.info(f"{overlap_percent=} and {overlap_deci=}")
         dish_grids: dict[str, dict[int, StageCoord]] = {}
         for well, well_coord in selected_wells.items():
-            dish_grids[well] = well_grid_manager.create_well_grid(well_coord, numb_field_view, overlap_deci, n_corners_in)
+            grid = well_grid_manager.create_well_grid(well_coord, numb_field_view, overlap_deci, n_corners_in)
+            
+            # Add the center of the well to the grid, if present
+            center = well_coord.center
+            if center is not None:
+                pfs = well_coord.PFSOffset
+                zdrive = well_coord.ZDrive
+                coord = StageCoord(center, pfs, zdrive)
+                coord_id = max(grid.keys()) + 1
+                grid[coord_id] = coord
+            dish_grids[well] = grid
         
         # Save the dish grids
         dish_grids_name = f"grid_{self.dish_name}.json"
