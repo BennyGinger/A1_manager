@@ -12,7 +12,7 @@ from pycromanager import Core
 # Set up logging
 logger = logging.getLogger(__name__)
 
-DISTANCE_TO_LIQUID = {'96well': 10_800.0}   # Set to be ~ 3000 um above the bottom of the well in 100 um volume
+DISTANCE_TO_LIQUID = {'96well': 16_000.0}   # Set to be ~ 3000 um above the bottom of the well in 100 um volume
 # DISTANCE_TO_AIR = {'96well': 9_000.0}   # Set to be ~ 2000 um above the plate 
 
 @dataclass(slots=True)
@@ -95,5 +95,7 @@ if __name__ == "__main__":
     arm = MarZ(core=Core(), dish='96well') # type: ignore
 
     print("Current head position:", arm._get_arm_position)
+    # arm.to_liquid()
+    # print("Moved to liquid position:", arm._get_arm_position)
     sleep(1)
     
