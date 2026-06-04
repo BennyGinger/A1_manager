@@ -186,7 +186,7 @@ class PICController(PickDevice):
             self._set_delay(valve_time)
             self._set_valve_time(1, valve_time)
             self._open_valves_sequence('K')
-            time.sleep((valve_time + VALVE_2_TIME)/1000)  # Wait for both valves to finish, in seconds
+            #time.sleep((valve_time + VALVE_2_TIME)/1000)  # Wait for both valves to finish, in seconds
     
     def _convert_volume_to_time(self, vol_ul: float) -> int:
         """

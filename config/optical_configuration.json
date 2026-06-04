@@ -4,7 +4,7 @@
  "Intensity": "0-100%",
 
 
- "GFP": {"fTurret": 3, "fWheel": 6, "led": "470", "intensity": 5.0, "exposure_ms": 200.0},  
+ "GFP": {"fTurret": 3, "fWheel": 5, "led": "470", "intensity": 50.0, "exposure_ms": 200.0},  
 
  "RFP": {"fTurret": 3, "fWheel": 6, "led": "550", "intensity": 40.0, "exposure_ms": 200.0},
 
