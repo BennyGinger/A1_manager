@@ -17,7 +17,7 @@ VOL_TIME_MAP = {
 }
 
 class PICController(PickDevice):
-    def __init__(self, needle_size: int, pressure: float, test_mode: bool = False, port: str = "COM7"):
+    def __init__(self, needle_size: int, pressure: float, test_mode: bool = False, port: str = "COM8"):
         """
         Initialize the PIC Controller connection.
         :param needle_size: Needle size in microns (e.g., 30)
