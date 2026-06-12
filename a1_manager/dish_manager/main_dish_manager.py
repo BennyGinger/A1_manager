@@ -98,11 +98,9 @@ class DishManager:
         if overlap_percent is not None:
             overlap_deci = overlap_percent / 100 # Convert from % to decimal
         
-        selected_wells = {}
-        
         # Filter wells based on well_selection
         selected_wells_list = parse_wells(well_selection)
-        selected_wells = {well: self.dish_calibration[well] for well in selected_wells_list if well in self.dish_calibration} # Convert it to dictionary again after filtering
+        selected_wells = {well: self.dish_calibration[well] for well in selected_wells_list if well in self.dish_calibration} 
         
         # Initialize the well grid manager
         well_grid_manager = WellGridManager.load_subclass_instance(self.dish_name, dmd_window_only, self.a1_manager)

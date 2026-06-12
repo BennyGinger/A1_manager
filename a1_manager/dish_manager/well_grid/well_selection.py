@@ -1,16 +1,14 @@
 import re
 
-from a1_manager.utils.utility_classes import WellCircleCoord, WellSquareCoord
-
 ROWS = "ABCDEFGH"
 COLS = range(1, 13)
 
 
-def well_name(row, col):
+def well_name(row: str, col: int) -> str:
     return f"{row}{col}"
 
 
-def expand_part(part):
+def expand_part(part: str) -> list[str]:
     part = part.strip().upper()
 
     # Allow ":" as range too
