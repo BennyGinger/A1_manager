@@ -1,0 +1,4994 @@
+{
+    "A1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            50050.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            45550.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            41050.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            36550.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            32050.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            27550.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            23050.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            18550.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            14050.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            9550.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            5050.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            550.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "A24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            -35385.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            -32885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            50050.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            45550.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            41050.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            36550.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            32050.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            27550.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            23050.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            18550.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            14050.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            9550.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            5050.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            550.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "B24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            -30885.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            -28385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            50050.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            45550.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            41050.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            36550.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            32050.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            27550.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            23050.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            18550.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            14050.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            9550.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            5050.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            550.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "C24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            -26385.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            -23885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            50050.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            45550.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            41050.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            36550.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            32050.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            27550.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            23050.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            18550.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            14050.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            9550.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            5050.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            550.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "D24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            -21885.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            -19385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            50050.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            45550.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            41050.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            36550.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            32050.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            27550.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            23050.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            18550.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            14050.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            9550.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            5050.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            550.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "E24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            -17385.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            -14885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            50050.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            45550.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            41050.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            36550.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            32050.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            27550.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            23050.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            18550.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            14050.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            9550.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            5050.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            550.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "F24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            -12885.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            -10385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            50050.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            45550.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            41050.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            36550.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            32050.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            27550.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            23050.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            18550.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            14050.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            9550.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            5050.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            550.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "G24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            -8385.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            -5885.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            50050.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            45550.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            41050.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            36550.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            32050.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            27550.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            23050.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            18550.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            14050.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            9550.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            5050.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            550.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "H24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            -3885.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            -1385.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            615.0
+        ],
+        "bottom_right": [
+            50050.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            615.0
+        ],
+        "bottom_right": [
+            45550.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            615.0
+        ],
+        "bottom_right": [
+            41050.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            615.0
+        ],
+        "bottom_right": [
+            36550.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            615.0
+        ],
+        "bottom_right": [
+            32050.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            615.0
+        ],
+        "bottom_right": [
+            27550.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            615.0
+        ],
+        "bottom_right": [
+            23050.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            615.0
+        ],
+        "bottom_right": [
+            18550.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            615.0
+        ],
+        "bottom_right": [
+            14050.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            615.0
+        ],
+        "bottom_right": [
+            9550.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            615.0
+        ],
+        "bottom_right": [
+            5050.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            615.0
+        ],
+        "bottom_right": [
+            550.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            615.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            615.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            615.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            615.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            615.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            615.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            615.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            615.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            615.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            615.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            615.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "I24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            615.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            3115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            5115.0
+        ],
+        "bottom_right": [
+            50050.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            5115.0
+        ],
+        "bottom_right": [
+            45550.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            5115.0
+        ],
+        "bottom_right": [
+            41050.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            5115.0
+        ],
+        "bottom_right": [
+            36550.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            5115.0
+        ],
+        "bottom_right": [
+            32050.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            5115.0
+        ],
+        "bottom_right": [
+            27550.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            5115.0
+        ],
+        "bottom_right": [
+            23050.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            5115.0
+        ],
+        "bottom_right": [
+            18550.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            5115.0
+        ],
+        "bottom_right": [
+            14050.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            5115.0
+        ],
+        "bottom_right": [
+            9550.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            5115.0
+        ],
+        "bottom_right": [
+            5050.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            5115.0
+        ],
+        "bottom_right": [
+            550.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "J24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            5115.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            7615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            9615.0
+        ],
+        "bottom_right": [
+            50050.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            9615.0
+        ],
+        "bottom_right": [
+            45550.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            9615.0
+        ],
+        "bottom_right": [
+            41050.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            9615.0
+        ],
+        "bottom_right": [
+            36550.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            9615.0
+        ],
+        "bottom_right": [
+            32050.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            9615.0
+        ],
+        "bottom_right": [
+            27550.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            9615.0
+        ],
+        "bottom_right": [
+            23050.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            9615.0
+        ],
+        "bottom_right": [
+            18550.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            9615.0
+        ],
+        "bottom_right": [
+            14050.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            9615.0
+        ],
+        "bottom_right": [
+            9550.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            9615.0
+        ],
+        "bottom_right": [
+            5050.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            9615.0
+        ],
+        "bottom_right": [
+            550.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "K24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            9615.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            12115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            14115.0
+        ],
+        "bottom_right": [
+            50050.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            14115.0
+        ],
+        "bottom_right": [
+            45550.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            14115.0
+        ],
+        "bottom_right": [
+            41050.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            14115.0
+        ],
+        "bottom_right": [
+            36550.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            14115.0
+        ],
+        "bottom_right": [
+            32050.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            14115.0
+        ],
+        "bottom_right": [
+            27550.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            14115.0
+        ],
+        "bottom_right": [
+            23050.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            14115.0
+        ],
+        "bottom_right": [
+            18550.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            14115.0
+        ],
+        "bottom_right": [
+            14050.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            14115.0
+        ],
+        "bottom_right": [
+            9550.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            14115.0
+        ],
+        "bottom_right": [
+            5050.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            14115.0
+        ],
+        "bottom_right": [
+            550.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "L24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            14115.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            16615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            18615.0
+        ],
+        "bottom_right": [
+            50050.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            18615.0
+        ],
+        "bottom_right": [
+            45550.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            18615.0
+        ],
+        "bottom_right": [
+            41050.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            18615.0
+        ],
+        "bottom_right": [
+            36550.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            18615.0
+        ],
+        "bottom_right": [
+            32050.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            18615.0
+        ],
+        "bottom_right": [
+            27550.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            18615.0
+        ],
+        "bottom_right": [
+            23050.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            18615.0
+        ],
+        "bottom_right": [
+            18550.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            18615.0
+        ],
+        "bottom_right": [
+            14050.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            18615.0
+        ],
+        "bottom_right": [
+            9550.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            18615.0
+        ],
+        "bottom_right": [
+            5050.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            18615.0
+        ],
+        "bottom_right": [
+            550.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "M24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            18615.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            21115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            23115.0
+        ],
+        "bottom_right": [
+            50050.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            23115.0
+        ],
+        "bottom_right": [
+            45550.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            23115.0
+        ],
+        "bottom_right": [
+            41050.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            23115.0
+        ],
+        "bottom_right": [
+            36550.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            23115.0
+        ],
+        "bottom_right": [
+            32050.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            23115.0
+        ],
+        "bottom_right": [
+            27550.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            23115.0
+        ],
+        "bottom_right": [
+            23050.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            23115.0
+        ],
+        "bottom_right": [
+            18550.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            23115.0
+        ],
+        "bottom_right": [
+            14050.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            23115.0
+        ],
+        "bottom_right": [
+            9550.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            23115.0
+        ],
+        "bottom_right": [
+            5050.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            23115.0
+        ],
+        "bottom_right": [
+            550.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "N24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            23115.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            25615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            27615.0
+        ],
+        "bottom_right": [
+            50050.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            27615.0
+        ],
+        "bottom_right": [
+            45550.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            27615.0
+        ],
+        "bottom_right": [
+            41050.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            27615.0
+        ],
+        "bottom_right": [
+            36550.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            27615.0
+        ],
+        "bottom_right": [
+            32050.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            27615.0
+        ],
+        "bottom_right": [
+            27550.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            27615.0
+        ],
+        "bottom_right": [
+            23050.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            27615.0
+        ],
+        "bottom_right": [
+            18550.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            27615.0
+        ],
+        "bottom_right": [
+            14050.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            27615.0
+        ],
+        "bottom_right": [
+            9550.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            27615.0
+        ],
+        "bottom_right": [
+            5050.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            27615.0
+        ],
+        "bottom_right": [
+            550.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "O24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            27615.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            30115.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P1": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            52550.5,
+            32115.0
+        ],
+        "bottom_right": [
+            50050.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P2": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            48050.5,
+            32115.0
+        ],
+        "bottom_right": [
+            45550.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P3": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            43550.5,
+            32115.0
+        ],
+        "bottom_right": [
+            41050.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P4": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            39050.5,
+            32115.0
+        ],
+        "bottom_right": [
+            36550.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P5": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            34550.5,
+            32115.0
+        ],
+        "bottom_right": [
+            32050.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P6": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            30050.5,
+            32115.0
+        ],
+        "bottom_right": [
+            27550.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P7": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            25550.5,
+            32115.0
+        ],
+        "bottom_right": [
+            23050.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P8": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            21050.5,
+            32115.0
+        ],
+        "bottom_right": [
+            18550.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P9": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            16550.5,
+            32115.0
+        ],
+        "bottom_right": [
+            14050.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P10": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            12050.5,
+            32115.0
+        ],
+        "bottom_right": [
+            9550.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P11": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            7550.5,
+            32115.0
+        ],
+        "bottom_right": [
+            5050.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P12": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            3050.5,
+            32115.0
+        ],
+        "bottom_right": [
+            550.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P13": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -1449.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -3949.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P14": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -5949.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -8449.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P15": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -10449.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -12949.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P16": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -14949.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -17449.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P17": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -19449.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -21949.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P18": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -23949.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -26449.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P19": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -28449.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -30949.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P20": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -32949.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -35449.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P21": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -37449.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -39949.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P22": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -41949.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -44449.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P23": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -46449.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -48949.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    },
+    "P24": {
+        "ZDrive": null,
+        "PFSOffset": null,
+        "top_left": [
+            -50949.5,
+            32115.0
+        ],
+        "bottom_right": [
+            -53449.5,
+            34615.0
+        ],
+        "__class__": "WellSquareCoord"
+    }
+}
