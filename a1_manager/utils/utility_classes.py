@@ -32,6 +32,9 @@ class StageCoord:
     def __getitem__(self, key: str)-> tuple[float, float] | float:
         return getattr(self, key)
 
+    def __setitem__(self, key: str, value: Any | None) -> None:
+        setattr(self, key, value)
+    
     def get(self, key: str, default=None) -> tuple[float, float] | float | None:
         """Mimic dict.get(): Return the value for key if key is in the object, else default."""
         return getattr(self, key, default)

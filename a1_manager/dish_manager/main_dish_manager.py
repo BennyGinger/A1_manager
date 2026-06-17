@@ -4,6 +4,7 @@ from pathlib import Path
 import logging
 
 from a1_manager.autofocus_main import run_autofocus
+from a1_manager.dish_manager.well_grid.well_selection import parse_wells
 from a1_manager.utils.json_utils import save_config_file
 from a1_manager.dish_manager.well_grid_manager import WellGridManager
 from a1_manager.a1manager import A1Manager
@@ -67,6 +68,25 @@ class DishManager:
         """
         return run_autofocus(method, self.a1_manager, self.calib_path, well_selection, overwrite, af_savedir)
     
+    
+    def _well_selection_converter(self, well_selection: str | list[str] | None) -> list[str]:
+        """
+        Convert the well selection input into a list of well names.
+        """
+        if well_selection is None:
+            return list(self.dish_calibration.keys())
+        
+        if isinstance(well_selection, str):
+            if well_selection.lower() == 'all':
+                return list(self.dish_calibration.keys())
+            else:
+                return [well_selection]
+        elif isinstance(well_selection, list):
+            return well_selection
+        else:
+            raise ValueError(f"Invalid well selection: {well_selection}. Must be a string or a list of strings.")
+    
+    
     def create_well_grids(self, dmd_window_only: bool, numb_field_view: int | None = None, well_selection: str | list[str] | None = None, overlap_percent: int | None = None, n_corners_in: int = 4) -> dict[str, dict[int, StageCoord]]:
         """
         Create a well grid for a dish, where each well is a dictionary containing the coordinates of all the field of views.
@@ -79,15 +99,8 @@ class DishManager:
             overlap_deci = overlap_percent / 100 # Convert from % to decimal
         
         # Filter wells based on well_selection
-        if well_selection is None:
-            selected_wells = self.dish_calibration
-        elif isinstance(well_selection, str):
-            if well_selection.lower() == 'all':
-                selected_wells = self.dish_calibration
-            else:
-                selected_wells = {well_selection: self.dish_calibration[well_selection]}
-        else:
-            selected_wells = {well: self.dish_calibration[well] for well in well_selection if well in self.dish_calibration}
+        selected_wells_list = parse_wells(well_selection)
+        selected_wells = {well: self.dish_calibration[well] for well in selected_wells_list if well in self.dish_calibration} 
         
         # Initialize the well grid manager
         well_grid_manager = WellGridManager.load_subclass_instance(self.dish_name, dmd_window_only, self.a1_manager)
