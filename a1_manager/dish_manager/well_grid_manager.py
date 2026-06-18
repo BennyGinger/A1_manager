@@ -40,11 +40,11 @@ class WellGridManager(ABC):
         if dish_name == '35mm' or dish_name == '96well':
             from a1_manager.dish_manager.well_grid.well_circle import WellCircleGrid
             grid_instance = WellCircleGrid()
-        elif dish_name == 'ibidi-8well':
+        elif dish_name == 'ibidi-8well' or dish_name == '384well':
             from a1_manager.dish_manager.well_grid.well_square import WellSquareGrid
             grid_instance = WellSquareGrid()
         else:
-            available_dishes = ['35mm', '96well', 'ibidi-8well']
+            available_dishes = ['35mm', '96well', 'ibidi-8well', '384well']
             raise ValueError(f"Unknown dish name: {dish_name}. Available dishes: {', '.join(available_dishes)}")
         
         # Instantiate and return the appropriate subclass

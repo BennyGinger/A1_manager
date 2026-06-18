@@ -46,8 +46,11 @@ class DishCalibManager(ABC):
         elif dish_name == 'ibidi-8well':
             from a1_manager.dish_manager.dish_calibration.dish_ibidi import DishIbidi
             return DishIbidi(calib_path)
+        elif dish_name == '384well':
+            from a1_manager.dish_manager.dish_calibration.dish_384well import Dish384Well
+            return Dish384well(calib_path)
         else:
-            available_dishes = ['35mm', '96well', 'ibidi-8well']
+            available_dishes = ['35mm', '96well', 'ibidi-8well', '384well']
             raise ValueError(f"Unknown dish name: {dish_name}. Available dishes: {', '.join(available_dishes)}")
     
     def unpack_settings(self, settings: dict) -> None:

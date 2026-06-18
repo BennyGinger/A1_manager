@@ -27,7 +27,7 @@ def launch_dish_workflow(a1_manager: A1Manager,
     Args:
         a1_manager (A1Manager): A1Manager object.
         run_dir (Path): Directory to save the results.
-        dish_name (str): Name of the dish. Choose from '96well', '35mm', 'ibidi-8well'
+        dish_name (str): Name of the dish. Choose from '96well', '35mm', 'ibidi-8well', '384well'.
         well_selection (str | list[str]): Well selection for measurement.
         af_method (str): Autofocus method to use. Choose from 'sq_grad', 'OughtaFocus', 'Manual'.
         dmd_window_only (bool): If True, only the DMD window will be used for measurement.

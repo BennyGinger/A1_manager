@@ -91,6 +91,10 @@ if __name__ == "__main__":
     # Suppress pycromanager version mismatch warning
     warnings.filterwarnings("ignore", message=".*Java ZMQ server and Python client.*")
     
+    from a1_manager import A1Manager, StageCoord
+    a1_manager = A1Manager(objective='10x', lamp_name='pE-800')
+    
+    a1_manager.set_stage_position(StageCoord(xy =  [49205.4,-32139.4]))
     # Example usage
     arm = MarZ(core=Core(), dish='96well') # type: ignore
 
