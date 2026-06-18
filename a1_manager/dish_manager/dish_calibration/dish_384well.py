@@ -181,7 +181,7 @@ if __name__ == "__main__":
     
     # import time
     
-    a1_manager.set_stage_position(StageCoord(xy=[calibration_data["O23"].center[0], calibration_data["O23"].center[1]]))  
+    a1_manager.set_stage_position(StageCoord(xy=[calibration_data["A1"].center[0], calibration_data["A1"].center[1]]))  
     
     # arm.to_home()  # Move the arm to the home position
     # print(arm._get_arm_position)  # Print the current arm position
