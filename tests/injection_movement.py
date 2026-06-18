@@ -876,7 +876,7 @@ if __name__ == "__main__":
     from a1_manager.microscope_hardware.nanopick.devices.marZ import MarZ
     from pycromanager import Core
     controller = PICController(needle_size=50, pressure=0.3, port="COM8")
-    a1_manager = A1Manager(objective = '20x', lamp_name = 'pE-800', focus_device  = 'PFSOffset')
+    # a1_manager = A1Manager(objective = '20x', lamp_name = 'pE-800', focus_device  = 'PFSOffset')
     run_dir = Path('D:\\Zsuzsi\\20260618_automated_injection_384well_plate')
     arm = MarZ(core=Core(), dish='384well') # type: ignore
     # well = 'A1'
@@ -941,15 +941,23 @@ if __name__ == "__main__":
     
     # Continuous - circling during injection
     #continuous(well=well, x0=x0, y0=y0, run_dir=run_dir)
-    well_list = ['A22', 'B22', 'C22', 'D22', 'E22', 'F22', 'G22', 'H22', 'I22', 'J22', 'K22', 'L22', 'M22', 'N22', 'O22', 'P22']
-    for well in well_list:
-        x0 = calibration_data[well].center[0]
-        y0 = calibration_data[well].center[1]
-        a1_manager.set_stage_position(StageCoord(xy=[x0, y0]))  
-        integrated_imaging_384(well=well, x0=x0, y0=y0, run_dir= run_dir, pfs_offset=pfs_offset)
+    # well_list = ['A22', 'B22', 'C22', 'D22', 'E22', 'F22', 'G22', 'H22', 'I22', 'J22', 'K22', 'L22', 'M22', 'N22', 'O22', 'P22']
+    # for well in well_list:
+    #     x0 = calibration_data[well].center[0]
+    #     y0 = calibration_data[well].center[1]
+    #     a1_manager.set_stage_position(StageCoord(xy=[x0, y0]))  
+    #     integrated_imaging_384(well=well, x0=x0, y0=y0, run_dir= run_dir, pfs_offset=pfs_offset)
     
     
+    arm.to_liquid()
+        
+    controller.inject(inject_vol_ul=10, mixing_cycles=1)
+        
+    arm.to_home()
+    time.sleep(2) # wait a bit for the stage to move, adjust as needed
     
+    arm.to_liquid()
+    arm.to_home()
     
     
     
