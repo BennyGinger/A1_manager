@@ -12,8 +12,8 @@ from pycromanager import Core
 # Set up logging
 logger = logging.getLogger(__name__)
 
-DISTANCE_TO_LIQUID = {'96well': 16_000.0, '384well' : 16000}   # Set to be ~ 3000 um above the bottom of the well in 100 um volume
-# DISTANCE_TO_AIR = {'96well': 9_000.0}   # Set to be ~ 2000 um above the plate 
+DISTANCE_TO_LIQUID = {'96well': 16_000.0, '384well' : 16_000}   # Set to be ~ 3000 um above the bottom of the well in 100 um volume
+DISTANCE_FOR_CALIB = {'96well': 18_500.0}   # Set to be ~ 1300 um above the plate 
 
 @dataclass(slots=True)
 class MarZ():
@@ -62,6 +62,12 @@ class MarZ():
         """
         return self._set_arm_position(self._ref_position - DISTANCE_TO_LIQUID[self.dish])
 
+    def to_calibration(self) -> None:
+        """
+        Move to the position for calibration safely above the plate.
+        """
+        return self._set_arm_position(self._ref_position - DISTANCE_FOR_CALIB[self.dish])
+    
     def to_home(self) -> None:
         """
         Move to the safe height above the plate.
@@ -91,17 +97,19 @@ if __name__ == "__main__":
     # Suppress pycromanager version mismatch warning
     warnings.filterwarnings("ignore", message=".*Java ZMQ server and Python client.*")
     
-    from a1_manager import A1Manager, StageCoord
-    a1_manager = A1Manager(objective='10x', lamp_name='pE-800')
+    # from a1_manager import A1Manager, StageCoord
+    # a1_manager = A1Manager(objective='10x', lamp_name='pE-800')
     
-    a1_manager.set_stage_position(StageCoord(xy =  [49205.4,-32139.4]))
+    # a1_manager.set_stage_position(StageCoord(xy =  [49205.4,-32139.4]))
     # Example usage
     arm = MarZ(core=Core(), dish='96well') # type: ignore
 
     print("Current head position:", arm._get_arm_position)
     arm.to_liquid()
     # print("Moved to liquid position:", arm._get_arm_position)
-    sleep(1)
-    
+    # sleep(10)
+    # arm.to_calibration()
+    # sleep(10)
+    arm.to_home()
     # you need to use the '10x' objective for calibration
     

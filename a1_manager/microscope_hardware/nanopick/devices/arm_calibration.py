@@ -196,59 +196,60 @@ def run_alignment_gui(core: Core, ring_radius: int = 80):
 # ==============================================================================
 # Your MarZ Hardware Class (with @property syntax fix applied)
 # ==============================================================================
-@dataclass(slots=True)
-class MarZ():
-    core: Core
-    dish: str
-    _ref_position: float = field(init=False)
+# @dataclass(slots=True)
+# class MarZ():
+#     core: Core
+#     dish: str
+#     _ref_position: float = field(init=False)
 
-    def __post_init__(self):
-        self.core.set_property('ZAxis', 'SpeedZ [mm/s]', 18) # type: ignore
-        self.core.set_property('ZAxis', 'Acceleration Z [m/s^2]', 0.18) # type: ignore
-        self._init_ref_position()
-        logger.debug(f"Arm initialized at reference position: {self._ref_position}")
+#     def __post_init__(self):
+#         self.core.set_property('ZAxis', 'SpeedZ [mm/s]', 18) # type: ignore
+#         self.core.set_property('ZAxis', 'Acceleration Z [m/s^2]', 0.18) # type: ignore
+#         self._init_ref_position()
+#         logger.debug(f"Arm initialized at reference position: {self._ref_position}")
     
-    def _init_ref_position(self) -> None:
-        self._set_arm_position(100000)
-        self.core.wait_for_device('ZAxis') # type: ignore
-        self._set_arm_position(round(self._get_arm_position - 5000))
-        self.core.wait_for_device('ZAxis') # type: ignore
-        self._set_arm_position(100000)
-        self.core.wait_for_device('ZAxis') # type: ignore
-        self._set_arm_position(round(self._get_arm_position - 500))
-        self._ref_position = self._get_arm_position
+#     def _init_ref_position(self) -> None:
+#         self._set_arm_position(100000)
+#         self.core.wait_for_device('ZAxis') # type: ignore
+#         self._set_arm_position(round(self._get_arm_position - 5000))
+#         self.core.wait_for_device('ZAxis') # type: ignore
+#         self._set_arm_position(100000)
+#         self.core.wait_for_device('ZAxis') # type: ignore
+#         self._set_arm_position(round(self._get_arm_position - 500))
+#         self._ref_position = self._get_arm_position
     
-    @property
-    def _get_arm_position(self) -> float:
-        return self.core.get_position('ZAxis') # type: ignore
+#     @property
+#     def _get_arm_position(self) -> float:
+#         return self.core.get_position('ZAxis') # type: ignore
     
-    def to_liquid(self) -> None:
-        return self._set_arm_position(self._ref_position - DISTANCE_TO_LIQUID[self.dish])
+#     def to_liquid(self) -> None:
+#         return self._set_arm_position(self._ref_position - DISTANCE_TO_LIQUID[self.dish])
 
-    def to_home(self) -> None:
-        return self._set_arm_position(self._ref_position)
+#     def to_home(self) -> None:
+#         return self._set_arm_position(self._ref_position)
     
-    def _set_arm_position(self, position: float) -> None:
-        self.core.set_position('ZAxis', position) # type: ignore
-        self.core.wait_for_device('ZAxis') # type: ignore
+#     def _set_arm_position(self, position: float) -> None:
+#         self.core.set_position('ZAxis', position) # type: ignore
+#         self.core.wait_for_device('ZAxis') # type: ignore
     
-    def safe_check(self) -> None:
-        # Note: Fixed property access here to cleanly compare floats
-        if self._get_arm_position < self._ref_position:
-            logger.warning("The arm is too low, it will be sent home!")
-            self._set_arm_position(self._ref_position)
+#     def safe_check(self) -> None:
+#         # Note: Fixed property access here to cleanly compare floats
+#         if self._get_arm_position < self._ref_position:
+#             logger.warning("The arm is too low, it will be sent home!")
+#             self._set_arm_position(self._ref_position)
             
 if __name__ == "__main__":
-    
+    from a1_manager.microscope_hardware.nanopick.devices.marZ import MarZ
     from a1_manager import A1Manager
     a1_manager = A1Manager(objective='10x', lamp_name='pE-800')
+    # a1_manager.oc_settings('bf')
     
     core_instance = Core()
     arm = MarZ(core=core_instance, dish='96well') # type: ignore
 
     print("Current head position:", arm._get_arm_position)
     print("Moving arm down to liquid position...")
-    arm.to_liquid()
+    arm.to_calibration()
     
     print("\n--- LAUNCHING ADVANCED ALIGNMENT TARGET PANEL ---")
     print("1. Use the slider at the bottom to snap the red circle size to your light ring (if needed).")

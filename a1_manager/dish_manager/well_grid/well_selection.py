@@ -1,37 +1,59 @@
 import re
 
-ROWS = "ABCDEFGH"
-COLS = range(1, 13)
-
-
 def well_name(row: str, col: int) -> str:
     return f"{row}{col}"
 
 
-def expand_part(part: str) -> list[str]:
+def expand_part(part: str, dish_name: str) -> list[str]:
     part = part.strip().upper()
 
     # Allow ":" as range too
     part = part.replace(":", "-")
+    if dish_name == "384well":
+        ROWS = "ABCDEFGHIJKLMNOP"
+        COLS = range(1, 25)
+    else:
+        ROWS = "ABCDEFGH"
+        COLS = range(1, 13)
 
-    # Single well: A1
-    if re.fullmatch(r"[A-H](?:[1-9]|1[0-2])", part):
-        return [part]
+    if dish_name == "384well":
+        # Single well: A1
+        if re.fullmatch(r"[A-P](?:[1-9]|1[0-9]|2[0-4])", part):
+            return [part]
 
-    # Single row: A
-    if re.fullmatch(r"[A-H]", part):
-        return [well_name(part, c) for c in COLS]
+        # Single row: A
+        if re.fullmatch(r"[A-P]", part):
+            return [well_name(part, c) for c in COLS]
 
-    # Single column: 1 or 12
-    if re.fullmatch(r"(?:[1-9]|1[0-2])", part):
-        col = int(part)
-        return [well_name(r, col) for r in ROWS]
+        # Single column: 1 or 12
+        if re.fullmatch(r"(?:[1-9]|1[0-9]|2[0-4])", part):
+            col = int(part)
+            return [well_name(r, col) for r in ROWS]
 
-    # Range
-    match = re.fullmatch(
-        r"([A-H]?)([1-9]|1[0-2])?-([A-H]?)([1-9]|1[0-2])?",
-        part
-    )
+        # Range
+        match = re.fullmatch(
+            r"([A-P]?)([1-9]|1[0-9]|2[0-4])?-([A-P]?)([1-9]|1[0-9]|2[0-4])?",
+            part
+        )
+    else:
+        # Single well: A1
+        if re.fullmatch(r"[A-H](?:[1-9]|1[0-2])", part):
+            return [part]
+
+        # Single row: A
+        if re.fullmatch(r"[A-H]", part):
+            return [well_name(part, c) for c in range(1, 13)]
+
+        # Single column: 1 or 12
+        if re.fullmatch(r"(?:[1-9]|1[0-2])", part):
+            col = int(part)
+            return [well_name(r, col) for r in "ABCDEFGH"]
+
+        # Range
+        match = re.fullmatch(
+            r"([A-H]?)([1-9]|1[0-2])?-([A-H]?)([1-9]|1[0-2])?",
+            part
+        )
 
     if not match:
         raise ValueError(f"Invalid well expression: {part}")
@@ -88,7 +110,7 @@ def expand_part(part: str) -> list[str]:
     raise ValueError(f"Invalid range: {part}")
 
 
-def parse_wells(user_input: str | list[str] | None) -> list[str]:
+def parse_wells(user_input: str | list[str] | None, dish_name: str) -> list[str]:
     """
     Parse a user input string specifying wells into a list of well names.
     The input can include:
@@ -101,6 +123,13 @@ def parse_wells(user_input: str | list[str] | None) -> list[str]:
     Note: "A1-C5" will create a rectangle of wells from A1 to C5, including all wells in between.
     """
     
+    if dish_name == "384well":
+        ROWS = "ABCDEFGHIJKLMNOP"
+        COLS = range(1, 25)
+    else:
+        ROWS = "ABCDEFGH"
+        COLS = range(1, 13)
+    
     if user_input is None:
         return [well_name(r, c) for r in ROWS for c in COLS]
     else:
@@ -110,7 +139,7 @@ def parse_wells(user_input: str | list[str] | None) -> list[str]:
             for item in user_input:
                 if not isinstance(item, str):
                     raise ValueError(f"Invalid item in well selection list: {item}. All items must be strings.")
-                wells.extend(parse_wells(item))
+                wells.extend(parse_wells(item, dish_name))
                 
             return list(dict.fromkeys(wells))
         
@@ -120,11 +149,11 @@ def parse_wells(user_input: str | list[str] | None) -> list[str]:
         
             wells = []
             for part in user_input.split(","):
-                wells.extend(expand_part(part))
+                wells.extend(expand_part(part, dish_name))
 
             # Remove duplicates while preserving order
             return list(dict.fromkeys(wells))
         
 if __name__ == "__main__":
     # Example usage
-    print(parse_wells("A1, A3, B, 1-2, A1-C5"))
+    print(parse_wells("J18-N24", "384well"))
