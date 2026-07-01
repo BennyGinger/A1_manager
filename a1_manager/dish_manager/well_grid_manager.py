@@ -149,7 +149,7 @@ class WellGridManager(ABC):
         pass
     
     #################### Main method ####################
-    def create_well_grid(self, well_measurements: WellBaseCoord, numb_field_view: int | None, overlap: float | None = None, n_corners_in: int=4) -> dict[int, StageCoord]:
+    def create_well_grid(self, well_measurements: WellBaseCoord, dish_name:str, numb_field_view: int | None, overlap: float | None = None, n_corners_in: int=4) -> dict[int, StageCoord]:
         """
         Main method called by the child class.
         Create a grid of rectangles that covers the well.
@@ -167,6 +167,7 @@ class WellGridManager(ABC):
         # Calculate the layout parameters for the grid
         grid_builder = GridBuilder()
         num_rects, align_correction = grid_builder.calculate_layout_parameters(self.window_size, self.axis_length, overlap)
+
         
         # Get list of all coords of rectangle centers on each axis
         x_coord, y_coord = self.generate_coordinates_per_axis(num_rects, align_correction)
@@ -174,10 +175,46 @@ class WellGridManager(ABC):
         # Create an "empty" template point that contains the focus plane of the current well
         temp_point = well_measurements.get_template_point_coord()
         
-        # Build the well grid
-        well_grid = self._build_well_grid(x_coord, y_coord, temp_point)
-        
+        if dish_name == '384well':
+            # Executing your finalized manual layout grid loop
+            x_coord = [x - 77 for x in x_coord] 
+            well_grid = {}
+            well_grid = self._build_well_grid(x_coord, y_coord, temp_point)
+            print(f"DEBUG: well_grid now contains {len(well_grid)} populated items after _build_well_grid() call!")
+        else:
+            # Build the normal grid for all other untouched layout classes
+            well_grid = self._build_well_grid(x_coord, y_coord, temp_point)
+            
         # Randomize the field of view if necessary
         if numb_field_view is None:
             return well_grid
         return randomise_fov(well_grid, numb_field_view)
+    
+
+if __name__ == "__main__":
+    # Example usage of the WellGridManager and its subclasses
+    from a1_manager.a1manager import A1Manager
+    from a1_manager.dish_manager.well_grid.well_square import WellSquareGrid
+    from a1_manager.utils.utility_classes import WellSquareCoord
+
+    # Initialize A1Manager (assuming you have the necessary setup)
+    a1_manager = A1Manager(objective="20x", lamp_name = 'pE-800')
+
+    # Create an instance of WellSquareGrid for testing
+    grid_manager = WellSquareGrid()
+    
+    # Example well measurements (replace with actual values)
+    test_well = WellSquareCoord(
+        top_left=(-14620.217391304352, -35620.1),
+        bottom_right=( -17420.21739130435,-32820.1)   
+    )
+
+    # Configure the grid manager with the A1Manager instance
+    grid_manager._configure_grid_instance(a1_manager, dmd_window_only=False)
+    
+    # Create the well grid
+    well_grid = grid_manager.create_well_grid(test_well, dish_name='384well', numb_field_view=None, overlap=None, n_corners_in=4)
+    
+    # Print the generated well grid coordinates
+    for index, coord in well_grid.items():
+        print(f"Rectangle {index}: X={coord.xy[0]:.2f}, Y={coord.xy[1]:.2f}")

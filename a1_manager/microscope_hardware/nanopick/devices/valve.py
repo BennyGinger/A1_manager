@@ -183,7 +183,7 @@ class PICController(PickDevice):
               
         # Inject
         for _ in range(mixing_cycles):
-            #print(f"Injecting {inject_vol_ul/mixing_cycles} uL in {valve_time} ms for cycle {_+1}/{mixing_cycles}")
+            print(f"Injecting {inject_vol_ul/mixing_cycles} uL in {valve_time} ms for cycle {_+1}/{mixing_cycles}")
             self._set_delay(valve_time)
             self._set_valve_time(1, valve_time)
             self._open_valves_sequence('K')

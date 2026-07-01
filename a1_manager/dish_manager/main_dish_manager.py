@@ -101,6 +101,7 @@ class DishManager:
         # Filter wells based on well_selection
         selected_wells_list = parse_wells(well_selection, dish_name=self.dish_name)
         selected_wells = {well: self.dish_calibration[well] for well in selected_wells_list if well in self.dish_calibration} 
+
         
         # Initialize the well grid manager
         well_grid_manager = WellGridManager.load_subclass_instance(self.dish_name, dmd_window_only, self.a1_manager)
@@ -109,8 +110,8 @@ class DishManager:
         logger.info(f"{overlap_percent=} and {overlap_deci=}")
         dish_grids: dict[str, dict[int, StageCoord]] = {}
         for well, well_coord in selected_wells.items():
-            grid = well_grid_manager.create_well_grid(well_coord, numb_field_view, overlap_deci, n_corners_in)
-            
+            grid = well_grid_manager.create_well_grid(well_coord,  self.dish_name, numb_field_view, overlap_deci, n_corners_in)
+
             # Add the center of the well to the grid, if present
             center = well_coord.center
             if center is not None:

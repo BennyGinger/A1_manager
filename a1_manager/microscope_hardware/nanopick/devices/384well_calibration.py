@@ -16,7 +16,7 @@ from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QVBoxLayout, QWid
 
 logger = logging.getLogger(__name__)
 
-DISTANCE_TO_LIQUID = {'96well': 16_000.0, '384well' : 16000}
+DISTANCE_TO_LIQUID = {'96well': 16_000.0, '384well' : 16_000}
 
 
 # ==============================================================================

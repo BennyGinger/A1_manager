@@ -13,6 +13,21 @@ def prompt_for_center(nikon: 'NikonTi2') -> tuple[float, float]:
     logging.info(f"User confirmed center position: {pos}")
     return nikon.get_stage_position()['xy']
 
+def prompt_for_top_left_A1(nikon: 'NikonTi2') -> tuple[float, float]:
+        """Prompt the user to move the stage to the top-left corner of well A1."""
+        input("Move the center of the objective to the real TOP-LEFT CORNER of well A1 and press 'Enter'")
+        pos = nikon.get_stage_position()['xy']
+        logging.info(f"User confirmed A1 top-left corner position: {pos}")
+        return pos
+
+def prompt_for_top_left_P24(nikon: 'NikonTi2') -> tuple[float, float]:
+        """Prompt the user to move the stage to the top-left corner of well P24."""
+        input("Move the center of the objective to the real TOP-LEFT CORNER of well P24 and press 'Enter'")
+        pos = nikon.get_stage_position()['xy']
+        logging.info(f"User confirmed P24 top-left corner position: {pos}")
+        return pos
+
+
 def prompt_for_edge_points(nikon: 'NikonTi2') -> list[tuple[float, float]]:
     """Prompt the user to move the stage to the edge of the dish."""
     
