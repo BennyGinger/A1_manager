@@ -13,7 +13,7 @@ from pycromanager import Core
 logger = logging.getLogger(__name__)
 
 DISTANCE_TO_LIQUID = {'96well': 16_000.0, '384well' : 16_000}   # Set to be ~ 3000 um above the bottom of the well in 100 um volume
-DISTANCE_FOR_CALIB = {'96well': 18_500.0}   # Set to be ~ 1300 um above the plate 
+DISTANCE_FOR_CALIB = {'96well': 17_500.0}   # Set to be ~ 1300 um above the plate 18500
 
 @dataclass(slots=True)
 class MarZ():
@@ -105,11 +105,12 @@ if __name__ == "__main__":
     arm = MarZ(core=Core(), dish='96well') # type: ignore
 
     print("Current head position:", arm._get_arm_position)
-    arm.to_liquid()
-    # print("Moved to liquid position:", arm._get_arm_position)
+    # arm._set_arm_position(arm._ref_position - 21950)  # Move down by 21050 units
+    arm.to_calibration()
+    print("Moved to liquid position:", arm._get_arm_position)
     # sleep(10)
     # arm.to_calibration()
     # sleep(10)
-    arm.to_home()
+    # arm.to_home()
     # you need to use the '10x' objective for calibration
     
