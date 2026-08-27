@@ -105,12 +105,19 @@ if __name__ == "__main__":
     arm = MarZ(core=Core(), dish='96well') # type: ignore
 
     print("Current head position:", arm._get_arm_position)
-    # arm._set_arm_position(arm._ref_position - 21950)  # Move down by 21050 units
-    arm.to_calibration()
-    print("Moved to liquid position:", arm._get_arm_position)
+    # arm._set_arm_position(arm._ref_position - 22730)  # Move down by 21050 units
+    # arm._set_arm_position(arm._ref_position - 21410) # 20 um
+    # arm._set_arm_position(arm._ref_position - 21380) # 50 um
+    # arm._set_arm_position(arm._ref_position - 21330) # 100 um
+    # arm._set_arm_position(arm._ref_position - 21230) # 200 um
+    # arm._set_arm_position(arm._ref_position - 22115) # 200 um # date: 07.28.
+    arm._set_arm_position(arm._ref_position - 22500)
+    # arm.to_calibration()
+    # print("Moved to liquid position:", arm._get_arm_position)
     # sleep(10)
     # arm.to_calibration()
-    # sleep(10)
-    # arm.to_home()
+    sleep(10)
+    arm.to_home()
+    print("Current head position:", arm._get_arm_position)
     # you need to use the '10x' objective for calibration
     

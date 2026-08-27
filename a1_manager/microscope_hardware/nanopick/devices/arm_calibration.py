@@ -69,9 +69,9 @@ class AdvancedAlignmentPopup(QMainWindow):
         self.main_layout.addLayout(self.slider_layout)
 
         # Micro-Manager Live Stream Safety Check
-        self.was_sequence_running = self.mmc.is_sequence_running()
+        self.was_sequence_running = self.mmc.is_sequence_running() # type: ignore
         if not self.was_sequence_running:
-            self.mmc.start_continuous_sequence_acquisition(0)
+            self.mmc.start_continuous_sequence_acquisition(0) # type: ignore
 
         # 30 FPS Update Loop
         self.timer = QTimer()
@@ -85,10 +85,10 @@ class AdvancedAlignmentPopup(QMainWindow):
         self.value_label.setText(f"<b>{value} px</b>")
 
     def update_live_frame(self):
-        if self.mmc.get_remaining_image_count() == 0:
+        if self.mmc.get_remaining_image_count() == 0: # type: ignore
             return
 
-        tagged_img = self.mmc.get_last_tagged_image()
+        tagged_img = self.mmc.get_last_tagged_image() # type: ignore
         width = tagged_img.tags["Width"]
         height = tagged_img.tags["Height"]
 
@@ -177,11 +177,13 @@ class AdvancedAlignmentPopup(QMainWindow):
         )
         self.image_label.setPixmap(QPixmap.fromImage(qt_image))
 
-    def closeEvent(self, event):
+    def closeEvent(self, a0):
+        from PyQt6.QtGui import QCloseEvent
         self.timer.stop()
-        if not self.was_sequence_running and self.mmc.is_sequence_running():
-            self.mmc.stop_sequence_acquisition()
-        event.accept()
+        if not self.was_sequence_running and self.mmc.is_sequence_running(): # type: ignore
+            self.mmc.stop_sequence_acquisition() # type: ignore
+        if isinstance(a0, QCloseEvent):
+            a0.accept()
 
 
 def run_alignment_gui(core: Core, ring_radius: int = 80):
@@ -257,7 +259,7 @@ if __name__ == "__main__":
     print("3. Close the target window when the adjustment is completed to continue.")
     
     # Launching with a starting radius guess of 90 pixels
-    run_alignment_gui(core=core_instance, ring_radius=237)
+    run_alignment_gui(core=core_instance, ring_radius=237) #type: ignore
     
     print("\nAlignment window closed. Returning arm home...")
     arm.to_home()

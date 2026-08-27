@@ -205,7 +205,7 @@ class PICController(PickDevice):
 # Example usage
 if __name__ == "__main__":
       
-        controller = PICController(needle_size=50, pressure=0.3, port="COM8",)
+        controller = PICController(needle_size=70, pressure=0.2, port="COM9",)
         controller.inject(inject_vol_ul=10, mixing_cycles=1)
         # controller.set_led_ring(ring=1)
         controller._close()
