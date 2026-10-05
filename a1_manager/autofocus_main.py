@@ -25,7 +25,8 @@ def run_autofocus(method: str,
                   well_selection: str | list[str], 
                   overwrite: bool, 
                   af_savedir: Path | None = None,
-                  review_callback: Optional[Callable[[NDArray], None]] = None
+                  review_callback: Optional[Callable[[NDArray], str | None]] = None,
+                  cancel_check: Callable[[], None] | None = None,
                   )-> None:
         """
         Run autofocus for the selected wells. Requires the calibration file with the dish measurements.
@@ -38,7 +39,7 @@ def run_autofocus(method: str,
             calib_path (Path): Path to the calibration file.
             overwrite (bool): If True, overwrite the focus values in the calibration file.
             af_savedir (Path): Path to save the images for the square gradient method.
-            review_callback (Callable[[NDArray], None] | None): Optional callback to display the autofocus image for user review. If None, a blocking prompt will be used.
+            review_callback (Callable[[NDArray], str | None] | None): Optional blocking callback returning continue, restart, or quit. If None, a standalone prompt is used.
         """
         
         # Initialize focus device
@@ -59,6 +60,8 @@ def run_autofocus(method: str,
 
         sorted_wells = _snake_sort_wells(dish_measurements, well_selection)
         for idx, (well, measurement) in enumerate(sorted_wells):
+            if cancel_check is not None:
+                cancel_check()
             # Skip if no measurement coord
             if measurement[focus_device] is not None and not overwrite:
                 logger.info(f"Autofocus already done for {well} with {focus_device} at {measurement[focus_device]}")
@@ -71,7 +74,8 @@ def run_autofocus(method: str,
                                         measurement=measurement,
                                         focus_device=focus_device,
                                         autofocus=autofocus,
-                                        review_callback=review_callback)
+                                        review_callback=review_callback,
+                                        cancel_check=cancel_check)
 
             except QuitAutofocus:
                 # Quit the autofocus process - re-raise to propagate to caller
@@ -87,7 +91,16 @@ def run_autofocus(method: str,
         if method == 'Manual':
             logger.info("Autofocus was added mannually for all the wells.")
             
-def _focus_one_well(*, idx: int, well: str, measurement: WellCircleCoord | WellSquareCoord, focus_device: str, autofocus: AutoFocusManager, review_callback: Optional[Callable[[NDArray], None]] = None) -> float:
+def _focus_one_well(
+    *,
+    idx: int,
+    well: str,
+    measurement: WellCircleCoord | WellSquareCoord,
+    focus_device: str,
+    autofocus: AutoFocusManager,
+    review_callback: Optional[Callable[[NDArray], str | None]] = None,
+    cancel_check: Callable[[], None] | None = None,
+) -> float:
     """
     Process a single well for autofocus.
     Args:
@@ -96,11 +109,13 @@ def _focus_one_well(*, idx: int, well: str, measurement: WellCircleCoord | WellS
         measurement (WellCircleCoord | WellSquareCoord): Measurement data for the well.
         focus_device (str): Focus device to use. Choose from 'ZDrive' or 'PFSOffset'.
         autofocus (AutoFocusManager): AutoFocusManager object.
-        review_callback (Callable[[NDArray], None] | None): Optional callback to display the autofocus image for user review. If None, a blocking prompt will be used.
+        review_callback (Callable[[NDArray], str | None] | None): Optional blocking callback returning continue, restart, or quit. If None, a standalone prompt is used.
     Returns:
         float: Focus value for the well.
     """
     while True:
+        if cancel_check is not None:
+            cancel_check()
         try:
             # Extract manager back
             a1_manager = autofocus.a1_manager
@@ -143,14 +158,21 @@ def _move_stage_to_center(idx: int, well: str, measurement: WellCircleCoord | We
     point_center = StageCoord(xy=measurement.center)
     a1_manager.nikon.set_stage_position(point_center)
 
-def _autofocus_review(img: NDArray, review_callback: Optional[Callable[[NDArray], None]] = None):
+def _autofocus_review(
+    img: NDArray,
+    review_callback: Optional[Callable[[NDArray], str | None]] = None,
+) -> None:
     """
-    Review autofocus image. If review_callback is provided, call it (non-blocking, GUI-embedded).
-    Otherwise, use the default blocking pop-up/terminal review.
+    Review autofocus image using a blocking GUI callback or standalone prompt.
     """
     if review_callback is not None:
-        review_callback(img)
-        # The pipeline must wait for the result via signal/callback/state machine
+        result = review_callback(img)
+        if result == "restart":
+            raise RestartAutofocus
+        if result == "quit":
+            raise QuitAutofocus
+        if result not in ("continue", None):
+            raise ValueError(f"Unknown autofocus review result: {result!r}")
     else:
         from a1_manager.autofocus.af_utils import prompt_autofocus_with_image
         prompt_autofocus_with_image(img, use_gui=True)

@@ -6,7 +6,7 @@ import logging
 
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QPushButton, QSizePolicy
 from PyQt6.QtCore import Qt, QTimer, pyqtSignal
-from PyQt6.QtGui import QPixmap, QImage, QFont
+from PyQt6.QtGui import QPixmap, QImage, QFont, QPainter
 
 logger = logging.getLogger(__name__)
 
@@ -166,7 +166,10 @@ class AutofocusWidget(QWidget):
             return pixmap
         if image.dtype != np.uint8:
             vmin, vmax = np.percentile(image, [2, 98])
-            image_norm = np.clip((image - vmin) / (vmax - vmin) * 255, 0, 255).astype(np.uint8)
+            if vmax > vmin:
+                image_norm = np.clip((image - vmin) / (vmax - vmin) * 255, 0, 255).astype(np.uint8)
+            else:
+                image_norm = np.zeros_like(image, dtype=np.uint8)
         else:
             vmin, vmax = np.percentile(image, [1, 99])
             if vmax > vmin:

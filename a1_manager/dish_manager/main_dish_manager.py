@@ -2,6 +2,9 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from dataclasses import dataclass, field
 from pathlib import Path
 import logging
+from typing import Callable
+
+from numpy.typing import NDArray
 
 from a1_manager.autofocus_main import run_autofocus
 from a1_manager.dish_manager.well_grid.well_selection import parse_wells
@@ -61,12 +64,24 @@ class DishManager:
         save_config_file(self.calib_path, self.dish_calibration)
         return self.dish_calibration
 
-    def autofocus_dish(self, method: str, overwrite: bool, well_selection: str | list[str], af_savedir: Path | None = None) -> None:
+    def autofocus_dish(
+        self,
+        method: str,
+        overwrite: bool,
+        well_selection: str | list[str],
+        af_savedir: Path | None = None,
+        review_callback: Callable[[NDArray], str | None] | None = None,
+        cancel_check: Callable[[], None] | None = None,
+    ) -> None:
         """
         Run autofocus for the dish_calibration in each well.
         The autofocus measurements are saved in the same calibration file.
         """
-        return run_autofocus(method, self.a1_manager, self.calib_path, well_selection, overwrite, af_savedir)
+        return run_autofocus(
+            method, self.a1_manager, self.calib_path, well_selection,
+            overwrite, af_savedir, review_callback=review_callback,
+            cancel_check=cancel_check,
+        )
     
     
     def _well_selection_converter(self, well_selection: str | list[str] | None) -> list[str]:
@@ -87,7 +102,15 @@ class DishManager:
             raise ValueError(f"Invalid well selection: {well_selection}. Must be a string or a list of strings.")
     
     
-    def create_well_grids(self, dmd_window_only: bool, numb_field_view: int | None = None, well_selection: str | list[str] | None = None, overlap_percent: int | None = None, n_corners_in: int = 4) -> dict[str, dict[int, StageCoord]]:
+    def create_well_grids(
+        self,
+        dmd_window_only: bool,
+        numb_field_view: int | None = None,
+        well_selection: str | list[str] | None = None,
+        overlap_percent: int | None = None,
+        n_corners_in: int = 4,
+        cancel_check: Callable[[], None] | None = None,
+    ) -> dict[str, dict[int, StageCoord]]:
         """
         Create a well grid for a dish, where each well is a dictionary containing the coordinates of all the field of views.
         """
@@ -110,6 +133,8 @@ class DishManager:
         logger.info(f"{overlap_percent=} and {overlap_deci=}")
         dish_grids: dict[str, dict[int, StageCoord]] = {}
         for well, well_coord in selected_wells.items():
+            if cancel_check is not None:
+                cancel_check()
             grid = well_grid_manager.create_well_grid(well_coord,  self.dish_name, numb_field_view, overlap_deci, n_corners_in)
 
             # Add the center of the well to the grid, if present
@@ -121,6 +146,8 @@ class DishManager:
                 coord_id = max(grid.keys()) + 1
                 grid[coord_id] = coord
             dish_grids[well] = grid
+        if cancel_check is not None:
+            cancel_check()
         
         # Save the dish grids
         dish_grids_name = f"grid_{self.dish_name}.json"

@@ -1,5 +1,8 @@
 from __future__ import annotations # Enable type annotation to be stored as string
 from pathlib import Path
+from typing import Callable
+
+from numpy.typing import NDArray
 
 from a1_manager.utils.utility_classes import StageCoord
 from a1_manager.a1manager import A1Manager
@@ -19,7 +22,9 @@ def launch_dish_workflow(a1_manager: A1Manager,
                          overwrite_calib: bool = False, 
                          overwrite_autofocus: bool = False, 
                          af_savedir: Path | None = None,
-                         n_corners_in: int = 4
+                         n_corners_in: int = 4,
+                         review_callback: Callable[[NDArray], str | None] | None = None,
+                         cancel_check: Callable[[], None] | None = None,
                          ) -> dict[str, dict[int, StageCoord]]:
     """
     Launch the dish workflow to calibrate the dish, perform autofocus, and create the well grids.
@@ -46,14 +51,26 @@ def launch_dish_workflow(a1_manager: A1Manager,
     dish_manager = DishManager(dish_name, run_dir, a1_manager) 
     
     # Calibrate the dish
+    if cancel_check is not None:
+        cancel_check()
     dish_manager.calibrate_dish(overwrite_calib)
+    if cancel_check is not None:
+        cancel_check()
     
     try:
         # Perform autofocus, 'savedir' for the square gradient method is optional and can be passed as a keyword argument
-        dish_manager.autofocus_dish(af_method, overwrite_autofocus, well_selection, af_savedir)
+        dish_manager.autofocus_dish(
+            af_method, overwrite_autofocus, well_selection, af_savedir,
+            review_callback=review_callback, cancel_check=cancel_check,
+        )
     except QuitAutofocus:
         # User quit during autofocus - propagate the exception to stop the entire pipeline
         raise
     
     # Get the grids, n_corners_in is optional and can be passed as a keyword argument
-    return dish_manager.create_well_grids(dmd_window_only, numb_field_view, well_selection, overlap_percent, n_corners_in)
+    if cancel_check is not None:
+        cancel_check()
+    return dish_manager.create_well_grids(
+        dmd_window_only, numb_field_view, well_selection, overlap_percent,
+        n_corners_in, cancel_check=cancel_check,
+    )
