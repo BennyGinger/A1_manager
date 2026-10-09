@@ -13,7 +13,7 @@ from pycromanager import Core
 logger = logging.getLogger(__name__)
 
 DISTANCE_TO_LIQUID = {'96well': 16_000.0, '384well' : 16_000}   # Set to be ~ 3000 um above the bottom of the well in 100 um volume
-DISTANCE_FOR_CALIB = {'96well': 22573}   # Set to be ~ 1300 um above the plate 18500
+DISTANCE_FOR_CALIB = {'96well': 18930}   # Set to be ~ 1300 um above the plate 18500
 
 @dataclass(slots=True)
 class MarZ():
@@ -72,7 +72,20 @@ class MarZ():
         """
         Move to the safe height above the plate.
         """
-        return self._set_arm_position(self._ref_position)
+        self.start_to_home()
+        self.wait_for_home()
+
+    def start_to_home(self) -> None:
+        """
+        Start moving to the safe height above the plate without waiting for completion.
+        """
+        self.core.set_position('ZAxis', self._ref_position) # type: ignore
+
+    def wait_for_home(self) -> None:
+        """
+        Wait until the arm reaches the safe height above the plate.
+        """
+        self.core.wait_for_device('ZAxis') # type: ignore
     
     def _set_arm_position(self, position: float) -> None:
         """
@@ -107,7 +120,7 @@ if __name__ == "__main__":
     print("Current head position:", arm._get_arm_position)
     # arm._set_arm_position(arm._ref_position-23417)  # Move down by 21050 units
     # arm._set_arm_position(arm._ref_position - 22673)
-    # arm._set_arm_position(arm._ref_position - 21380) # 50 um
+    arm._set_arm_position(arm._ref_position - 18930) # 50 um
     # arm._set_arm_position(arm._ref_position - 21330) # 100 um
     # arm._set_arm_position(arm._ref_position - 21230) # 200 um
     # arm._set_arm_position(arm._ref_position - 22115) # 200 um # date: 07.28.

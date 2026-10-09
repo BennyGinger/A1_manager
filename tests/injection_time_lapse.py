@@ -22,9 +22,13 @@ VALVE_PORT = "COM8"
 NEEDLE_SIZE_UM = 50
 PRESSURE_BAR = 0.30
 INJECTION_VOLUME_UL = 10
-MIXING_CYCLES = 200
+MIXING_CYCLES = 300
 MIXING_CYCLE_INTERVAL_SECONDS = 2.0
 BASELINE_FRAME_COUNT = 5
+
+# False: no valve injection; the needle just stays down for NEEDLE_DOWN_SECONDS while imaging
+INJECT = False
+NEEDLE_DOWN_SECONDS = 120
 
 DURATION_SECONDS = 5 * 60
 OUTPUT_ROOT = Path(r"D:\Zsuzsi\Diffusion experiments\20261001_LTB4_c1913b_Diffusion_96well")
@@ -33,6 +37,7 @@ OUTPUT_ROOT = Path(r"D:\Zsuzsi\Diffusion experiments\20261001_LTB4_c1913b_Diffus
 def run_time_lapse() -> Path:
     run_dir = OUTPUT_ROOT / datetime.now().strftime("%Y%m%d_%H%M%S")
     run_dir.mkdir(parents=True, exist_ok=False)
+    
     print(f"Run folder: {run_dir}", flush=True)
     print("Connecting to microscope and valve...", flush=True)
 
@@ -42,10 +47,14 @@ def run_time_lapse() -> Path:
         lamp_name="pE-800",
         focus_device="PFSOffset",
     )
-    controller = PICController(
-        needle_size=NEEDLE_SIZE_UM,
-        pressure=PRESSURE_BAR,
-        port=VALVE_PORT,
+    controller = (
+        PICController(
+            needle_size=NEEDLE_SIZE_UM,
+            pressure=PRESSURE_BAR,
+            port=VALVE_PORT,
+        )
+        if INJECT
+        else None
     )
     arm: MarZ | None = None
     arm_is_home = False
@@ -70,16 +79,21 @@ def run_time_lapse() -> Path:
             print(f"Baseline: {frame_number + 1}/{BASELINE_FRAME_COUNT}", flush=True)
 
 
-        print(f"Moving arm to calibration position; starting {MIXING_CYCLES} injection cycles...", flush=True)
+        if controller is not None:
+            print(f"Moving arm to calibration position; starting {MIXING_CYCLES} injection cycles...", flush=True)
+        else:
+            print(f"Moving arm to calibration position; needle stays down {NEEDLE_DOWN_SECONDS}s without injection...", flush=True)
         arm.to_calibration()
-        valve_time = (
-            round(INJECTION_VOLUME_UL)
-            if controller.test_mode
-            else round(
-                controller._convert_volume_to_time(INJECTION_VOLUME_UL)
-                / MIXING_CYCLES
+        valve_time = 0
+        if controller is not None:
+            valve_time = (
+                round(INJECTION_VOLUME_UL)
+                if controller.test_mode
+                else round(
+                    controller._convert_volume_to_time(INJECTION_VOLUME_UL)
+                    / MIXING_CYCLES
+                )
             )
-        )
         injection_started = monotonic()
         injection_done = Event()
         injection_errors: list[Exception] = []
@@ -112,10 +126,19 @@ def run_time_lapse() -> Path:
             finally:
                 injection_done.set()
 
-        injection_thread = Thread(target=run_injection_cycles, name="valve-injection")
+        def hold_needle_down() -> None:
+            sleep(NEEDLE_DOWN_SECONDS)
+            injection_done.set()
+
+        injection_thread = Thread(
+            target=run_injection_cycles if controller is not None else hold_needle_down,
+            name="valve-injection" if controller is not None else "needle-hold",
+        )
         injection_thread.start()
         print("Capturing continuously during injection...", flush=True)
         post_injection_deadline: float | None = None
+        arm_lift_started = False
+
         next_status_update = injection_started + 30
         frame_number = 0
         try:
@@ -125,23 +148,23 @@ def run_time_lapse() -> Path:
 
                 now = monotonic()
                 if injection_done.is_set():
-                    if post_injection_deadline is None:
-                        print("Injection complete; lifting needle...", flush=True)
-                        arm.to_home()
-                        arm_is_home = True
+                    if not arm_lift_started:
+                        print("Injection complete; lifting needle while imaging continues...", flush=True)
+                        arm.start_to_home()
+                        arm_lift_started = True
                         post_injection_deadline = monotonic() + DURATION_SECONDS
-                        print("Injection complete; continuing time-lapse for five minutes...", flush=True)
-                    elif now >= post_injection_deadline:
+                        print("Continuing time-lapse for five minutes while the needle lifts...", flush=True)
+                    if post_injection_deadline is not None and now >= post_injection_deadline:
                         break
 
                 image = a1_manager.snap_image(dmd_exposure_sec=EXPOSURE_MS / 1000)
-                phase = "injection" if post_injection_deadline is None else "frame"
+                phase = "injection" if not injection_done.is_set() else "frame"
                 imwrite(run_dir / f"{phase}_{frame_number:06d}.tif", image)
                 frame_number += 1
 
                 now = monotonic()
                 if now >= next_status_update:
-                    if post_injection_deadline is None:
+                    if not injection_done.is_set():
                         print(f"Acquisition: {frame_number} frames; injection is running", flush=True)
                     else:
                         elapsed = DURATION_SECONDS - max(0, post_injection_deadline - now)
@@ -157,6 +180,9 @@ def run_time_lapse() -> Path:
 
         if injection_errors:
             raise injection_errors[0]
+        if arm_lift_started:
+            arm.wait_for_home()
+            arm_is_home = True
 
         print(f"Acquisition complete: {frame_number} injection/post-injection frames", flush=True)
     finally:
@@ -165,7 +191,8 @@ def run_time_lapse() -> Path:
                 print("Returning arm to home position...", flush=True)
                 arm.to_home()
         finally:
-            controller._close()
+            if controller is not None:
+                controller._close()
             print(f"Valve connection closed. Images saved in {run_dir}", flush=True)
 
     return run_dir
