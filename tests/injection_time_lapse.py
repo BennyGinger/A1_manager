@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from datetime import datetime
 from pathlib import Path
 from threading import Event, Thread
@@ -8,7 +9,8 @@ from time import monotonic, sleep
 from tifffile import imwrite
 
 from a1_manager import A1Manager
-from a1_manager.microscope_hardware.nanopick.devices.marZ import MarZ
+from brightfield import brightfield
+from a1_manager.microscope_hardware.nanopick.devices.needle_height import CalibratedMarZ
 from a1_manager.microscope_hardware.nanopick.devices.valve import PICController, VALVE_2_TIME
 
 
@@ -16,22 +18,28 @@ DISH = "96well"
 OBJECTIVE = "10x"
 OPTICAL_CONFIGURATION = "RFP"
 FILTER_WHEEL = 4
-
+# Brightfield (dia lamp) is used to focus the cells (and the needle tip in the calibrations)
+FOCUS_EXPOSURE_MS = 50
 EXPOSURE_MS = 200
 VALVE_PORT = "COM8"
 NEEDLE_SIZE_UM = 50
 PRESSURE_BAR = 0.30
 INJECTION_VOLUME_UL = 10
-MIXING_CYCLES = 300
+MIXING_CYCLES = 100
 MIXING_CYCLE_INTERVAL_SECONDS = 2.0
 BASELINE_FRAME_COUNT = 5
+TIP_HEIGHT_ABOVE_CELLS_UM = 100
+WELL = "C2"
+# False: compute the arm position from the arm calibration and the cell ZDrive (no per-well measurement)
+USE_STORED_WELL_TARGET = False
+NEEDLE_TARGETS_FILE = Path(__file__).with_name("needle_targets.json")
 
 # False: no valve injection; the needle just stays down for NEEDLE_DOWN_SECONDS while imaging
 INJECT = False
 NEEDLE_DOWN_SECONDS = 120
 
-DURATION_SECONDS = 5 * 60
-OUTPUT_ROOT = Path(r"D:\Zsuzsi\Diffusion experiments\20261001_LTB4_c1913b_Diffusion_96well")
+DURATION_SECONDS = 1 * 60
+OUTPUT_ROOT = Path(r"D:\Zsuzsi\Diffusion experiments\20261001_LTB4_c1913b_Diffusion_96well\HEK_c1913B_LTB4\Test")
 
 
 def run_time_lapse() -> Path:
@@ -56,26 +64,41 @@ def run_time_lapse() -> Path:
         if INJECT
         else None
     )
-    arm: MarZ | None = None
+    arm: CalibratedMarZ | None = None
     arm_is_home = False
 
     try:
-        print("Preparing arm and RFP imaging...", flush=True)
-        arm = MarZ(core=a1_manager.core, dish=DISH)
-        a1_manager.oc_settings(OPTICAL_CONFIGURATION, exposure_ms=EXPOSURE_MS)
-        a1_manager.core.set_property("FilterWheel1", "State", FILTER_WHEEL)
+        print("Preparing arm and imaging...", flush=True)
+        arm = CalibratedMarZ(core=a1_manager.core, dish=DISH)
         a1_manager.set_stage_position(a1_manager.nikon.get_stage_position())
 
+        with brightfield(a1_manager, FOCUS_EXPOSURE_MS):
+            print(
+                "Focus on the cells in brightfield (same as in the needle calibration); press Enter.",
+                flush=True,
+            )
+            input()
+            cell_z = a1_manager.nikon.get_stage_position().ZDrive
+        if cell_z is None:
+            raise RuntimeError("Could not read the cell ZDrive position.")
+
+        a1_manager.oc_settings(OPTICAL_CONFIGURATION, exposure_ms=EXPOSURE_MS)
+        a1_manager.core.set_property("FilterWheel1", "State", FILTER_WHEEL)
         print(
             "Check RFP focus in Micro-Manager and adjust if needed; press Enter to capture baseline.",
             flush=True,
         )
         input()
 
+        if a1_manager.core.is_sequence_running():
+            a1_manager.core.stop_sequence_acquisition()
+            print("Stopped live view before snapping.", flush=True)
+
         print(f"Capturing {BASELINE_FRAME_COUNT} baseline images...", flush=True)
         for frame_number in range(BASELINE_FRAME_COUNT):
             image = a1_manager.snap_image(dmd_exposure_sec=EXPOSURE_MS / 1000)
             imwrite(run_dir / f"baseline_{frame_number:06d}.tif", image)
+
             print(f"Baseline: {frame_number + 1}/{BASELINE_FRAME_COUNT}", flush=True)
 
 
@@ -83,7 +106,22 @@ def run_time_lapse() -> Path:
             print(f"Moving arm to calibration position; starting {MIXING_CYCLES} injection cycles...", flush=True)
         else:
             print(f"Moving arm to calibration position; needle stays down {NEEDLE_DOWN_SECONDS}s without injection...", flush=True)
-        arm.to_calibration()
+        if USE_STORED_WELL_TARGET:
+            arm.to_calibration()
+            needle_depth = json.loads(NEEDLE_TARGETS_FILE.read_text())[WELL]["depth_below_home"]
+            arm.to_depth_below_home(needle_depth)
+            print(f"Arm set to {needle_depth:.0f} below home (stored target for well {WELL}).", flush=True)
+        else:
+            def confirm_move(depth: float, position: float) -> bool:
+                print(
+                    f"Cell ZDrive {cell_z:.1f} -> arm target {position:.0f} ({depth:.0f} below home), "
+                    f"tip {TIP_HEIGHT_ABOVE_CELLS_UM} um above the cells. Current arm: {arm.depth_below_home:.0f} below home.",
+                    flush=True,
+                )
+                return input("Press Enter to move the arm (or type 'n' to abort): ").strip().lower() != "n"
+
+            target = arm.to_height_from_calibration(cell_z, TIP_HEIGHT_ABOVE_CELLS_UM, confirm=confirm_move)
+            print(f"Arm set to {target:.0f}, tip {TIP_HEIGHT_ABOVE_CELLS_UM} um above the cells (cell ZDrive {cell_z:.1f}).", flush=True)
         valve_time = 0
         if controller is not None:
             valve_time = (
@@ -183,6 +221,7 @@ def run_time_lapse() -> Path:
         if arm_lift_started:
             arm.wait_for_home()
             arm_is_home = True
+            
 
         print(f"Acquisition complete: {frame_number} injection/post-injection frames", flush=True)
     finally:

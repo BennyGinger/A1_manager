@@ -13,7 +13,7 @@ from pycromanager import Core
 logger = logging.getLogger(__name__)
 
 DISTANCE_TO_LIQUID = {'96well': 16_000.0, '384well' : 16_000}   # Set to be ~ 3000 um above the bottom of the well in 100 um volume
-DISTANCE_FOR_CALIB = {'96well': 18930}   # Set to be ~ 1300 um above the plate 18500
+DISTANCE_FOR_CALIB = {'96well': 17000}   # Set to be ~ 1300 um above the plate 18500
 
 @dataclass(slots=True)
 class MarZ():

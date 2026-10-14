@@ -212,7 +212,7 @@ if __name__ == "__main__":
         arm = MarZ(core=Core(), dish = '96well') # type ignore
         
         arm.to_calibration() # Example action with the arm
-        controller.inject(inject_vol_ul=10, mixing_cycles=10)
+        controller.inject(inject_vol_ul=10, mixing_cycles=100)
         arm.to_home()
         # controller.set_led_ring(ring=1)
         controller._close()
