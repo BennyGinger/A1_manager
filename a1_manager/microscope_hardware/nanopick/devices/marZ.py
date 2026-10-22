@@ -120,7 +120,7 @@ if __name__ == "__main__":
     print("Current head position:", arm._get_arm_position)
     # arm._set_arm_position(arm._ref_position-23417)  # Move down by 21050 units
     # arm._set_arm_position(arm._ref_position - 22673)
-    arm._set_arm_position(arm._ref_position - 18930) # 50 um
+    # arm._set_arm_position(arm._ref_position - 20200) # 50 um
     # arm._set_arm_position(arm._ref_position - 21330) # 100 um
     # arm._set_arm_position(arm._ref_position - 21230) # 200 um
     # arm._set_arm_position(arm._ref_position - 22115) # 200 um # date: 07.28.
