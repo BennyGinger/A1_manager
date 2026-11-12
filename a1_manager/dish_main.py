@@ -2,7 +2,6 @@ from __future__ import annotations # Enable type annotation to be stored as stri
 from pathlib import Path
 from typing import Callable
 
-from numpy.typing import NDArray
 
 from a1_manager.utils.utility_classes import StageCoord
 from a1_manager.a1manager import A1Manager
@@ -23,7 +22,7 @@ def launch_dish_workflow(a1_manager: A1Manager,
                          overwrite_autofocus: bool = False, 
                          af_savedir: Path | None = None,
                          n_corners_in: int = 4,
-                         review_callback: Callable[[NDArray], str | None] | None = None,
+                         review_callback: Callable[[A1Manager], str | None] | None = None,
                          cancel_check: Callable[[], None] | None = None,
                          prompt_callback: Callable[[str], str] | None = None,
                          ) -> dict[str, dict[int, StageCoord]]:

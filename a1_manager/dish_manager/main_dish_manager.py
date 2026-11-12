@@ -4,11 +4,10 @@ from pathlib import Path
 import logging
 from typing import Callable
 
-from numpy.typing import NDArray
 
 from a1_manager.autofocus_main import run_autofocus
 from a1_manager.dish_manager.well_grid.well_selection import parse_wells
-from a1_manager.utils.json_utils import save_config_file
+from a1_manager.utils.json_utils import load_config_file, save_config_file
 from a1_manager.dish_manager.well_grid_manager import WellGridManager
 from a1_manager.a1manager import A1Manager
 from a1_manager.utils.utility_classes import StageCoord, WellCircleCoord, WellSquareCoord
@@ -71,18 +70,22 @@ class DishManager:
         overwrite: bool,
         well_selection: str | list[str],
         af_savedir: Path | None = None,
-        review_callback: Callable[[NDArray], str | None] | None = None,
+        review_callback: Callable[[A1Manager], str | None] | None = None,
         cancel_check: Callable[[], None] | None = None,
     ) -> None:
         """
         Run autofocus for the dish_calibration in each well.
         The autofocus measurements are saved in the same calibration file.
         """
-        return run_autofocus(
+        run_autofocus(
             method, self.a1_manager, self.calib_path, well_selection,
             overwrite, af_savedir, review_callback=review_callback,
             cancel_check=cancel_check,
         )
+        calibration = load_config_file(self.calib_path)
+        if calibration is None:
+            raise RuntimeError("Autofocus calibration could not be reloaded")
+        self.dish_calibration = calibration
     
     
     def _well_selection_converter(self, well_selection: str | list[str] | None) -> list[str]:
@@ -143,7 +146,7 @@ class DishManager:
             if center is not None:
                 pfs = well_coord.PFSOffset
                 zdrive = well_coord.ZDrive
-                coord = StageCoord(center, pfs, zdrive)
+                coord = StageCoord(xy=center, ZDrive=zdrive, PFSOffset=pfs)
                 coord_id = max(grid.keys()) + 1
                 grid[coord_id] = coord
             dish_grids[well] = grid
