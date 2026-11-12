@@ -50,7 +50,7 @@ class DishManager:
         calib_name = f"calib_{self.dish_name}.json"
         self.calib_path = self.config_path.joinpath(calib_name)
 
-    def calibrate_dish(self, overwrite: bool = False) -> dict[str, WellCircleCoord | WellSquareCoord]:
+    def calibrate_dish(self, overwrite: bool = False, *, prompt_callback: Callable[[str], str] | None = None) -> dict[str, WellCircleCoord | WellSquareCoord]:
         """
         Calibrate the dish with the specified dish name.
         The calibration measurements are saved in a json file in the run directory, except for the 96well dish where the calibration measurements are pre-defined.
@@ -58,6 +58,7 @@ class DishManager:
         
         # Initialize the dish calibration manager
         dish = DishCalibManager.dish_calib_factory(self.dish_name, self.calib_path)
+        dish.prompt_callback = prompt_callback
         
         # Get the calibration measurements or calibrate the dish
         self.dish_calibration = dish.calibrate_dish(self.a1_manager.nikon, overwrite)

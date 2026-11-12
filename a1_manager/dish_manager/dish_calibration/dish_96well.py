@@ -69,7 +69,7 @@ class Dish96well(DishCalibManager):
         Returns a dictionary mapping well names (e.g., 'A1', 'B2', etc.) to WellCircle objects.
         """
         
-        x_tl, y_tl = prompt_for_center(nikon)
+        x_tl, y_tl = prompt_for_center(nikon, prompt_callback=self.prompt_callback)
 
         # Create wells
         dish_measurements: dict[str, WellCircleCoord] = {}

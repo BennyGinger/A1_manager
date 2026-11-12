@@ -48,7 +48,7 @@ class Dish35mm(DishCalibManager):
         success_calibration = False    
         while not success_calibration:
             # Define 3 points on the middle ring. The middle of the objective must be on the inner part of the ring
-            point1, point2, point3 = prompt_for_edge_points(nikon)
+            point1, point2, point3 = prompt_for_edge_points(nikon, prompt_callback=self.prompt_callback)
             # Center of circle
             center, measured_radius = find_circle(point1, point2, point3)
             
@@ -57,7 +57,7 @@ class Dish35mm(DishCalibManager):
                 
                 # Ask user if they want to proceed with the measured radius or restart
                 if prompt_for_calibration_approval(measured_radius, self.expected_radius, 
-                                                 self.expected_radius_lower, self.expected_radius_upper):
+                                                 self.expected_radius_lower, self.expected_radius_upper, prompt_callback=self.prompt_callback):
                     success_calibration = True
                 else:
                     continue

@@ -1,5 +1,6 @@
 from __future__ import annotations # Enable type annotation to be stored as string
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from collections.abc import Callable
 from abc import ABC, abstractmethod
 from pathlib import Path
 import logging
@@ -20,6 +21,7 @@ class DishCalibManager(ABC):
     """
     # Instance variables.
     calib_path: Path
+    prompt_callback: Callable[[str], str] | None = field(default=None, kw_only=True)
     
     @classmethod
     def dish_calib_factory(cls, dish_name: str, calib_path: Path) -> DishCalibManager:

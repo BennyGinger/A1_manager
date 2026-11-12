@@ -56,7 +56,7 @@ class DishIbidi(DishCalibManager):
         """
         
         # Prompt the user to move the stage to the center of the A1 well
-        x_center, y_center = prompt_for_center(nikon)
+        x_center, y_center = prompt_for_center(nikon, prompt_callback=self.prompt_callback)
         
         # Calculate the top-left and bottom-right corners for well A1.
         x_tl = x_center + self.well_length / 2

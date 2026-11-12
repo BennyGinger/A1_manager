@@ -25,6 +25,7 @@ def launch_dish_workflow(a1_manager: A1Manager,
                          n_corners_in: int = 4,
                          review_callback: Callable[[NDArray], str | None] | None = None,
                          cancel_check: Callable[[], None] | None = None,
+                         prompt_callback: Callable[[str], str] | None = None,
                          ) -> dict[str, dict[int, StageCoord]]:
     """
     Launch the dish workflow to calibrate the dish, perform autofocus, and create the well grids.
@@ -53,7 +54,7 @@ def launch_dish_workflow(a1_manager: A1Manager,
     # Calibrate the dish
     if cancel_check is not None:
         cancel_check()
-    dish_manager.calibrate_dish(overwrite_calib)
+    dish_manager.calibrate_dish(overwrite_calib, prompt_callback=prompt_callback)
     if cancel_check is not None:
         cancel_check()
     

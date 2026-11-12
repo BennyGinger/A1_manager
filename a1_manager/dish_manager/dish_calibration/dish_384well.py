@@ -79,8 +79,8 @@ class Dish384Well(DishCalibManager):
         """
         
         # 1. Fetch both manual top-left coordinates directly from stage positioning
-        x_tl_a1, y_tl_a1 = prompt_for_top_left_A1(nikon)
-        x_tl_p24, y_tl_p24 = prompt_for_top_left_P24(nikon)
+        x_tl_a1, y_tl_a1 = prompt_for_top_left_A1(nikon, prompt_callback=self.prompt_callback)
+        x_tl_p24, y_tl_p24 = prompt_for_top_left_P24(nikon, prompt_callback=self.prompt_callback)
         
         
         
